@@ -2,22 +2,44 @@
   "Apple": {
     "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
     "products": [
-      { "name": "iPhone 15 Pro", "price": "CHF 999.-", "img": "images/iphone15pro.jpg" },
-      { "name": "iPhone 14", "price": "CHF 699.-", "img": "images/iphone14.jpg" },
-      { "name": "iPhone 13 Mini", "price": "CHF 499.-", "img": "images/iphone13mini.jpg" }
+      { 
+        "name": "iPhone 12 mini - Schwarz", 
+        "price": "200", 
+        "oldPrice": "212",
+        "storage": "128 GB",
+        "network": "5G",
+        "rating": 4.7,
+        "reviews": 3,
+        "discount": "6%",
+        "img": "images/iphone12mini.jpg" 
+      },
+      { 
+        "name": "iPhone 15 Pro Max - Titan Natur", 
+        "price": "598", 
+        "oldPrice": "664",
+        "storage": "256 GB",
+        "network": "5G",
+        "rating": 4.1,
+        "reviews": 7,
+        "discount": "10%",
+        "img": "images/iphone15pro.jpg" 
+      }
     ]
   },
   "Samsung": {
     "logo": "https://cdn-icons-png.flaticon.com/512/5969/5969240.png",
     "products": [
-      { "name": "Galaxy S24", "price": "CHF 899.-", "img": "images/s24.jpg" },
-      { "name": "Galaxy A54", "price": "CHF 349.-", "img": "images/a54.jpg" }
-    ]
-  },
-  "Google": {
-    "logo": "https://cdn-icons-png.flaticon.com/512/2702/2702602.png",
-    "products": [
-      { "name": "Pixel 8", "price": "CHF 659.-", "img": "images/pixel8.jpg" }
+      { 
+        "name": "Galaxy S24 Ultra", 
+        "price": "899", 
+        "oldPrice": "1100",
+        "storage": "512 GB",
+        "network": "5G",
+        "rating": 4.9,
+        "reviews": 12,
+        "discount": "18%",
+        "img": "images/s24.jpg" 
+      }
     ]
   }
 }
