@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AO Mobile | Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GRUNDEINSTELLUNGEN --- */
+        :root {
+            --primary-color: #007bff;
+            --text-color: #333;
+            --bg-color: #ffffff; /* Weisser Hintergrund wie gewünscht */
+            --card-bg: #f9f9f9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-top: 100px; /* Platz für den fixierten Header */
+        }
+
+        /* --- HEADER (Kopie von der Hauptseite) --- */
+        header {
+            height: 80px;
+            background: #121212; /* Dunkler Header als Kontrast */
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
+        
+        .logo {
+            font-size: 24px; font-weight: 600; letter-spacing: 1px;
+            background: linear-gradient(135deg, #007bff, #00d2ff);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .icon-btn svg { fill: white; width: 24px; height: 24px; cursor: pointer; }
+        
+        /* Link zurück zur Startseite */
+        a.logo-link { text-decoration: none; }
+
+        /* --- SHOP CONTAINER --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 { margin-bottom: 40px; font-weight: 600; color: #222; }
+
+        /* --- GRID SYSTEM (4 Kacheln breit) --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* Genau 4 Spalten */
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* Responsive: Auf Handys weniger Spalten */
+        @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px) { .grid { grid-template-columns: 1fr; } }
+
+        /* --- KACHEL DESIGN --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px; /* Runde Rahmen */
+            padding: 30px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #eee;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        /* --- RUNDE BILDER --- */
+        .card-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%; /* Macht das Bild zum Kreis */
+            object-fit: cover;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-title { font-size: 18px; font-weight: 600; color: #333; }
+        .card-price { color: #007bff; font-weight: 500; margin-top: 5px; }
+
+        /* --- NAVIGATION BUTTONS --- */
+        .back-btn {
+            display: none; /* Erstmal ausgeblendet */
+            padding: 10px 20px;
+            background-color: #eee;
+            color: #333;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .back-btn:hover { background-color: #ddd; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="index.html" class="logo-link"><div class="logo">AO Mobile</div></a>
+        </div>
+        <div class="header-right">
+            <div class="icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <button id="back-btn" class="back-btn" onclick="showBrands()">← Zurück zu Marken</button>
+        <h1 id="page-title">Wähle eine Marke</h1>
+        
+        <div id="grid-container" class="grid"></div>
+    </div>
+
+    <script>
+        // ==========================================
+        // DIES IST DEINE "DATENBANK"
+        // Hier kannst du einfach neue Handys hinzufügen.
+        // ==========================================
+        const shopData = {
+            "Apple": [
+                { name: "iPhone 15 Pro", price: "CHF 999.-", img: "https://images.unsplash.com/photo-1696446701796-da61225697cc?auto=format&fit=crop&w=300&q=80" },
+                { name: "iPhone 14", price: "CHF 699.-", img: "https://images.unsplash.com/photo-1678685888221-cda773a3dcd9?auto=format&fit=crop&w=300&q=80" },
+                { name: "iPhone 13 Mini", price: "CHF 499.-", img: "https://images.unsplash.com/photo-1632661674596-df8be070a5c5?auto=format&fit=crop&w=300&q=80" },
+                { name: "iPhone SE", price: "CHF 299.-", img: "https://images.unsplash.com/photo-1589492477829-5e65395b66cc?auto=format&fit=crop&w=300&q=80" },
+                { name: "iPhone 12", price: "CHF 399.-", img: "https://images.unsplash.com/photo-1616348436168-de43ad0db179?auto=format&fit=crop&w=300&q=80" }
+            ],
+            "Samsung": [
+                { name: "Galaxy S24", price: "CHF 899.-", img: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=300&q=80" },
+                { name: "Galaxy A54", price: "CHF 349.-", img: "https://images.unsplash.com/photo-1610792516307-ea5acd9c3b00?auto=format&fit=crop&w=300&q=80" },
+                { name: "Galaxy Z Flip", price: "CHF 799.-", img: "https://images.unsplash.com/photo-1623945199623-28f0967a51d9?auto=format&fit=crop&w=300&q=80" },
+                { name: "Galaxy S22", price: "CHF 499.-", img: "https://images.unsplash.com/photo-1595941069915-4ebc5197c14a?auto=format&fit=crop&w=300&q=80" }
+            ],
+            "Google": [
+                { name: "Pixel 8", price: "CHF 659.-", img: "https://images.unsplash.com/photo-1598327105666-5b89351aff23?auto=format&fit=crop&w=300&q=80" },
+                { name: "Pixel 7a", price: "CHF 429.-", img: "https://images.unsplash.com/photo-1612442449529-2706b123d44b?auto=format&fit=crop&w=300&q=80" }
+            ]
+        };
+
+        // Marken-Logos (Optional, sonst wird Text angezeigt)
+        const brandLogos = {
+            "Apple": "https://cdn-icons-png.flaticon.com/512/0/747.png",
+            "Samsung": "https://cdn-icons-png.flaticon.com/512/5969/5969240.png",
+            "Google": "https://cdn-icons-png.flaticon.com/512/2702/2702602.png"
+        };
+
+        // ==========================================
+        // LOGIK (Nichts hierunter ändern)
+        // ==========================================
+        
+        const gridContainer = document.getElementById('grid-container');
+        const pageTitle = document.getElementById('page-title');
+        const backBtn = document.getElementById('back-btn');
+
+        // Funktion 1: Zeige alle Marken an
+        function showBrands() {
+            gridContainer.innerHTML = ''; // Leeren
+            pageTitle.innerText = "Wähle eine Marke";
+            backBtn.style.display = "none";
+
+            // Loop durch die Marken in shopData
+            for (let brand in shopData) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => showModels(brand); // Bei Klick Modelle zeigen
+
+                const img = document.createElement('img');
+                img.src = brandLogos[brand] || 'https://via.placeholder.com/150';
+                img.className = 'card-image';
+                
+                const title = document.createElement('div');
+                title.className = 'card-title';
+                title.innerText = brand;
+
+                card.appendChild(img);
+                card.appendChild(title);
+                gridContainer.appendChild(card);
+            }
+        }
+
+        // Funktion 2: Zeige Modelle einer Marke an
+        function showModels(brand) {
+            gridContainer.innerHTML = ''; // Leeren
+            pageTitle.innerText = brand + " Modelle";
+            backBtn.style.display = "inline-block";
+
+            const models = shopData[brand];
+
+            models.forEach(model => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                // Hier könntest du später einen Link zur Detailseite einbauen
+                card.onclick = () => alert("Du hast " + model.name + " ausgewählt!"); 
+
+                const img = document.createElement('img');
+                img.src = model.img;
+                img.className = 'card-image';
+                
+                const title = document.createElement('div');
+                title.className = 'card-title';
+                title.innerText = model.name;
+
+                const price = document.createElement('div');
+                price.className = 'card-price';
+                price.innerText = model.price;
+
+                card.appendChild(img);
+                card.appendChild(title);
+                card.appendChild(price);
+                gridContainer.appendChild(card);
+            });
+        }
+
+        // Start: Zeige Marken beim Laden
+        showBrands();
+
+    </script>
+
+</body>
+</html>
