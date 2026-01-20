@@ -12,7 +12,7 @@
         "rating": 4.7,
         "reviews": 3,
         "discount": "6%",
-        "img": "images/iphone12mini.jpg",
+        "img": "images/1.png",
         "condition": "Gebraucht",
         "color": "Schwarz",
         "warranty": "1 Jahr"
@@ -27,7 +27,7 @@
         "rating": 4.1,
         "reviews": 7,
         "discount": "10%",
-        "img": "images/iphone15pro.jpg",
+        "img": "images/1.png",
         "condition": "Wie neu",
         "color": "Titan",
         "warranty": "1 Jahr"
@@ -47,7 +47,7 @@
         "rating": 4.9,
         "reviews": 12,
         "discount": "18%",
-        "img": "images/s24.jpg",
+        "img": "images/1.png",
         "condition": "Neu",
         "color": "Grau",
         "warranty": "2 Jahre"
