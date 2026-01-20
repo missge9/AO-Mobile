@@ -3,6 +3,7 @@
     "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
     "products": [
       { 
+        "id": "iphone12mini", 
         "name": "iPhone 12 mini - Schwarz", 
         "price": "200", 
         "oldPrice": "212",
@@ -11,9 +12,14 @@
         "rating": 4.7,
         "reviews": 3,
         "discount": "6%",
-        "img": "images/iphone12mini.jpg" 
+        "img": "images/iphone12mini.jpg",
+        "condition": "Gebraucht",
+        "battery": "Gebraucht",
+        "color": "Schwarz",
+        "warranty": "1 Jahr"
       },
       { 
+        "id": "iphone15pro",
         "name": "iPhone 15 Pro Max - Titan Natur", 
         "price": "598", 
         "oldPrice": "664",
@@ -22,7 +28,11 @@
         "rating": 4.1,
         "reviews": 7,
         "discount": "10%",
-        "img": "images/iphone15pro.jpg" 
+        "img": "images/iphone15pro.jpg",
+        "condition": "Wie neu",
+        "battery": "Neu",
+        "color": "Titan",
+        "warranty": "1 Jahr"
       }
     ]
   },
@@ -30,6 +40,7 @@
     "logo": "https://cdn-icons-png.flaticon.com/512/5969/5969240.png",
     "products": [
       { 
+        "id": "s24ultra",
         "name": "Galaxy S24 Ultra", 
         "price": "899", 
         "oldPrice": "1100",
@@ -38,7 +49,11 @@
         "rating": 4.9,
         "reviews": 12,
         "discount": "18%",
-        "img": "images/s24.jpg" 
+        "img": "images/s24.jpg",
+        "condition": "Neu",
+        "battery": "Neu",
+        "color": "Grau",
+        "warranty": "2 Jahre"
       }
     ]
   }
