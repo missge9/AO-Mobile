@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AO Mobile | Premium Smartphones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GRUNDEINSTELLUNGEN --- */
+        :root {
+            --primary-color: #007bff;
+            --primary-gradient: linear-gradient(135deg, #007bff, #00d2ff);
+            --dark-bg: #121212;
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER --- */
+        header {
+            height: 80px;
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-icon, .icon-btn {
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            transition: transform 0.2s;
+        }
+        
+        .menu-icon:hover, .icon-btn:hover { transform: scale(1.1); }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .icon-btn svg, .menu-icon svg {
+            fill: white;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* --- SIDEBAR MENÜ --- */
+        #dropdown-menu {
+            position: fixed;
+            top: 0; left: 0;
+            width: 280px; height: 100vh;
+            background: #1a1a1a;
+            padding-top: 100px;
+            transform: translateX(-100%); 
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 999;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        #dropdown-menu.open { transform: translateX(0); }
+
+        #dropdown-menu a {
+            display: block;
+            padding: 20px 30px;
+            color: #ccc;
+            text-decoration: none;
+            font-size: 18px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        #dropdown-menu a:hover {
+            background-color: #252525;
+            color: white;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 40px;
+        }
+
+        /* --- SEKTIONEN ALLGEMEIN --- */
+        .fullscreen-section {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- SPEZIELLES LAYOUT FÜR BUY & SELL (LINKS UNTEN) --- */
+        .buy-sell-layout {
+            justify-content: flex-end; /* Nach unten schieben */
+            align-items: flex-start;   /* Nach links schieben */
+            padding-bottom: 12vh;      /* Abstand vom unteren Rand */
+            padding-left: 8vw;         /* Abstand vom linken Rand */
+        }
+
+        /* --- SLIDER --- */
+        .slider-container { width: 100%; height: 100%; }
+        .slides {
+            display: flex;
+            width: 300%; height: 100%;
+            animation: slide 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        .slide-wrapper { width: 33.333%; height: 100%; position: relative; }
+        
+        .slide-image {
+            width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            position: absolute; top: 0; left: 0;
+        }
+        
+        /* Verlauf für Slider Text Lesbarkeit */
+        .slide-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 70%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        }
+
+        .slide-text-area {
+            position: absolute;
+            bottom: 15vh; left: 8vw;
+            width: 85%; max-width: 600px;
+            z-index: 2; color: white;
+        }
+
+        .slide-text-area h2 {
+            font-size: clamp(32px, 5vh, 48px);
+            margin-bottom: 15px; font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .slide-text-area p {
+            font-size: clamp(16px, 2vh, 20px);
+            line-height: 1.6; margin-bottom: 25px; color: #e0e0e0;
+        }
+
+        /* --- BUTTONS --- */
+        .slide-btn {
+            display: inline-block;
+            padding: 12px 35px;
+            background: var(--primary-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500; font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .slide-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+        }
+
+        @keyframes slide {
+            0%, 28% { transform: translateX(0); }
+            33.33%, 61.33% { transform: translateX(-33.333%); }
+            66.66%, 94.66% { transform: translateX(-66.666%); }
+            100% { transform: translateX(0); }
+        }
+
+        /* --- CONTENT TEXT (OHNE BOX, MIT ICON) --- */
+        .text-content-transparent {
+            position: relative;
+            z-index: 5;
+            text-align: left;
+            width: 90%;
+            max-width: 600px;
+            background: transparent; /* Keine Box */
+            padding: 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        /* Styling für die zurückgekehrten Icons */
+        .text-content-transparent .content-image {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+            /* Macht die Icons weiss, damit sie zum Text passen */
+            filter: brightness(0) invert(1) drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+        }
+
+        .text-content-transparent h2 {
+            font-size: clamp(36px, 6vh, 56px);
+            margin-bottom: 20px;
+            color: white;
+            text-shadow: 2px 2px 20px rgba(0,0,0,0.8);
+        }
+
+        .text-content-transparent p {
+            color: #f0f0f0;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 10px rgba(0,0,0,0.9);
+            font-weight: 400;
+        }
+
+        .active-view .text-content-transparent { opacity: 1; transform: translateY(0); }
+
+        /* Hintergründe für Buy/Sell */
+        .bg-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            z-index: -1;
+            transition: transform 10s ease;
+        }
+        .active-view .bg-image { transform: scale(1.1); }
+
+        .buy-section .bg-image { background-image: url('https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=1200&q=80'); }
+        .sell-section .bg-image { background-image: url('https://images.unsplash.com/photo-1556656793-02715d8dd660?auto=format&fit=crop&w=1200&q=80'); }
+
+        /* Verlauf Overlay von OBEN nach UNTEN */
+        .section-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            /* Gradient wird nach unten hin dunkler, damit der Text lesbar ist */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 0;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            min-height: 40vh;
+            background-color: #0a0a0a;
+            color: #777;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            scroll-snap-align: end; padding: 60px 20px;
+            text-align: center;
+        }
+        footer a { color: #aaa; text-decoration: none; margin: 8px 0; font-size: 16px; transition: color 0.3s; }
+        footer a:hover { color: var(--primary-color); }
+        footer p { margin-top: 30px; opacity: 0.5; font-size: 14px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="menu-icon" onclick="toggleMenu()">
+                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+            <div class="logo">AO Mobile</div>
+        </div>
+        <div class="header-right">
+            <div class="icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+            <div class="icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+        </div>
+    </header>
+
+    <div id="dropdown-menu">
+        <a href="#buy" onclick="toggleMenu()">Handy kaufen</a>
+        <a href="#sell" onclick="toggleMenu()">Handy verkaufen</a>
+        <a href="#" onclick="toggleMenu()">Warenkorb</a>
+        <a href="#" onclick="toggleMenu()">Profil</a>
+    </div>
+
+    <div class="fullscreen-section slider-section" id="intro">
+        <div class="slider-container">
+            <div class="slides">
+                <div class="slide-wrapper">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&w=1200&q=80');"></div>
+                    <div class="slide-text-area">
+                        <h2>AO Mobile</h2>
+                        <p>Dein Partner für Smartphones. Wir stehen für Qualität und Nachhaltigkeit. Jedes Gerät wird von uns geprüft.</p>
+                        <a href="#buy" class="slide-btn">Mehr erfahren</a>
+                    </div>
+                </div>
+                <div class="slide-wrapper">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1200&q=80');"></div>
+                    <div class="slide-text-area">
+                        <h2>Sonderangebote</h2>
+                        <p>Profitiere jetzt von unseren Rabatten. Wir haben diverse Modelle stark reduziert. Nur solange der Vorrat reicht.</p>
+                        <a href="#buy" class="slide-btn">Angebote ansehen</a>
+                    </div>
+                </div>
+                <div class="slide-wrapper">
+                    <div class="slide-image" style="background-image: url('https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?auto=format&fit=crop&w=1200&q=80');"></div>
+                    <div class="slide-text-area">
+                        <h2>Sicher kaufen</h2>
+                        <p>Bei uns kaufst du ohne Risiko mit 14 Tagen Rückgaberecht. Wir garantieren dir zudem immer faire Preise.</p>
+                        <a href="#buy" class="slide-btn">Zum Shop</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-section buy-section buy-sell-layout" id="buy">
+        <div class="bg-image"></div>
+        <div class="section-overlay"></div>
+        
+        <div class="text-content-transparent">
+            <img src="https://cdn-icons-png.flaticon.com/512/3081/3081648.png" alt="Kaufen Icon" class="content-image">
+            <h2>Handy kaufen</h2>
+            <p>
+                Suchst du ein neues Smartphone aber willst nicht den vollen Preis bezahlen. Wir bieten dir geprüfte Gebrauchtgeräte in Top Zustand an. Inklusive Garantie.
+            </p>
+            <a href="#" class="slide-btn">Zum Shop</a>
+        </div>
+    </div>
+
+    <div class="fullscreen-section sell-section buy-sell-layout" id="sell">
+        <div class="bg-image"></div>
+        <div class="section-overlay"></div>
+        
+        <div class="text-content-transparent">
+             <img src="https://cdn-icons-png.flaticon.com/512/2331/2331718.png" alt="Verkaufen Icon" class="content-image">
+            <h2>Handy verkaufen</h2>
+            <p>
+                Hast du ein altes Smartphone in der Schublade liegen. Lass es nicht verstauben. Bei uns kannst du dein gebrauchtes Handy schnell und sicher zu Geld machen.
+            </p>
+            <a href="#" class="slide-btn">Wert ermitteln</a>
+        </div>
+    </div>
+
+    <footer>
+        <a href="#">AFB</a>
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+        <a href="#">Kontakt aufnehmen</a>
+        <p>&copy; 2024 AO Mobile. Alle Rechte vorbehalten.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.getElementById("dropdown-menu");
+            menu.classList.toggle("open");
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active-view');
+                }
+            });
+        }, { threshold: 0.3 });
+
+        document.querySelectorAll('.fullscreen-section').forEach((section) => {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
