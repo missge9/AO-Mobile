@@ -3,34 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produktdetails | AO Mobile</title>
+    <title>AO Mobile | Shop</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* --- GRUNDEINSTELLUNGEN --- */
         :root {
             --primary-color: #007bff;
-            --green-btn: #4caf50; /* Das Grün aus dem Screenshot */
             --text-color: #333;
-            --bg-color: #ffffff;
-            --price-color: #ea4335;
+            --bg-color: #f4f4f4; /* Leichter grauer Hintergrund wie im Bild */
+            --card-bg: #ffffff;
+            --price-color: #ea4335; /* Rot für den Preis */
+            --green-color: #00c853; /* Grün für Sterne/Check */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
         body {
-            background-color: #f9f9f9;
+            background-color: var(--bg-color);
             color: var(--text-color);
             padding-top: 100px;
-            padding-bottom: 100px;
+            padding-bottom: 50px;
         }
 
-        /* --- HEADER (Identisch) --- */
+        /* --- HEADER --- */
         header {
-            height: 80px; background: #121212; color: white;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000;
+            height: 80px;
+            background: #121212;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+
         .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
         a.logo-link { text-decoration: none; }
         .logo {
@@ -40,122 +50,171 @@
         }
         .icon-btn svg { fill: white; width: 24px; height: 24px; cursor: pointer; }
 
-        /* --- MAIN CONTAINER --- */
-        .detail-container {
-            max-width: 1100px;
+        /* --- SHOP CONTAINER --- */
+        .container {
+            max-width: 1000px; /* Etwas schmaler für den 2er Look */
             margin: 0 auto;
             padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Links Bild, Rechts Info */
-            gap: 40px;
         }
 
-        /* Handy Ansicht: Alles untereinander */
-        @media (max-width: 800px) { .detail-container { grid-template-columns: 1fr; } }
+        h1 { text-align: center; margin-bottom: 40px; font-weight: 600; color: #222; }
 
-        /* --- LINKE SEITE: BILDER --- */
-        .image-gallery {
-            background: white;
-            border-radius: 20px;
+        .back-btn {
+            display: none;
+            padding: 10px 20px;
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .back-btn:hover { background-color: #f0f0f0; }
+
+        /* --- GRID SYSTEM (2 Kacheln) --- */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 Spalten! */
+            gap: 20px;
+        }
+
+        /* Auf Handy untereinander */
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+        /* --- NEUES KACHEL DESIGN (PRODUKTKARTE) --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            text-align: center;
+            transition: transform 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+            position: relative; /* Für Herz und Badges */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; /* Alles linksbündig */
         }
 
-        .main-image {
-            width: 80%;
-            max-height: 400px;
-            object-fit: contain;
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: #ddd;
+        }
+
+        /* Badges oben */
+        .badges-top {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 10px;
+            position: absolute;
+            top: 20px;
+            left: 0;
+            padding: 0 20px;
+            z-index: 5;
+        }
+        
+        .discount-badge {
+            background-color: var(--price-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .check-badge {
+            width: 24px; height: 24px;
+            background: var(--green-color);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .check-badge svg { fill: white; width: 14px; }
+
+        /* Bild */
+        .card-image {
+            width: 100%;
+            height: 220px; /* Feste Höhe */
+            object-fit: contain; /* Bild wird nicht verzerrt */
+            margin-top: 30px;
             margin-bottom: 20px;
         }
 
-        .gallery-thumbs {
-            display: flex; justify-content: center; gap: 10px; margin-top: 20px;
+        /* Chips (GB / 5G) */
+        .chips {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
         }
-        .thumb {
-            width: 50px; height: 60px; border: 1px solid #ddd; border-radius: 8px;
-            object-fit: contain; padding: 5px; cursor: pointer;
-        }
-        .thumb:hover { border-color: var(--primary-color); }
-
-        .usage-banner {
-            background: #f0f0f0; border-radius: 8px; padding: 10px;
-            margin-top: 20px; display: flex; align-items: center; justify-content: space-between;
-            font-size: 14px; cursor: pointer;
-        }
-
-        /* --- RECHTE SEITE: INFOS --- */
-        .product-info { padding: 10px; }
-
-        .delivery-status {
-            color: #333; font-size: 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
-        }
-        .check-icon { color: var(--green-btn); width: 20px; }
-
-        h1 { font-size: 28px; line-height: 1.2; margin-bottom: 20px; }
-
-        /* OPTIONEN BOXEN (Zustand, Speicher, etc.) */
-        .option-group { margin-bottom: 25px; }
-        .option-title { font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        
-        .option-pills { display: flex; flex-wrap: wrap; gap: 10px; }
-        
-        .pill {
-            padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px;
-            background: white; cursor: pointer; font-size: 14px; transition: 0.2s;
-        }
-        .pill.active { border: 2px solid #333; font-weight: 600; }
-        .pill.disabled { opacity: 0.5; text-decoration: line-through; cursor: not-allowed; border-color: #eee; }
-
-        /* Farben Kreise */
-        .color-circle {
-            width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd;
-            cursor: pointer; position: relative;
-        }
-        .color-circle.active::after {
-            content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
-            border: 2px solid #333; border-radius: 50%;
+        .chip {
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
         }
 
-        /* PREIS & WARENKORB */
-        .price-section { margin-top: 30px; margin-bottom: 30px; }
-        .big-price { font-size: 32px; font-weight: 700; color: var(--price-color); }
-        .old-price { text-decoration: line-through; color: #999; margin-left: 10px; }
-        .discount-tag { color: var(--price-color); font-weight: 600; margin-left: 10px; }
+        /* Preis Sektion */
+        .price-row { margin-bottom: 5px; }
+        .price-current {
+            color: var(--price-color);
+            font-size: 20px;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        .price-old {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 14px;
+        }
 
-        /* Sticky Button am unteren Rand (wie im Bild) */
-        .sticky-cart-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: var(--green-btn); color: white;
-            padding: 15px; display: flex; justify-content: center; align-items: center;
-            font-weight: 700; font-size: 16px; cursor: pointer;
-            z-index: 999; text-transform: uppercase; letter-spacing: 1px;
+        /* Sterne */
+        .rating-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 10px;
+            color: var(--green-color);
+            font-size: 14px;
+            font-weight: 600;
         }
-        .chat-bubble {
-            position: absolute; right: 20px; top: -60px;
-            background: #333; width: 50px; height: 50px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .chat-bubble svg { fill: white; width: 24px; }
+        .rating-count { color: #777; font-weight: 400; }
 
-        /* --- ZUBEHÖR LISTE --- */
-        .accessory-box {
-            background: white; border-radius: 16px; padding: 20px; margin-top: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        /* Titel */
+        .card-title {
+            font-size: 18px; /* Grösserer Name */
+            font-weight: 700;
+            color: #222;
+            line-height: 1.3;
+            margin-bottom: 10px;
         }
-        .accessory-item {
-            display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee;
+
+        /* Herz unten rechts */
+        .heart-icon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: var(--green-color);
+            stroke-width: 2;
         }
-        .accessory-item:last-child { border-bottom: none; }
-        .acc-img { width: 40px; height: 50px; object-fit: contain; margin-right: 15px; }
-        .acc-info { flex-grow: 1; }
-        .acc-price { color: var(--price-color); font-weight: 700; font-size: 14px; }
-        .acc-name { font-size: 14px; margin: 2px 0; }
-        .add-circle {
-            width: 35px; height: 35px; background: var(--green-btn); border-radius: 50%;
-            color: white; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer;
+
+        /* Marken Logo Kachel (für die erste Ansicht) */
+        .brand-card {
+            background: white; border-radius: 16px; padding: 30px;
+            display: flex; flex-direction: column; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer;
+            transition: 0.3s;
         }
+        .brand-card:hover { transform: translateY(-5px); }
+        .brand-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; }
+        .brand-name { font-weight: 600; font-size: 18px; }
 
     </style>
 </head>
@@ -163,7 +222,7 @@
 
     <header>
         <div class="header-left">
-            <a href="shop.html" class="logo-link"><div class="logo">AO Mobile</div></a>
+            <a href="index.html" class="logo-link"><div class="logo">AO Mobile</div></a>
         </div>
         <div class="header-right">
             <div class="icon-btn">
@@ -172,164 +231,109 @@
         </div>
     </header>
 
-    <div class="detail-container">
-        <div class="left-col">
-            <div class="image-gallery">
-                <img id="main-img" src="" class="main-image">
-                <div class="gallery-thumbs">
-                    <img src="" class="thumb main-thumb">
-                    <div style="width:50px; height:60px; background:#eee; border-radius:8px;"></div>
-                    <div style="width:50px; height:60px; background:#eee; border-radius:8px;"></div>
-                </div>
-                <div class="usage-banner">
-                    <img src="https://via.placeholder.com/30" style="border-radius:4px; margin-right:10px;">
-                    <span>Beispiele für Gebrauchsspuren</span>
-                    <span>→</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="product-info">
-            <div class="delivery-status">
-                <svg class="check-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                <span>Donnerstag geliefert</span>
-            </div>
-
-            <h1 id="product-name">Lade Produkt...</h1>
-
-            <div class="option-group">
-                <div class="option-title">Optischer Zustand ⓘ</div>
-                <div class="option-pills">
-                    <div class="pill disabled">Schnäppchen</div>
-                    <div class="pill active" id="cond-used">Gebraucht</div>
-                    <div class="pill">Sehr gut</div>
-                    <div class="pill disabled">Wie neu</div>
-                    <div class="pill disabled">Neu</div>
-                </div>
-            </div>
-
-            <div class="option-group">
-                <div class="option-title">Akkuzustand ⓘ</div>
-                <div class="option-pills">
-                    <div class="pill active">Gebraucht</div>
-                    <div class="pill">Neu</div>
-                </div>
-            </div>
-
-            <div class="option-group">
-                <div class="option-title">Speicher: <span id="storage-text">128 GB</span></div>
-                <div class="option-pills">
-                    <div class="pill">64 GB</div>
-                    <div class="pill">256 GB</div>
-                    <div class="pill active">128 GB</div>
-                </div>
-            </div>
-
-            <div class="option-group">
-                <div class="option-title">Farbe: <span id="color-text">Schwarz</span></div>
-                <div class="option-pills">
-                    <div class="color-circle active" style="background:black;"></div>
-                    <div class="color-circle" style="background:#1c3959;"></div> <div class="color-circle" style="background:#eaffea;"></div> <div class="color-circle" style="background:white; border:1px solid #ccc;"></div>
-                    <div class="color-circle" style="background:#e11c1c;"></div> </div>
-            </div>
-
-            <div class="option-group">
-                <div class="option-title">Garantie</div>
-                <div class="option-pills">
-                    <div class="pill active">1 Jahr</div>
-                    <div class="pill">3 Jahre (+34.00 CHF)</div>
-                </div>
-            </div>
-
-            <div class="price-section">
-                <span class="big-price" id="price-display">200 CHF</span>
-                <span class="old-price" id="old-price-display">212 CHF</span>
-                <span class="discount-tag" id="discount-display">-6%</span>
-                <div style="font-size:12px; color:#666; margin-top:5px;">inkl. MwSt. <span style="color:var(--green-btn); text-decoration:underline;">Versand</span> wird beim Checkout berechnet</div>
-            </div>
-
-            <div class="option-title" style="margin-top:30px;">Passendes Zubehör</div>
-            <div class="accessory-box">
-                <div class="accessory-item">
-                    <img src="https://via.placeholder.com/40" class="acc-img">
-                    <div class="acc-info">
-                        <div class="acc-price">25 CHF</div>
-                        <div style="color:var(--green-btn); font-size:12px;">★★★★★</div>
-                        <div class="acc-name">Revendo Glass iPhone 12 Mini Clear</div>
-                    </div>
-                    <div class="add-circle">+</div>
-                </div>
-                <div class="accessory-item">
-                    <img src="https://via.placeholder.com/40" class="acc-img">
-                    <div class="acc-info">
-                        <div class="acc-price">29 CHF</div>
-                        <div style="color:var(--green-btn); font-size:12px;">★★★★★</div>
-                        <div class="acc-name">Revendo Case Everyday Weiss</div>
-                    </div>
-                    <div class="add-circle">+</div>
-                </div>
-                <div class="accessory-item">
-                    <img src="https://via.placeholder.com/40" class="acc-img">
-                    <div class="acc-info">
-                        <div class="acc-price">15 CHF</div>
-                        <div style="color:var(--green-btn); font-size:12px;">★★★★★</div>
-                        <div class="acc-name">20W USB-C Ladegerät</div>
-                    </div>
-                    <div class="add-circle">+</div>
-                </div>
-            </div>
-
-        </div> </div> <div class="sticky-cart-bar">
-        In den Warenkorb legen
-        <div class="chat-bubble">
-            <svg viewBox="0 0 24 24"><path fill="white" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-        </div>
+    <div class="container">
+        <button id="back-btn" class="back-btn" onclick="showBrands()">← Zurück zu Marken</button>
+        <h1 id="page-title">Wähle eine Marke</h1>
+        
+        <div id="grid-container" class="grid"></div>
     </div>
 
     <script>
-        // Funktion zum Lesen der URL Parameter (z.B. ?id=iphone12)
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
+        const gridContainer = document.getElementById('grid-container');
+        const pageTitle = document.getElementById('page-title');
+        const backBtn = document.getElementById('back-btn');
 
-        const productId = getQueryParam('id');
+        let shopData = {};
 
+        // 1. DATEN LADEN
         fetch('data.json')
             .then(response => response.json())
             .then(data => {
-                let foundProduct = null;
-
-                // Suche das Produkt in allen Marken
-                for (let brand in data) {
-                    const product = data[brand].products.find(p => p.id === productId);
-                    if (product) {
-                        foundProduct = product;
-                        break;
-                    }
-                }
-
-                if (foundProduct) {
-                    // Daten in die HTML Elemente füllen
-                    document.getElementById('product-name').innerText = foundProduct.name;
-                    document.getElementById('main-img').src = foundProduct.img;
-                    document.querySelector('.main-thumb').src = foundProduct.img;
-                    document.getElementById('price-display').innerText = foundProduct.price + " CHF";
-                    document.getElementById('old-price-display').innerText = foundProduct.oldPrice + " CHF";
-                    document.getElementById('discount-display').innerText = "-" + foundProduct.discount;
-                    
-                    document.getElementById('storage-text').innerText = foundProduct.storage;
-                    document.getElementById('color-text').innerText = foundProduct.color || 'Standard';
-
-                    // Update Condition (nur Beispielhaft)
-                    if(foundProduct.condition) {
-                        document.getElementById('cond-used').innerText = foundProduct.condition;
-                    }
-                } else {
-                    document.body.innerHTML = "<h1 style='text-align:center; margin-top:100px;'>Produkt nicht gefunden</h1>";
-                }
+                shopData = data; 
+                showBrands();    
             })
-            .catch(error => console.error('Fehler:', error));
+            .catch(error => console.error('Fehler beim Laden der JSON:', error));
+
+        // 2. MARKEN ANZEIGEN
+        function showBrands() {
+            gridContainer.innerHTML = ''; 
+            pageTitle.innerText = "Wähle eine Marke";
+            backBtn.style.display = "none";
+
+            for (let brand in shopData) {
+                const card = document.createElement('div');
+                card.className = 'brand-card'; // Eigene Klasse für Marken
+                card.onclick = () => showModels(brand); 
+
+                const img = document.createElement('img');
+                img.src = shopData[brand].logo || 'https://via.placeholder.com/150';
+                img.className = 'brand-img';
+                
+                const title = document.createElement('div');
+                title.className = 'brand-name';
+                title.innerText = brand;
+
+                card.appendChild(img);
+                card.appendChild(title);
+                gridContainer.appendChild(card);
+            }
+        }
+
+        // 3. MODELLE ANZEIGEN (Das neue Design)
+        function showModels(brand) {
+            gridContainer.innerHTML = ''; 
+            pageTitle.innerText = brand + " Modelle";
+            backBtn.style.display = "inline-block";
+
+            const models = shopData[brand].products;
+
+            models.forEach(model => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.onclick = () => window.location.href = 'detail.html?id=' + model.id;
+
+                // HTML Struktur genau wie im Bild
+                card.innerHTML = `
+                    <div class="badges-top">
+                        ${model.discount ? `<div class="discount-badge">Bis zu ${model.discount} Rabatt</div>` : '<div></div>'}
+                        <div class="check-badge">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
+                    </div>
+
+                    <img src="${model.img}" class="card-image" onerror="this.src='https://via.placeholder.com/200?text=Phone'">
+                    
+                    <div class="chips">
+                        <span class="chip">${model.storage || '128 GB'}</span>
+                        <span class="chip">${model.network || '5G'}</span>
+                    </div>
+
+                    <div class="price-row">
+                        <span class="price-current">Von ${model.price} CHF</span>
+                        ${model.oldPrice ? `<span class="price-old">${model.oldPrice} CHF</span>` : ''}
+                    </div>
+
+                    <div class="rating-row">
+                        <div style="display:flex">
+                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                        </div>
+                        <span>${model.rating || '5.0'} (${model.reviews || 0})</span>
+                    </div>
+
+                    <div class="card-title">${model.name}</div>
+
+                    <svg class="heart-icon" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                `;
+
+                gridContainer.appendChild(card);
+            });
+        }
     </script>
 
 </body>
