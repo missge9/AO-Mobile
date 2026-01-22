@@ -35,7 +35,9 @@
             <div class="logo">AO Mobile</div>
         </div>
         <div class="header-right">
-            <div class="icon-btn"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
+            <a href="cart.html" class="icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </a>
             <div class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
         </div>
     </header>
@@ -75,12 +77,21 @@
 
     <script>
         const productId = new URLSearchParams(window.location.search).get('id');
-        function toggleMenu() { document.getElementById("dropdown-menu").classList.toggle("open"); }
+
+        function toggleMenu() {
+            document.getElementById("dropdown-menu").classList.toggle("open");
+        }
 
         fetch('data.json?v=' + new Date().getTime()).then(r => r.json()).then(data => {
             let p = null, brandOfProduct = "";
-            for (let b in data) { let found = data[b].products.find(x => x.id === productId); if (found) { p = found; brandOfProduct = b; break; } }
+            // Produkt in den Daten suchen
+            for (let b in data) { 
+                let found = data[b].products.find(x => x.id === productId); 
+                if (found) { p = found; brandOfProduct = b; break; } 
+            }
+
             if (p) {
+                // Zurück-Link setzen
                 document.getElementById('back-link').href = `shop.html?brand=${brandOfProduct}`;
                 document.getElementById('product-name').innerText = p.name;
                 document.getElementById('main-img').src = p.img;
@@ -88,25 +99,76 @@
                 document.getElementById('price-old').innerText = p.oldPrice ? p.oldPrice + " CHF" : "";
                 document.getElementById('discount-val').innerText = p.hasDiscount ? "-" + p.discount : "";
                 
+                // Hilfsfunktion zum Rendern der Pillen
                 const renderPills = (id, items) => {
                     const el = document.getElementById(id); el.innerHTML = '';
                     items.forEach((item, i) => {
-                        const s = document.createElement('span'); s.className = 'pill' + (i === 0 ? ' active' : ''); s.innerText = item;
-                        s.onclick = () => { el.querySelectorAll('.pill').forEach(b => b.classList.remove('active')); s.classList.add('active'); };
+                        const s = document.createElement('span'); 
+                        s.className = 'pill' + (i === 0 ? ' active' : ''); 
+                        s.innerText = item;
+                        s.onclick = () => { 
+                            el.querySelectorAll('.pill').forEach(b => b.classList.remove('active')); 
+                            s.classList.add('active'); 
+                        };
                         el.appendChild(s);
                     });
                 };
-                renderPills('optical-list', p.opticalConditions); renderPills('battery-list', p.batteryConditions);
-                renderPills('storage-list', p.storageOptions); renderPills('warranty-list', p.warranties);
+
+                renderPills('optical-list', p.opticalConditions); 
+                renderPills('battery-list', p.batteryConditions);
+                renderPills('storage-list', p.storageOptions); 
+                renderPills('warranty-list', p.warranties);
                 
-                const colorContainer = document.getElementById('color-list'); colorContainer.innerHTML = '';
+                // Farben rendern
+                const colorContainer = document.getElementById('color-list'); 
+                colorContainer.innerHTML = '';
                 p.colors.forEach((c, i) => {
-                    const d = document.createElement('div'); d.className = 'color-circle' + (i === 0 ? ' active' : ''); d.style.background = c.hex;
-                    d.onclick = () => { colorContainer.querySelectorAll('.color-circle').forEach(circle => circle.classList.remove('active')); d.classList.add('active'); };
+                    const d = document.createElement('div'); 
+                    d.className = 'color-circle' + (i === 0 ? ' active' : ''); 
+                    d.style.background = c.hex;
+                    d.setAttribute('data-name', c.name); // Farbe-Name speichern
+                    d.onclick = () => { 
+                        colorContainer.querySelectorAll('.color-circle').forEach(circle => circle.classList.remove('active')); 
+                        d.classList.add('active'); 
+                    };
                     colorContainer.appendChild(d);
                 });
             }
         });
+
+        // WARENKORB LOGIK
+        document.querySelector('.sticky-cart-bar').onclick = function() {
+            const productName = document.getElementById('product-name').innerText;
+            if (productName === "" || productName === "Produkt wird geladen...") return;
+
+            // Alle gewählten Daten sammeln
+            const item = {
+                id: productId,
+                name: productName,
+                price: document.getElementById('price-val').innerText.replace(' CHF', ''),
+                img: document.getElementById('main-img').src,
+                options: {
+                    condition: document.querySelector('#optical-list .pill.active')?.innerText || 'Standard',
+                    battery: document.querySelector('#battery-list .pill.active')?.innerText || 'Standard',
+                    storage: document.querySelector('#storage-list .pill.active')?.innerText || 'Standard',
+                    color: document.querySelector('#color-list .color-circle.active')?.getAttribute('data-name') || 'Standard',
+                    warranty: document.querySelector('#warranty-list .pill.active')?.innerText || 'Standard'
+                }
+            };
+
+            // Im LocalStorage speichern
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.push(item);
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Feedback für den Nutzer
+            this.innerText = "Hinzugefügt!";
+            this.style.backgroundColor = "#2e7d32";
+            setTimeout(() => {
+                this.innerText = "In den Warenkorb legen";
+                this.style.backgroundColor = "";
+            }, 2000);
+        };
     </script>
 </body>
 </html>

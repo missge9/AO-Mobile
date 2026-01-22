@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warenkorb | AO Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-color: #007bff; --text-color: #333; --bg-color: #f4f4f4; --price-color: #ea4335; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; }
+        header { height: 80px; background: #121212; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: 600; color: white; text-decoration: none; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { margin-bottom: 30px; }
+        .cart-item { background: white; padding: 20px; border-radius: 16px; margin-bottom: 15px; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .cart-img { width: 80px; height: 80px; object-fit: contain; margin-right: 20px; }
+        .cart-info { flex-grow: 1; }
+        .cart-info h3 { font-size: 18px; margin-bottom: 5px; }
+        .cart-details { font-size: 13px; color: #777; line-height: 1.4; }
+        .cart-price { font-weight: 600; color: var(--price-color); margin: 0 20px; }
+        .remove-btn { color: #999; cursor: pointer; font-size: 20px; border: none; background: none; }
+        .remove-btn:hover { color: var(--price-color); }
+        .total-section { margin-top: 30px; text-align: right; border-top: 2px solid #ddd; padding-top: 20px; }
+        .total-price { font-size: 24px; font-weight: 700; color: var(--text-color); }
+        .checkout-btn { display: inline-block; background: #4caf50; color: white; padding: 15px 40px; border-radius: 30px; text-decoration: none; font-weight: 600; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">AO Mobile</a>
+        <a href="shop.html" style="color:white; text-decoration:none;">Weiter einkaufen</a>
+    </header>
+
+    <div class="container">
+        <h1>Dein Warenkorb</h1>
+        <div id="cart-content"></div>
+        <div class="total-section" id="total-section" style="display:none;">
+            <div class="total-price">Gesamt: <span id="total-val">0</span> CHF</div>
+            <a href="#" class="checkout-btn">Zur Kasse gehen</a>
+            <br><br>
+            <button onclick="clearCart()" style="background:none; border:none; color:#999; cursor:pointer; text-decoration:underline;">Warenkorb leeren</button>
+        </div>
+    </div>
+
+    <script>
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const container = document.getElementById('cart-content');
+            const totalSection = document.getElementById('total-section');
+            const totalVal = document.getElementById('total-val');
+            
+            container.innerHTML = '';
+            let total = 0;
+
+            if (cart.length === 0) {
+                container.innerHTML = '<p>Dein Warenkorb ist noch leer.</p><br><a href="shop.html">Jetzt Produkte entdecken</a>';
+                totalSection.style.display = 'none';
+                return;
+            }
+
+            totalSection.style.display = 'block';
+            cart.forEach((item, index) => {
+                total += parseFloat(item.price);
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <img src="${item.img}" class="cart-img">
+                    <div class="cart-info">
+                        <h3>${item.name}</h3>
+                        <div class="cart-details">
+                            Zustand: ${item.options.condition} | Akku: ${item.options.battery}<br>
+                            Speicher: ${item.options.storage} | Farbe: ${item.options.color} | Garantie: ${item.options.warranty}
+                        </div>
+                    </div>
+                    <div class="cart-price">${item.price} CHF</div>
+                    <button class="remove-btn" onclick="removeItem(${index})">&times;</button>
+                `;
+                container.appendChild(div);
+            });
+            totalVal.innerText = total;
+        }
+
+        function removeItem(index) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCart();
+        }
+
+        function clearCart() {
+            if(confirm('Möchtest du den gesamten Warenkorb leeren?')) {
+                localStorage.removeItem('cart');
+                loadCart();
+            }
+        }
+
+        loadCart();
+    </script>
+</body>
+</html>
