@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benutzerkonto | AO Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-color: #007bff; 
+            --primary-gradient: linear-gradient(135deg, #007bff, #00d2ff);
+            --text-color: #333; 
+            --bg-color: #f4f4f4; 
+            --card-bg: #ffffff; 
+            --error-color: #ea4335;
+            --success-color: #00c853;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; padding-bottom: 50px; }
+        
+        header { 
+            height: 80px; background: #121212; color: white; 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; 
+        }
+        .logo { font-size: 24px; font-weight: 600; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+
+        .container { max-width: 650px; margin: 0 auto; padding: 20px; }
+        .user-card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        
+        h1 { margin-bottom: 30px; font-weight: 600; text-align: center; }
+        h3 { margin: 25px 0 15px 0; font-size: 16px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        /* Spezielle Aufteilung für Strasse und Hausnummer */
+        .address-row { display: grid; grid-template-columns: 3fr 1fr; gap: 15px; }
+        /* Spezielle Aufteilung für PLZ und Ort */
+        .city-row { display: grid; grid-template-columns: 1fr 2.5fr; gap: 15px; }
+
+        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 13px; color: #666; }
+        input {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 14px; outline: none; transition: border-color 0.3s;
+        }
+        input:focus { border-color: var(--primary-color); }
+        input.error { border-color: var(--error-color); background-color: #fff8f8; }
+        
+        .status-msg { margin-top: 20px; text-align: center; font-size: 14px; font-weight: 500; min-height: 20px; }
+
+        .btn-save { 
+            display: block; width: 100%; padding: 15px; 
+            background: var(--primary-gradient); color: white; 
+            border: none; border-radius: 30px; font-weight: 600; 
+            cursor: pointer; margin-top: 30px; text-transform: uppercase;
+        }
+
+        @media (max-width: 500px) {
+            .form-row, .address-row, .city-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">AO Mobile</a>
+    </header>
+
+    <div class="container">
+        <div class="user-card">
+            <h1>Benutzerkonto</h1>
+            
+            <form id="user-form">
+                <h3>Persönliche Angaben</h3>
+                <div class="form-group">
+                    <label>Benutzername</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label>E.Mail Adresse</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <h3>Sicherheit</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Neues Passwort</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Passwort wiederholen</label>
+                        <input type="password" id="password_confirm" required>
+                    </div>
+                </div>
+
+                <h3>Anschrift</h3>
+                <div class="address-row">
+                    <div class="form-group">
+                        <label>Strasse</label>
+                        <input type="text" id="street" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nr.</label>
+                        <input type="text" id="house_number" required>
+                    </div>
+                </div>
+                <div class="city-row">
+                    <div class="form-group">
+                        <label>PLZ</label>
+                        <input type="text" id="zip" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ort</label>
+                        <input type="text" id="city" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-save">Profil speichern</button>
+                <div id="status" class="status-msg"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('user-form');
+        const statusMsg = document.getElementById('status');
+        const pass = document.getElementById('password');
+        const passConfirm = document.getElementById('password_confirm');
+
+        // Daten beim Laden füllen
+        window.onload = function() {
+            const data = JSON.parse(localStorage.getItem('ao_user_data') || '{}');
+            if (data.username) {
+                document.getElementById('username').value = data.username;
+                document.getElementById('email').value = data.email;
+                document.getElementById('street').value = data.street || '';
+                document.getElementById('house_number').value = data.house_number || '';
+                document.getElementById('zip').value = data.zip || '';
+                document.getElementById('city').value = data.city || '';
+            }
+        };
+
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            statusMsg.innerText = "";
+            pass.classList.remove('error');
+            passConfirm.classList.remove('error');
+
+            // Passwort-Check
+            if (pass.value !== passConfirm.value) {
+                passConfirm.classList.add('error');
+                statusMsg.innerText = "Die Passwörter stimmen nicht überein.";
+                statusMsg.style.color = "var(--error-color)";
+                return;
+            }
+
+            // Daten sammeln
+            const userData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: pass.value, // In einem echten Shop würde man das verschlüsseln
+                street: document.getElementById('street').value,
+                house_number: document.getElementById('house_number').value,
+                zip: document.getElementById('zip').value,
+                city: document.getElementById('city').value
+            };
+
+            // Speichern
+            localStorage.setItem('ao_user_data', JSON.stringify(userData));
+
+            statusMsg.innerText = "Profil erfolgreich gespeichert.";
+            statusMsg.style.color = "var(--success-color)";
+            
+            // Felder nach kurzer Zeit wieder normal färben
+            setTimeout(() => { statusMsg.innerText = ""; }, 4000);
+        };
+    </script>
+</body>
+</html>
