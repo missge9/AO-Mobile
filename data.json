@@ -23,6 +23,21 @@
           {"name": "Revendo Glass iPhone 12 Mini Clear", "price": "25", "img": "https://via.placeholder.com/40"},
           {"name": "Revendo Case Everyday Weiss", "price": "29", "img": "https://via.placeholder.com/40"}
         ]
+      },
+      { 
+        "id": "iphone15pro",
+        "name": "iPhone 15 Pro Max . Titan Natur", 
+        "price": "598", 
+        "oldPrice": "664",
+        "hasDiscount": true,
+        "discount": "10%",
+        "img": "images/1.png",
+        "opticalConditions": ["Sehr gut", "Wie neu"],
+        "batteryConditions": ["Gebraucht", "Neu"],
+        "storageOptions": ["256 GB", "512 GB"],
+        "colors": [{"name": "Titan", "hex": "#444"}],
+        "warranties": ["1 Jahr", "2 Jahre"],
+        "accessories": []
       }
     ]
   },

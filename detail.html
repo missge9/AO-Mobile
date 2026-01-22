@@ -3,85 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AO Mobile | Shop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Produktdetails | AO Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-color: #007bff; --text-color: #333; --bg-color: #f4f4f4; --card-bg: #ffffff; --price-color: #ea4335; --green-color: #00c853; }
+        :root { 
+            --primary-color: #007bff; 
+            --primary-gradient: linear-gradient(135deg, #007bff, #00d2ff);
+            --green-btn: #4caf50; 
+            --text-color: #333; 
+            --bg-color: #f9f9f9; 
+            --price-color: #ea4335; 
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; padding-bottom: 50px; }
-        header { height: 80px; background: #121212; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .logo { font-size: 24px; font-weight: 600; background: linear-gradient(135deg, #007bff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        h1 { text-align: center; margin-bottom: 40px; }
-        .back-btn { display: none; padding: 10px 20px; background: #fff; border: 1px solid #ddd; border-radius: 30px; cursor: pointer; margin-bottom: 20px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-        .card { background: var(--card-bg); border-radius: 16px; padding: 20px; cursor: pointer; position: relative; display: flex; flex-direction: column; }
-        .badges-top { display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px; }
-        .discount-badge { background: var(--price-color); color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; }
-        .card-image { width: 100%; height: 200px; object-fit: contain; margin: 20px 0; }
-        .price-current { color: var(--price-color); font-weight: 700; font-size: 20px; }
-        .card-title { font-weight: 700; font-size: 18px; margin-top: 10px; }
-        .brand-card { background: white; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .brand-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 110px; padding-bottom: 100px; }
+        
+        header { 
+            height: 80px; background: #121212; color: white; 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; 
+        }
+        .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
+        .menu-icon, .icon-btn { cursor: pointer; width: 28px; height: 28px; }
+        .logo { font-size: 24px; font-weight: 600; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .icon-btn svg, .menu-icon svg { fill: white; width: 100%; height: 100%; }
+
+        #dropdown-menu {
+            position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
+            background: #1a1a1a; padding-top: 100px; transform: translateX(-100%); 
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 999;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+        #dropdown-menu.open { transform: translateX(0); }
+        #dropdown-menu a {
+            display: block; padding: 20px 30px; color: #ccc; text-decoration: none;
+            font-size: 18px; border-left: 3px solid transparent; transition: all 0.3s;
+        }
+        #dropdown-menu a:hover { background-color: #252525; color: white; border-left: 3px solid var(--primary-color); padding-left: 40px; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+        .back-btn { display: inline-block; padding: 10px 25px; background: #fff; border: 1px solid #ddd; border-radius: 30px; text-decoration: none; color: #333; font-size: 14px; margin-bottom: 30px; }
+        
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        @media (max-width: 850px) { .detail-grid { grid-template-columns: 1fr; } }
+        
+        .product-image-card { background: white; border-radius: 20px; padding: 30px; text-align: center; }
+        #main-img { max-width: 100%; max-height: 450px; object-fit: contain; }
+        
+        .option-group { margin-bottom: 30px; }
+        .option-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+        .pill-container { display: flex; flex-wrap: wrap; gap: 10px; }
+        .pill { padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; background: white; cursor: pointer; font-size: 14px; }
+        .pill.active { border: 2px solid #333; font-weight: 600; }
+        
+        .color-container { display: flex; gap: 15px; }
+        .color-circle { width: 35px; height: 35px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; position: relative; }
+        .color-circle.active::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border: 2px solid #333; border-radius: 50%; }
+        
+        .price-main { font-size: 36px; font-weight: 600; color: var(--price-color); }
+        .price-old { font-size: 20px; text-decoration: line-through; color: #999; margin-left: 15px; }
+        .discount-badge { font-size: 18px; font-weight: 600; color: var(--price-color); margin-left: 10px; }
+        
+        .accessory-box { background: white; border-radius: 16px; padding: 20px; border: 1px solid #eee; margin-top: 15px; }
+        .acc-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f5f5f5; }
+        .sticky-cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--green-btn); color: white; height: 70px; display: flex; justify-content: center; align-items: center; font-size: 18px; font-weight: 600; cursor: pointer; z-index: 1100; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <header><div class="logo">AO Mobile</div></header>
-    <div class="container">
-        <button id="back-btn" class="back-btn" onclick="showBrands()">Zurück zur Übersicht</button>
-        <h1 id="page-title">Wähle eine Kategorie</h1>
-        <div id="grid-container" class="grid"></div>
+    <header>
+        <div class="header-left">
+            <div class="menu-icon" onclick="toggleMenu()">
+                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+            <div class="logo">AO Mobile</div>
+        </div>
+        <div class="header-right">
+            <div class="icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </div>
+            <div class="icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
+        </div>
+    </header>
+
+    <div id="dropdown-menu">
+        <a href="index.html#buy" onclick="toggleMenu()">Handy kaufen</a>
+        <a href="index.html#sell" onclick="toggleMenu()">Handy verkaufen</a>
+        <a href="#" onclick="toggleMenu()">Warenkorb</a>
+        <a href="#" onclick="toggleMenu()">Profil</a>
     </div>
+
+    <div class="container">
+        <a href="shop.html" id="back-link" class="back-btn">← Zurück</a>
+        <div class="detail-grid">
+            <div class="product-image-card"><img id="main-img" src=""></div>
+            <div class="product-info">
+                <h1 id="product-name" style="font-size:32px; margin-bottom:25px;"></h1>
+                <div class="option-group"><div class="option-title">Optischer Zustand ⓘ</div><div id="optical-list" class="pill-container"></div></div>
+                <div class="option-group"><div class="option-title">Akkuzustand ⓘ</div><div id="battery-list" class="pill-container"></div></div>
+                <div class="option-group"><div class="option-title">Speicher</div><div id="storage-list" class="pill-container"></div></div>
+                <div class="option-group"><div class="option-title">Farbe</div><div id="color-list" class="color-container"></div></div>
+                <div class="option-group"><div class="option-title">Garantie</div><div id="warranty-list" class="pill-container"></div></div>
+                <div class="price-section" style="border-top: 1px solid #eee; padding-top: 25px;">
+                    <span id="price-val" class="price-main"></span><span id="price-old" class="price-old"></span><span id="discount-val" class="discount-badge"></span>
+                    <div style="font-size:12px; color:#777; margin-top:10px;">inkl. MwSt. . <span style="text-decoration:underline; color:var(--green-btn);">Versand</span> wird beim Checkout berechnet</div>
+                </div>
+                <div class="option-group" style="margin-top:40px;"><div class="option-title">Passendes Zubehör</div><div id="accessory-list" class="accessory-box"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sticky-cart-bar">In den Warenkorb legen</div>
+
     <script>
-        const gridContainer = document.getElementById('grid-container');
-        const pageTitle = document.getElementById('page-title');
-        const backBtn = document.getElementById('back-btn');
-        let shopData = {};
+        const productId = new URLSearchParams(window.location.search).get('id');
 
-        fetch('data.json').then(r => r.json()).then(data => { shopData = data; showBrands(); });
+        function toggleMenu() {
+            document.getElementById("dropdown-menu").classList.toggle("open");
+        }
 
-        function showBrands() {
-            gridContainer.innerHTML = ''; pageTitle.innerText = "Wähle eine Kategorie"; backBtn.style.display = "none";
-            for (let brand in shopData) {
-                const card = document.createElement('div'); card.className = 'brand-card';
-                card.onclick = () => showModels(brand);
-                card.innerHTML = `<img src="${shopData[brand].logo}" class="brand-img"><div>${brand}</div>`;
-                gridContainer.appendChild(card);
+        fetch('data.json?v=' + new Date().getTime()).then(r => r.json()).then(data => {
+            let p = null, brandOfProduct = "";
+            for (let b in data) { let found = data[b].products.find(x => x.id === productId); if (found) { p = found; brandOfProduct = b; break; } }
+            if (p) {
+                document.getElementById('back-link').href = `shop.html?brand=${brandOfProduct}`;
+                document.getElementById('product-name').innerText = p.name;
+                document.getElementById('main-img').src = p.img;
+                document.getElementById('price-val').innerText = p.price + " CHF";
+                document.getElementById('price-old').innerText = p.oldPrice ? p.oldPrice + " CHF" : "";
+                document.getElementById('discount-val').innerText = p.hasDiscount ? "-" + p.discount : "";
+                
+                const renderPills = (id, items) => {
+                    const el = document.getElementById(id); el.innerHTML = '';
+                    items.forEach((item, i) => {
+                        const s = document.createElement('span'); s.className = 'pill' + (i === 0 ? ' active' : ''); s.innerText = item;
+                        s.onclick = () => { el.querySelectorAll('.pill').forEach(b => b.classList.remove('active')); s.classList.add('active'); };
+                        el.appendChild(s);
+                    });
+                };
+                renderPills('optical-list', p.opticalConditions); renderPills('battery-list', p.batteryConditions);
+                renderPills('storage-list', p.storageOptions); renderPills('warranty-list', p.warranties);
+                
+                const colorContainer = document.getElementById('color-list'); colorContainer.innerHTML = '';
+                p.colors.forEach((c, i) => {
+                    const d = document.createElement('div'); d.className = 'color-circle' + (i === 0 ? ' active' : ''); d.style.background = c.hex;
+                    d.onclick = () => { colorContainer.querySelectorAll('.color-circle').forEach(circle => circle.classList.remove('active')); d.classList.add('active'); };
+                    colorContainer.appendChild(d);
+                });
+                
+                const accList = document.getElementById('accessory-list'); accList.innerHTML = '';
+                p.accessories.forEach(acc => {
+                    const div = document.createElement('div'); div.className = 'acc-item';
+                    div.innerHTML = `<img src="${acc.img}" style="width:45px; margin-right:20px;"><div style="flex-grow:1;"><div style="font-weight:600; color:var(--price-color);">${acc.price} CHF</div><div style="font-size:14px;">${acc.name}</div></div>`;
+                    accList.appendChild(div);
+                });
             }
-        }
-
-        function showModels(brand) {
-            // Container leeren und Titel anpassen
-            gridContainer.innerHTML = ''; 
-            pageTitle.innerText = brand; 
-            
-            // Zurück-Button anzeigen (erscheint im Container unter dem Header)
-            backBtn.style.display = "inline-block";
-
-            shopData[brand].products.forEach(model => {
-                const card = document.createElement('div'); 
-                card.className = 'card';
-                card.onclick = () => window.location.href = 'detail.html?id=' + model.id;
-
-                card.innerHTML = `
-                    <div class="badges-top">
-                        ${model.hasDiscount ? `<div class="discount-badge">Bis zu ${model.discount} Rabatt</div>` : '<div></div>'}
-                        <div class="check-badge">
-                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        </div>
-                    </div>
-                    <img src="${model.img}" class="card-image">
-                    <div class="price-row">
-                        <span class="price-current">Von ${model.price} CHF</span>
-                    </div>
-                    <div class="card-title">${model.name}</div>
-                `;
-
-                // WICHTIG: Das Element muss dem Grid hinzugefügt werden
-                gridContainer.appendChild(card);
-            });
-        }
+        });
     </script>
 </body>
 </html>
