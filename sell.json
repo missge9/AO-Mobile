@@ -2,15 +2,10 @@
   "Apple": {
     "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
     "products": [
-      {
-  "Apple": {
-    "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
-    "products": [
       { 
         "id": "iphone12mini",
         "name": "iPhone 12 mini", 
         "baseSellPrice": 150,
-        "img": "images/1.png",
         "opticalConditions": [
           {"name": "Starke Gebrauchsspuren", "price": -30},
           {"name": "Gebraucht", "price": 0},
@@ -25,24 +20,29 @@
           {"name": "64 GB", "price": -15},
           {"name": "128 GB", "price": 0},
           {"name": "256 GB", "price": 30}
-        ],
-        "colors": [
-          {"name": "Schwarz", "hex": "#000000"},
-          {"name": "Blau", "hex": "#1c3959"},
-          {"name": "Weiss", "hex": "#ffffff"}
         ]
       }
-    ]
-  }
-}
     ]
   },
   "Samsung": {
     "logo": "https://cdn-icons-png.flaticon.com/512/5969/5969240.png",
-    "products": []
-  },
-  "Zubehör": {
-    "logo": "https://cdn-icons-png.flaticon.com/512/3081/3081648.png",
-    "products": []
+    "products": [
+      { 
+        "id": "s24ultra",
+        "name": "Galaxy S24 Ultra", 
+        "baseSellPrice": 450,
+        "opticalConditions": [
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Wie neu", "price": 50}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht", "price": 0}
+        ],
+        "storageOptions": [
+          {"name": "256 GB", "price": 0},
+          {"name": "512 GB", "price": 60}
+        ]
+      }
+    ]
   }
 }

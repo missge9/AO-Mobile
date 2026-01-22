@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handy verkaufen | AO Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-color: #007bff; 
+            --primary-gradient: linear-gradient(135deg, #007bff, #00d2ff);
+            --text-color: #333; 
+            --bg-color: #f4f4f4; 
+            --price-color: #ea4335; 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; padding-bottom: 50px; }
+        header { height: 80px; background: #121212; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: 600; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .wizard-container { background: white; border-radius: 24px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); min-height: 400px; }
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; }
+        .wizard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .wizard-card { background: #f9f9f9; padding: 20px; border-radius: 16px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+        .wizard-card:hover { border-color: var(--primary-color); background: #f0f0f0; }
+        .wizard-card img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 10px; }
+        .pill-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; margin-bottom: 25px; }
+        .pill { padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; background: white; cursor: pointer; font-size: 14px; }
+        .pill.active { border: 2px solid #333; font-weight: 600; background: #f0f0f0; }
+        .btn-full { display: block; width: 100%; padding: 15px; background: var(--primary-gradient); color: white; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; margin-top: 20px; text-transform: uppercase; }
+        @media (max-width: 600px) { .wizard-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header><a href="index.html" class="logo">AO Mobile</a></header>
+    <div class="container">
+        <div class="wizard-container">
+            <div class="wizard-step active" id="step-brand">
+                <h2>Welche Marke hat dein Handy?</h2>
+                <div id="brand-grid" class="wizard-grid"></div>
+            </div>
+            <div class="wizard-step" id="step-model">
+                <h2>Welches Modell ist es?</h2>
+                <div id="model-grid" class="wizard-grid"></div>
+            </div>
+            <div class="wizard-step" id="step-specs">
+                <h2 id="spec-title">Geräte Details</h2>
+                <div class="option-group">
+                    <p style="font-weight:600;">Speicherplatz</p>
+                    <div id="storage-list" class="pill-container"></div>
+                </div>
+                <div class="option-group">
+                    <p style="font-weight:600;">Optischer Zustand</p>
+                    <div id="condition-list" class="pill-container"></div>
+                </div>
+                <div class="option-group">
+                    <p style="font-weight:600;">Akkuzustand</p>
+                    <div id="battery-list" class="pill-container"></div>
+                </div>
+                <button class="btn-full" onclick="calculateValue()">Wert berechnen</button>
+            </div>
+            <div class="wizard-step" id="step-result">
+                <h2>Dein Angebot</h2>
+                <div style="text-align: center; margin-top: 30px; padding: 30px; background: #f0f7ff; border-radius: 20px;">
+                    <div id="final-price" style="font-size: 48px; font-weight: 700; color: var(--primary-color);">0 CHF</div>
+                    <p>Voraussichtlicher Ankaufspreis</p>
+                </div>
+                <button class="btn-full" onclick="location.href='index.html'">Zurück zum Start</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        let sellData = {};
+        let selectedProduct = null;
+
+        fetch('sell.json?v=' + new Date().getTime()).then(r => r.json()).then(data => {
+            sellData = data;
+            const grid = document.getElementById('brand-grid');
+            for (let brand in sellData) {
+                const div = document.createElement('div');
+                div.className = 'wizard-card';
+                div.onclick = () => renderModels(brand);
+                div.innerHTML = `<img src="${sellData[brand].logo}"><div>${brand}</div>`;
+                grid.appendChild(div);
+            }
+        });
+
+        function renderModels(brand) {
+            const grid = document.getElementById('model-grid');
+            grid.innerHTML = '';
+            sellData[brand].products.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'wizard-card';
+                div.onclick = () => renderSpecs(p);
+                div.innerHTML = `<div>${p.name}</div>`;
+                grid.appendChild(div);
+            });
+            showStep('step-model');
+        }
+
+        function renderSpecs(p) {
+            selectedProduct = p;
+            document.getElementById('spec-title').innerText = p.name + " Details";
+            const renderPills = (id, items) => {
+                const el = document.getElementById(id); el.innerHTML = '';
+                items.forEach((item, i) => {
+                    const s = document.createElement('span'); s.className = 'pill' + (i === 0 ? ' active' : '');
+                    s.innerText = item.name; s.setAttribute('data-price', item.price);
+                    s.onclick = () => { el.querySelectorAll('.pill').forEach(b => b.classList.remove('active')); s.classList.add('active'); };
+                    el.appendChild(s);
+                });
+            };
+            renderPills('storage-list', p.storageOptions);
+            renderPills('condition-list', p.opticalConditions);
+            renderPills('battery-list', p.batteryConditions);
+            showStep('step-specs');
+        }
+
+        function calculateValue() {
+            let total = selectedProduct.baseSellPrice;
+            document.querySelectorAll('.pill.active').forEach(pill => {
+                total += parseFloat(pill.getAttribute('data-price') || 0);
+            });
+            document.getElementById('final-price').innerText = total + " CHF";
+            showStep('step-result');
+        }
+
+        function showStep(id) {
+            document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+    </script>
+</body>
+</html>
