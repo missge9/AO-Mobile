@@ -23,58 +23,15 @@
           {"name": "Revendo Glass iPhone 12 Mini Clear", "price": "25", "img": "https://via.placeholder.com/40"},
           {"name": "Revendo Case Everyday Weiss", "price": "29", "img": "https://via.placeholder.com/40"}
         ]
-      },
-      { 
-        "id": "iphone15pro",
-        "name": "iPhone 15 Pro Max . Titan Natur", 
-        "price": "598", 
-        "oldPrice": "664",
-        "hasDiscount": true,
-        "discount": "10%",
-        "img": "images/1.png",
-        "opticalConditions": ["Sehr gut", "Wie neu"],
-        "batteryConditions": ["Gebraucht", "Neu"],
-        "storageOptions": ["256 GB", "512 GB"],
-        "colors": [{"name": "Titan", "hex": "#444"}],
-        "warranties": ["1 Jahr", "2 Jahre"],
-        "accessories": []
       }
     ]
   },
   "Samsung": {
     "logo": "https://cdn-icons-png.flaticon.com/512/5969/5969240.png",
-    "products": [
-      { 
-        "id": "s24ultra",
-        "name": "Galaxy S24 Ultra", 
-        "price": "899", 
-        "hasDiscount": false,
-        "img": "images/1.png",
-        "opticalConditions": ["Neu"],
-        "batteryConditions": ["Neu"],
-        "storageOptions": ["256 GB", "512 GB"],
-        "colors": [{"name": "Titan", "hex": "#444"}],
-        "warranties": ["2 Jahre"],
-        "accessories": []
-      }
-    ]
+    "products": []
   },
   "Zubehör": {
     "logo": "https://cdn-icons-png.flaticon.com/512/3081/3081648.png",
-    "products": [
-      {
-        "id": "charger",
-        "name": "20W USB.C Ladegerät",
-        "price": "15",
-        "hasDiscount": false,
-        "img": "https://via.placeholder.com/200",
-        "opticalConditions": ["Neu"],
-        "batteryConditions": [],
-        "storageOptions": [],
-        "colors": [{"name": "Weiss", "hex": "#fff"}],
-        "warranties": ["2 Jahre"],
-        "accessories": []
-      }
-    ]
+    "products": []
   }
 }

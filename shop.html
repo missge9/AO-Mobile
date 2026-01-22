@@ -6,57 +6,22 @@
     <title>AO Mobile | Shop</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --primary-color: #007bff; 
-            --primary-gradient: linear-gradient(135deg, #007bff, #00d2ff);
-            --text-color: #333; 
-            --bg-color: #f4f4f4; 
-            --card-bg: #ffffff; 
-            --price-color: #ea4335; 
-            --green-color: #00c853; 
-        }
+        :root { --primary-color: #007bff; --text-color: #333; --bg-color: #f4f4f4; --card-bg: #ffffff; --price-color: #ea4335; --green-color: #00c853; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; padding-bottom: 50px; }
-        
-        header { 
-            height: 80px; background: #121212; color: white; 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; 
-        }
+        header { height: 80px; background: #121212; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
         .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
-        .menu-icon, .icon-btn { cursor: pointer; width: 28px; height: 28px; }
-        .logo { font-size: 24px; font-weight: 600; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .icon-btn svg, .menu-icon svg { fill: white; width: 100%; height: 100%; }
-
-        #dropdown-menu {
-            position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
-            background: #1a1a1a; padding-top: 100px; transform: translateX(-100%); 
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); z-index: 999;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-        }
+        .logo { font-size: 24px; font-weight: 600; background: linear-gradient(135deg, #007bff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .icon-btn svg, .menu-icon svg { fill: white; width: 28px; height: 28px; cursor: pointer; }
+        #dropdown-menu { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: #1a1a1a; padding-top: 100px; transform: translateX(-100%); transition: 0.4s; z-index: 999; }
         #dropdown-menu.open { transform: translateX(0); }
-        #dropdown-menu a {
-            display: block; padding: 20px 30px; color: #ccc; text-decoration: none;
-            font-size: 18px; border-left: 3px solid transparent; transition: all 0.3s;
-        }
-        #dropdown-menu a:hover { background-color: #252525; color: white; border-left: 3px solid var(--primary-color); padding-left: 40px; }
-
+        #dropdown-menu a { display: block; padding: 20px 30px; color: #ccc; text-decoration: none; font-size: 18px; }
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        h1 { text-align: center; margin-bottom: 40px; font-weight: 600; }
-        .back-btn { display: none; padding: 10px 20px; background: #fff; border: 1px solid #ddd; border-radius: 30px; cursor: pointer; margin-bottom: 20px; font-size: 14px; }
-        
+        .back-btn { display: none; padding: 10px 20px; background: #fff; border: 1px solid #ddd; border-radius: 30px; cursor: pointer; margin-bottom: 20px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-        
-        .card { background: var(--card-bg); border-radius: 16px; padding: 20px; cursor: pointer; position: relative; display: flex; flex-direction: column; }
-        .badges-top { display: flex; justify-content: space-between; width: 100%; }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 20px; cursor: pointer; display: flex; flex-direction: column; }
         .discount-badge { background: var(--price-color); color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; }
-        .check-badge { width: 24px; height: 24px; background: var(--green-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .check-badge svg { fill: white; width: 14px; }
         .card-image { width: 100%; height: 200px; object-fit: contain; margin: 20px 0; }
-        .price-current { color: var(--price-color); font-weight: 600; font-size: 20px; }
-        .card-title { font-weight: 600; font-size: 18px; margin-top: 10px; }
-        
         .brand-card { background: white; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .brand-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; }
     </style>
@@ -64,18 +29,12 @@
 <body>
     <header>
         <div class="header-left">
-            <div class="menu-icon" onclick="toggleMenu()">
-                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-            </div>
+            <div class="menu-icon" onclick="toggleMenu()"><svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></div>
             <div class="logo">AO Mobile</div>
         </div>
         <div class="header-right">
-            <div class="icon-btn">
-                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            </div>
-            <div class="icon-btn">
-                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            </div>
+            <div class="icon-btn"><svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg></div>
+            <div class="icon-btn"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
         </div>
     </header>
 
@@ -98,17 +57,13 @@
         const backBtn = document.getElementById('back-btn');
         let shopData = {};
 
-        function toggleMenu() {
-            document.getElementById("dropdown-menu").classList.toggle("open");
-        }
+        function toggleMenu() { document.getElementById("dropdown-menu").classList.toggle("open"); }
 
-        fetch('data.json?v=' + new Date().getTime())
-            .then(r => r.json())
-            .then(data => {
-                shopData = data;
-                const brandParam = new URLSearchParams(window.location.search).get('brand');
-                if (brandParam && shopData[brandParam]) { showModels(brandParam); } else { showBrands(); }
-            });
+        fetch('data.json?v=' + new Date().getTime()).then(r => r.json()).then(data => {
+            shopData = data;
+            const brandParam = new URLSearchParams(window.location.search).get('brand');
+            if (brandParam && shopData[brandParam]) { showModels(brandParam); } else { showBrands(); }
+        });
 
         function showBrands() {
             gridContainer.innerHTML = ''; pageTitle.innerText = "Wähle eine Kategorie"; backBtn.style.display = "none";
@@ -126,13 +81,13 @@
                 const card = document.createElement('div'); card.className = 'card';
                 card.onclick = () => window.location.href = 'detail.html?id=' + model.id;
                 card.innerHTML = `
-                    <div class="badges-top">
-                        ${model.hasDiscount ? `<div class="discount-badge">Bis zu ${model.discount} Rabatt</div>` : '<div></div>'}
-                        <div class="check-badge"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                    <div style="display:flex; justify-content:space-between;">
+                        ${model.hasDiscount ? `<div class="discount-badge">-${model.discount}</div>` : '<div></div>'}
+                        <div style="width:24px; height:24px; background:var(--green-color); border-radius:50%; display:flex; align-items:center; justify-content:center;"><svg fill="white" width="14" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
                     </div>
                     <img src="${model.img}" class="card-image">
-                    <div class="price-current">Von ${model.price} CHF</div>
-                    <div class="card-title">${model.name}</div>`;
+                    <div style="color:var(--price-color); font-weight:600;">Von ${model.price} CHF</div>
+                    <div style="font-weight:600; font-size:18px; margin-top:10px;">${model.name}</div>`;
                 gridContainer.appendChild(card);
             });
         }
