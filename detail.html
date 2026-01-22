@@ -5,120 +5,441 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produktdetails | AO Mobile</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --primary-color: #007bff; --green-btn: #4caf50; --text-color: #333; --price-color: #ea4335; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: #f9f9f9; color: var(--text-color); padding-top: 100px; padding-bottom: 100px; }
-        header { height: 80px; background: #121212; color: white; display: flex; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .logo { font-size: 24px; font-weight: 600; background: linear-gradient(135deg, #007bff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-        .back-btn { display: inline-block; padding: 8px 20px; background: white; border: 1px solid #ddd; border-radius: 20px; text-decoration: none; color: #333; font-size: 14px; margin-bottom: 20px; }
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        @media (max-width: 800px) { .detail-grid { grid-template-columns: 1fr; } }
-        .option-group { margin-bottom: 25px; }
-        .option-title { font-weight: 600; margin-bottom: 10px; }
-        .pill { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; margin-right: 8px; margin-bottom: 8px; display: inline-block; }
-        .pill.active { border: 2px solid #333; font-weight: 600; }
-        .color-circle { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; display: inline-block; margin-right: 10px; cursor: pointer; }
-        .price-big { font-size: 32px; font-weight: 700; color: var(--price-color); }
-        .price-old { text-decoration: line-through; color: #999; margin-left: 10px; }
-        .discount { color: var(--price-color); font-weight: 600; margin-left: 10px; }
-        .accessory-box { background: white; border-radius: 12px; padding: 15px; border: 1px solid #eee; margin-top: 20px; }
-        .acc-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .sticky-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--green-btn); color: white; padding: 15px; text-align: center; font-weight: 700; cursor: pointer; z-index: 1000; }
+        /* --- GRUNDEINSTELLUNGEN --- */
+        :root {
+            --primary-color: #007bff;
+            --green-btn: #4caf50;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --price-color: #ea4335;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-top: 110px; /* Platz fuer fixierten Header + Abstand */
+            padding-bottom: 100px; /* Platz fuer Sticky Cart Bar */
+        }
+
+        /* --- HEADER --- */
+        header {
+            height: 80px;
+            background: #121212;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #007bff, #00d2ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- CONTAINER & NAVIGATION --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background-color: #ffffff;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+        }
+
+        /* --- PRODUKT GRID --- */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        @media (max-width: 850px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+        }
+
+        /* --- LINKE SEITE: BILD --- */
+        .product-image-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        #main-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+        /* --- RECHTE SEITE: INFOS --- */
+        .product-info {
+            padding-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #111;
+            line-height: 1.2;
+        }
+
+        /* OPTIONEN (Pills) */
+        .option-group {
+            margin-bottom: 30px;
+        }
+
+        .option-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        .pill-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pill {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            color: #555;
+        }
+
+        .pill:hover {
+            border-color: #bbb;
+        }
+
+        .pill.active {
+            border: 2px solid #333;
+            color: #000;
+            font-weight: 600;
+            background-color: #f8f8f8;
+        }
+
+        /* FARBAUSWAHL */
+        .color-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        .color-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.2s ease;
+        }
+
+        .color-circle:hover {
+            transform: scale(1.1);
+        }
+
+        .color-circle.active::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid #333;
+            border-radius: 50%;
+        }
+
+        /* PREIS-SEKTION */
+        .price-section {
+            margin-top: 40px;
+            padding: 25px 0;
+            border-top: 1px solid #eee;
+        }
+
+        .price-main {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--price-color);
+        }
+
+        .price-old {
+            font-size: 20px;
+            text-decoration: line-through;
+            color: #999;
+            margin-left: 15px;
+        }
+
+        .discount-badge {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--price-color);
+            margin-left: 10px;
+        }
+
+        .price-info {
+            font-size: 12px;
+            color: #777;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .price-info span {
+            text-decoration: underline;
+            cursor: pointer;
+            color: var(--green-btn);
+        }
+
+        /* ZUBEHÖR */
+        .accessory-box {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #eee;
+            margin-top: 15px;
+        }
+
+        .acc-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .acc-item:last-child {
+            border-bottom: none;
+        }
+
+        .acc-image {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            margin-right: 20px;
+        }
+
+        .acc-details {
+            flex-grow: 1;
+        }
+
+        .acc-price {
+            font-weight: 700;
+            color: var(--price-color);
+            font-size: 14px;
+        }
+
+        .acc-name {
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* STICKY WARENKORB BAR */
+        .sticky-cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--green-btn);
+            color: white;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 1100;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
+
 <body>
-    <header><div class="logo">AO Mobile</div></header>
+
+    <header>
+        <div class="logo">AO Mobile</div>
+    </header>
+
     <div class="container">
         <a href="shop.html" class="back-btn">← Zurück zur Übersicht</a>
+
         <div class="detail-grid">
-            <div class="image-section"><img id="main-img" src="" style="width:100%; max-height:450px; object-fit:contain;"></div>
-            <div class="info-section">
-                <h1 id="product-name" style="margin-bottom:20px;"></h1>
-                
+            <div class="product-image-card">
+                <img id="main-img" src="" alt="Produktbild">
+            </div>
+
+            <div class="product-info">
+                <h1 id="product-name">Produkt wird geladen...</h1>
+
                 <div class="option-group">
                     <div class="option-title">Optischer Zustand ⓘ</div>
-                    <div id="optical-list"></div>
+                    <div id="optical-list" class="pill-container"></div>
                 </div>
 
                 <div class="option-group">
                     <div class="option-title">Akkuzustand ⓘ</div>
-                    <div id="battery-list"></div>
+                    <div id="battery-list" class="pill-container"></div>
                 </div>
 
                 <div class="option-group">
                     <div class="option-title">Speicher</div>
-                    <div id="storage-list"></div>
+                    <div id="storage-list" class="pill-container"></div>
                 </div>
 
                 <div class="option-group">
                     <div class="option-title">Farbe</div>
-                    <div id="color-list"></div>
+                    <div id="color-list" class="color-container"></div>
                 </div>
 
                 <div class="option-group">
                     <div class="option-title">Garantie</div>
-                    <div id="warranty-list"></div>
+                    <div id="warranty-list" class="pill-container"></div>
                 </div>
 
                 <div class="price-section">
-                    <span class="price-big" id="price-val"></span>
-                    <span class="price-old" id="price-old"></span>
-                    <span class="discount" id="discount-val"></span>
-                    <div style="font-size:12px; color:#666; margin-top:5px;">inkl. MwSt. <span style="text-decoration:underline; cursor:pointer;">Versand</span> wird beim Checkout berechnet</div>
+                    <span id="price-val" class="price-main">0 CHF</span>
+                    <span id="price-old" class="price-old"></span>
+                    <span id="discount-val" class="discount-badge"></span>
+                    <div class="price-info">
+                        inkl. MwSt. . <span>Versand</span> wird beim Checkout berechnet
+                    </div>
                 </div>
 
-                <div class="option-title" style="margin-top:40px;">Passendes Zubehör</div>
-                <div class="accessory-box" id="accessory-list"></div>
+                <div class="option-group" style="margin-top: 40px;">
+                    <div class="option-title">Passendes Zubehör</div>
+                    <div id="accessory-list" class="accessory-box"></div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="sticky-bar">In den Warenkorb legen</div>
+
+    <div class="sticky-cart-bar">
+        In den Warenkorb legen
+    </div>
 
     <script>
         const productId = new URLSearchParams(window.location.search).get('id');
-        fetch('data.json').then(r => r.json()).then(data => {
-            let p = null;
-            for (let b in data) { p = data[b].products.find(x => x.id === productId) || p; }
-            if (p) {
-                document.getElementById('product-name').innerText = p.name;
-                document.getElementById('main-img').src = p.img;
-                document.getElementById('price-val').innerText = p.price + " CHF";
-                document.getElementById('price-old').innerText = p.oldPrice ? p.oldPrice + " CHF" : "";
-                document.getElementById('discount-val').innerText = p.hasDiscount ? "-" + p.discount : "";
 
-                const renderPills = (listId, items) => {
-                    const el = document.getElementById(listId);
-                    items.forEach((item, i) => {
-                        const s = document.createElement('span');
-                        s.className = 'pill' + (i === 0 ? ' active' : '');
-                        s.innerText = item;
-                        el.appendChild(s);
+        fetch('data.json?v=' + new Date().getTime())
+            .then(r => r.json())
+            .then(data => {
+                let p = null;
+                for (let b in data) { 
+                    p = data[b].products.find(x => x.id === productId) || p; 
+                }
+
+                if (p) {
+                    document.getElementById('product-name').innerText = p.name;
+                    document.getElementById('main-img').src = p.img;
+                    document.getElementById('price-val').innerText = p.price + " CHF";
+                    document.getElementById('price-old').innerText = p.oldPrice ? p.oldPrice + " CHF" : "";
+                    document.getElementById('discount-val').innerText = p.hasDiscount ? "-" + p.discount : "";
+
+                    // Hilfsfunktion zum Rendern der Pillen
+                    const renderPills = (listId, items) => {
+                        const el = document.getElementById(listId);
+                        el.innerHTML = '';
+                        items.forEach((item, i) => {
+                            const s = document.createElement('span');
+                            s.className = 'pill' + (i === 0 ? ' active' : '');
+                            s.innerText = item;
+                            s.onclick = () => {
+                                el.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
+                                s.classList.add('active');
+                            };
+                            el.appendChild(s);
+                        });
+                    };
+
+                    renderPills('optical-list', p.opticalConditions);
+                    renderPills('battery-list', p.batteryConditions);
+                    renderPills('storage-list', p.storageOptions);
+                    renderPills('warranty-list', p.warranties);
+
+                    // Farben rendern
+                    const colorContainer = document.getElementById('color-list');
+                    colorContainer.innerHTML = '';
+                    p.colors.forEach((c, i) => {
+                        const d = document.createElement('div');
+                        d.className = 'color-circle' + (i === 0 ? ' active' : '');
+                        d.style.background = c.hex;
+                        d.title = c.name;
+                        d.onclick = () => {
+                            colorContainer.querySelectorAll('.color-circle').forEach(circle => circle.classList.remove('active'));
+                            d.classList.add('active');
+                        };
+                        colorContainer.appendChild(d);
                     });
-                };
 
-                renderPills('optical-list', p.opticalConditions);
-                renderPills('battery-list', p.batteryConditions);
-                renderPills('storage-list', p.storageOptions);
-                renderPills('warranty-list', p.warranties);
-
-                p.colors.forEach((c, i) => {
-                    const d = document.createElement('div');
-                    d.className = 'color-circle';
-                    d.style.background = c.hex;
-                    if(i === 0) d.style.border = "2px solid #333";
-                    document.getElementById('color-list').appendChild(d);
-                });
-
-                p.accessories.forEach(acc => {
-                    const div = document.createElement('div');
-                    div.className = 'acc-item';
-                    div.innerHTML = `<img src="${acc.img}" width="40" style="margin-right:15px;"><div><div style="font-weight:600;">${acc.price} CHF</div><div style="font-size:13px;">${acc.name}</div></div>`;
-                    document.getElementById('accessory-list').appendChild(div);
-                });
-            }
-        });
+                    // Zubehör rendern
+                    const accList = document.getElementById('accessory-list');
+                    accList.innerHTML = '';
+                    p.accessories.forEach(acc => {
+                        const div = document.createElement('div');
+                        div.className = 'acc-item';
+                        div.innerHTML = `
+                            <img src="${acc.img}" class="acc-image">
+                            <div class="acc-details">
+                                <div class="acc-price">${acc.price} CHF</div>
+                                <div class="acc-name">${acc.name}</div>
+                            </div>
+                        `;
+                        accList.appendChild(div);
+                    });
+                } else {
+                    document.querySelector('.container').innerHTML = "<h1>Produkt wurde nicht gefunden.</h1>";
+                }
+            })
+            .catch(error => console.error('Fehler beim Laden der Produktdaten:', error));
     </script>
+
 </body>
 </html>
