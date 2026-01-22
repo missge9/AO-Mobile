@@ -2,28 +2,39 @@
   "Apple": {
     "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
     "products": [
+      {
+  "Apple": {
+    "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
+    "products": [
       { 
         "id": "iphone12mini",
-        "name": "iPhone 12 mini . Schwarz", 
-        "price": "200", 
-        "oldPrice": "212",
-        "hasDiscount": true,
-        "discount": "6%",
+        "name": "iPhone 12 mini", 
+        "baseSellPrice": 150,
         "img": "images/1.png",
-        "opticalConditions": ["Schnäppchen", "Gebraucht", "Sehr gut", "Wie neu", "Neu"],
-        "batteryConditions": ["Gebraucht", "Neu"],
-        "storageOptions": ["64 GB", "128 GB", "256 GB"],
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -30},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 20},
+          {"name": "Wie neu", "price": 40}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 15}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": -15},
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 30}
+        ],
         "colors": [
           {"name": "Schwarz", "hex": "#000000"},
           {"name": "Blau", "hex": "#1c3959"},
           {"name": "Weiss", "hex": "#ffffff"}
-        ],
-        "warranties": ["1 Jahr", "3 Jahre (+34.00 CHF)"],
-        "accessories": [
-          {"name": "Revendo Glass iPhone 12 Mini Clear", "price": "25", "img": "https://via.placeholder.com/40"},
-          {"name": "Revendo Case Everyday Weiss", "price": "29", "img": "https://via.placeholder.com/40"}
         ]
       }
+    ]
+  }
+}
     ]
   },
   "Samsung": {
