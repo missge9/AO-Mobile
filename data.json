@@ -4,31 +4,35 @@
     "products": [
       { 
         "id": "iphone12mini",
-        "name": "iPhone 12 mini - Schwarz", 
+        "name": "iPhone 12 mini . Schwarz", 
         "price": "200", 
         "oldPrice": "212",
         "storage": "128 GB",
         "network": "5G",
         "rating": 4.7,
         "reviews": 3,
+        "hasDiscount": true,
         "discount": "6%",
         "img": "images/1.png",
         "condition": "Gebraucht",
+        "availableConditions": ["Gebraucht", "Sehr gut"],
         "color": "Schwarz",
         "warranty": "1 Jahr"
       },
       { 
         "id": "iphone15pro",
-        "name": "iPhone 15 Pro Max - Titan Natur", 
+        "name": "iPhone 15 Pro Max . Titan Natur", 
         "price": "598", 
         "oldPrice": "664",
         "storage": "256 GB",
         "network": "5G",
         "rating": 4.1,
         "reviews": 7,
+        "hasDiscount": true,
         "discount": "10%",
         "img": "images/1.png",
         "condition": "Wie neu",
+        "availableConditions": ["Wie neu", "Neu"],
         "color": "Titan",
         "warranty": "1 Jahr"
       }
@@ -46,11 +50,29 @@
         "network": "5G",
         "rating": 4.9,
         "reviews": 12,
-        "discount": "18%",
+        "hasDiscount": false,
+        "discount": "0%",
         "img": "images/1.png",
         "condition": "Neu",
+        "availableConditions": ["Neu"],
         "color": "Grau",
         "warranty": "2 Jahre"
+      }
+    ]
+  },
+  "Zubehör": {
+    "logo": "https://cdn-icons-png.flaticon.com/512/3081/3081648.png",
+    "products": [
+      {
+        "id": "ladegeraet",
+        "name": "20W USB.C Ladegerät",
+        "price": "15",
+        "hasDiscount": false,
+        "img": "https://via.placeholder.com/200",
+        "condition": "Neu",
+        "availableConditions": ["Neu"],
+        "rating": 5.0,
+        "reviews": 10
       }
     ]
   }

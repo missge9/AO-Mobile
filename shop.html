@@ -5,336 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AO Mobile | Shop</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        /* --- GRUNDEINSTELLUNGEN --- */
-        :root {
-            --primary-color: #007bff;
-            --text-color: #333;
-            --bg-color: #f4f4f4; /* Leichter grauer Hintergrund wie im Bild */
-            --card-bg: #ffffff;
-            --price-color: #ea4335; /* Rot für den Preis */
-            --green-color: #00c853; /* Grün für Sterne/Check */
-        }
-
+        :root { --primary-color: #007bff; --text-color: #333; --bg-color: #f4f4f4; --card-bg: #ffffff; --price-color: #ea4335; --green-color: #00c853; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding-top: 100px;
-            padding-bottom: 50px;
-        }
-
-        /* --- HEADER --- */
-        header {
-            height: 80px;
-            background: #121212;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 25px;
-            position: fixed;
-            top: 0; width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
-        a.logo-link { text-decoration: none; }
-        .logo {
-            font-size: 24px; font-weight: 600; letter-spacing: 1px;
-            background: linear-gradient(135deg, #007bff, #00d2ff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .icon-btn svg { fill: white; width: 24px; height: 24px; cursor: pointer; }
-
-        /* --- SHOP CONTAINER --- */
-        .container {
-            max-width: 1000px; /* Etwas schmaler für den 2er Look */
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 { text-align: center; margin-bottom: 40px; font-weight: 600; color: #222; }
-
-        .back-btn {
-            display: none;
-            padding: 10px 20px;
-            background-color: #fff;
-            color: #333;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
-        .back-btn:hover { background-color: #f0f0f0; }
-
-        /* --- GRID SYSTEM (2 Kacheln) --- */
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* 2 Spalten! */
-            gap: 20px;
-        }
-
-        /* Auf Handy untereinander */
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; padding-bottom: 50px; }
+        header { height: 80px; background: #121212; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: 600; background: linear-gradient(135deg, #007bff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; margin-bottom: 40px; }
+        .back-btn { display: none; padding: 10px 20px; background: #fff; border: 1px solid #ddd; border-radius: 30px; cursor: pointer; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-
-        /* --- NEUES KACHEL DESIGN (PRODUKTKARTE) --- */
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-            cursor: pointer;
-            border: 1px solid transparent;
-            position: relative; /* Für Herz und Badges */
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start; /* Alles linksbündig */
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            border-color: #ddd;
-        }
-
-        /* Badges oben */
-        .badges-top {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 10px;
-            position: absolute;
-            top: 20px;
-            left: 0;
-            padding: 0 20px;
-            z-index: 5;
-        }
-        
-        .discount-badge {
-            background-color: var(--price-color);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .check-badge {
-            width: 24px; height: 24px;
-            background: var(--green-color);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .check-badge svg { fill: white; width: 14px; }
-
-        /* Bild */
-        .card-image {
-            width: 100%;
-            height: 220px; /* Feste Höhe */
-            object-fit: contain; /* Bild wird nicht verzerrt */
-            margin-top: 30px;
-            margin-bottom: 20px;
-        }
-
-        /* Chips (GB / 5G) */
-        .chips {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .chip {
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #555;
-        }
-
-        /* Preis Sektion */
-        .price-row { margin-bottom: 5px; }
-        .price-current {
-            color: var(--price-color);
-            font-size: 20px;
-            font-weight: 700;
-            margin-right: 8px;
-        }
-        .price-old {
-            color: #999;
-            text-decoration: line-through;
-            font-size: 14px;
-        }
-
-        /* Sterne */
-        .rating-row {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 10px;
-            color: var(--green-color);
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .rating-count { color: #777; font-weight: 400; }
-
-        /* Titel */
-        .card-title {
-            font-size: 18px; /* Grösserer Name */
-            font-weight: 700;
-            color: #222;
-            line-height: 1.3;
-            margin-bottom: 10px;
-        }
-
-        /* Herz unten rechts */
-        .heart-icon {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 24px;
-            height: 24px;
-            fill: none;
-            stroke: var(--green-color);
-            stroke-width: 2;
-        }
-
-        /* Marken Logo Kachel (für die erste Ansicht) */
-        .brand-card {
-            background: white; border-radius: 16px; padding: 30px;
-            display: flex; flex-direction: column; align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); cursor: pointer;
-            transition: 0.3s;
-        }
-        .brand-card:hover { transform: translateY(-5px); }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 20px; cursor: pointer; position: relative; display: flex; flex-direction: column; }
+        .badges-top { display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px; }
+        .discount-badge { background: var(--price-color); color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; }
+        .card-image { width: 100%; height: 200px; object-fit: contain; margin: 20px 0; }
+        .price-current { color: var(--price-color); font-weight: 700; font-size: 20px; }
+        .card-title { font-weight: 700; font-size: 18px; margin-top: 10px; }
+        .brand-card { background: white; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
         .brand-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; }
-        .brand-name { font-weight: 600; font-size: 18px; }
-
     </style>
 </head>
 <body>
-
-    <header>
-        <div class="header-left">
-            <a href="index.html" class="logo-link"><div class="logo">AO Mobile</div></a>
-        </div>
-        <div class="header-right">
-            <div class="icon-btn">
-                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            </div>
-        </div>
-    </header>
-
+    <header><div class="logo">AO Mobile</div></header>
     <div class="container">
-        <button id="back-btn" class="back-btn" onclick="showBrands()">← Zurück zu Marken</button>
-        <h1 id="page-title">Wähle eine Marke</h1>
-        
+        <button id="back-btn" class="back-btn" onclick="showBrands()">Zurück zur Übersicht</button>
+        <h1 id="page-title">Wähle eine Kategorie</h1>
         <div id="grid-container" class="grid"></div>
     </div>
-
     <script>
         const gridContainer = document.getElementById('grid-container');
         const pageTitle = document.getElementById('page-title');
         const backBtn = document.getElementById('back-btn');
-
         let shopData = {};
 
-        // 1. DATEN LADEN
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                shopData = data; 
-                showBrands();    
-            })
-            .catch(error => console.error('Fehler beim Laden der JSON:', error));
+        fetch('data.json').then(r => r.json()).then(data => { shopData = data; showBrands(); });
 
-        // 2. MARKEN ANZEIGEN
         function showBrands() {
-            gridContainer.innerHTML = ''; 
-            pageTitle.innerText = "Wähle eine Marke";
-            backBtn.style.display = "none";
-
+            gridContainer.innerHTML = ''; pageTitle.innerText = "Wähle eine Kategorie"; backBtn.style.display = "none";
             for (let brand in shopData) {
-                const card = document.createElement('div');
-                card.className = 'brand-card'; // Eigene Klasse für Marken
-                card.onclick = () => showModels(brand); 
-
-                const img = document.createElement('img');
-                img.src = shopData[brand].logo || 'https://via.placeholder.com/150';
-                img.className = 'brand-img';
-                
-                const title = document.createElement('div');
-                title.className = 'brand-name';
-                title.innerText = brand;
-
-                card.appendChild(img);
-                card.appendChild(title);
+                const card = document.createElement('div'); card.className = 'brand-card';
+                card.onclick = () => showModels(brand);
+                card.innerHTML = `<img src="${shopData[brand].logo}" class="brand-img"><div>${brand}</div>`;
                 gridContainer.appendChild(card);
             }
         }
 
-        // 3. MODELLE ANZEIGEN (Das neue Design)
         function showModels(brand) {
-            gridContainer.innerHTML = ''; 
-            pageTitle.innerText = brand + " Modelle";
-            backBtn.style.display = "inline-block";
-
-            const models = shopData[brand].products;
-
-            models.forEach(model => {
-                const card = document.createElement('div');
-                card.className = 'card';
+            gridContainer.innerHTML = ''; pageTitle.innerText = brand; backBtn.style.display = "inline-block";
+            shopData[brand].products.forEach(model => {
+                const card = document.createElement('div'); card.className = 'card';
                 card.onclick = () => window.location.href = 'detail.html?id=' + model.id;
-
-                // HTML Struktur genau wie im Bild
                 card.innerHTML = `
                     <div class="badges-top">
-                        ${model.discount ? `<div class="discount-badge">Bis zu ${model.discount} Rabatt</div>` : '<div></div>'}
-                        <div class="check-badge">
-                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                        </div>
+                        ${model.hasDiscount ? `<div class="discount-badge">-${model.discount}</div>` : '<div></div>'}
                     </div>
-
-                    <img src="${model.img}" class="card-image" onerror="this.src='https://via.placeholder.com/200?text=Phone'">
-                    
-                    <div class="chips">
-                        <span class="chip">${model.storage || '128 GB'}</span>
-                        <span class="chip">${model.network || '5G'}</span>
-                    </div>
-
-                    <div class="price-row">
-                        <span class="price-current">Von ${model.price} CHF</span>
-                        ${model.oldPrice ? `<span class="price-old">${model.oldPrice} CHF</span>` : ''}
-                    </div>
-
-                    <div class="rating-row">
-                        <div style="display:flex">
-                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                        </div>
-                        <span>${model.rating || '5.0'} (${model.reviews || 0})</span>
-                    </div>
-
-                    <div class="card-title">${model.name}</div>
-
-                    <svg class="heart-icon" viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
-                `;
-
+                    <img src="${model.img}" class="card-image">
+                    <div class="price-current">Von ${model.price} CHF</div>
+                    <div class="card-title">${model.name}</div>`;
                 gridContainer.appendChild(card);
             });
         }
     </script>
-
 </body>
 </html>

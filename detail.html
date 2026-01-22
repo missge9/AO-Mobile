@@ -5,332 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produktdetails | AO Mobile</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        /* --- GRUNDEINSTELLUNGEN --- */
-        :root {
-            --primary-color: #007bff;
-            --green-btn: #4caf50; /* Das Grün aus dem Screenshot */
-            --text-color: #333;
-            --bg-color: #ffffff;
-            --price-color: #ea4335;
-        }
-
+        :root { --primary-color: #007bff; --green-btn: #4caf50; --text-color: #333; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
-        body {
-            background-color: #f9f9f9;
-            color: var(--text-color);
-            padding-top: 100px;
-            padding-bottom: 100px;
-        }
-
-        /* --- HEADER (Identisch) --- */
-        header {
-            height: 80px; background: #121212; color: white;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000;
-        }
-        .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
-        a.logo-link { text-decoration: none; }
-        .logo {
-            font-size: 24px; font-weight: 600; letter-spacing: 1px;
-            background: linear-gradient(135deg, #007bff, #00d2ff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .icon-btn svg { fill: white; width: 24px; height: 24px; cursor: pointer; }
-
-        /* --- MAIN CONTAINER --- */
-        .detail-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Links Bild, Rechts Info */
-            gap: 40px;
-        }
-
-        /* Handy Ansicht: Alles untereinander */
-        @media (max-width: 800px) { .detail-container { grid-template-columns: 1fr; } }
-
-        /* --- LINKE SEITE: BILDER --- */
-        .image-gallery {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-
-        .main-image {
-            width: 80%;
-            max-height: 400px;
-            object-fit: contain;
-            margin-bottom: 20px;
-        }
-
-        .gallery-thumbs {
-            display: flex; justify-content: center; gap: 10px; margin-top: 20px;
-        }
-        .thumb {
-            width: 50px; height: 60px; border: 1px solid #ddd; border-radius: 8px;
-            object-fit: contain; padding: 5px; cursor: pointer;
-        }
-        .thumb:hover { border-color: var(--primary-color); }
-
-        .usage-banner {
-            background: #f0f0f0; border-radius: 8px; padding: 10px;
-            margin-top: 20px; display: flex; align-items: center; justify-content: space-between;
-            font-size: 14px; cursor: pointer;
-        }
-
-        /* --- RECHTE SEITE: INFOS --- */
-        .product-info { padding: 10px; }
-
-        .delivery-status {
-            color: #333; font-size: 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
-        }
-        .check-icon { color: var(--green-btn); width: 20px; }
-
-        h1 { font-size: 28px; line-height: 1.2; margin-bottom: 20px; }
-
-        /* OPTIONEN BOXEN (Zustand, Speicher, etc.) */
-        .option-group { margin-bottom: 25px; }
-        .option-title { font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        
-        .option-pills { display: flex; flex-wrap: wrap; gap: 10px; }
-        
-        .pill {
-            padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px;
-            background: white; cursor: pointer; font-size: 14px; transition: 0.2s;
-        }
+        body { background: #f9f9f9; padding-top: 100px; padding-bottom: 100px; }
+        header { height: 80px; background: #121212; color: white; display: flex; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .back-link { color: white; text-decoration: none; margin-right: 20px; font-size: 14px; border: 1px solid white; padding: 5px 15px; border-radius: 20px; }
+        .detail-container { max-width: 1100px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .pill { padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; background: white; cursor: pointer; font-size: 14px; margin-right: 10px; margin-bottom: 10px; display: inline-block; }
         .pill.active { border: 2px solid #333; font-weight: 600; }
-        .pill.disabled { opacity: 0.5; text-decoration: line-through; cursor: not-allowed; border-color: #eee; }
-
-        /* Farben Kreise */
-        .color-circle {
-            width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ddd;
-            cursor: pointer; position: relative;
-        }
-        .color-circle.active::after {
-            content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px;
-            border: 2px solid #333; border-radius: 50%;
-        }
-
-        /* PREIS & WARENKORB */
-        .price-section { margin-top: 30px; margin-bottom: 30px; }
-        .big-price { font-size: 32px; font-weight: 700; color: var(--price-color); }
-        .old-price { text-decoration: line-through; color: #999; margin-left: 10px; }
-        .discount-tag { color: var(--price-color); font-weight: 600; margin-left: 10px; }
-
-        /* Sticky Button am unteren Rand (wie im Bild) */
-        .sticky-cart-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            background: var(--green-btn); color: white;
-            padding: 15px; display: flex; justify-content: center; align-items: center;
-            font-weight: 700; font-size: 16px; cursor: pointer;
-            z-index: 999; text-transform: uppercase; letter-spacing: 1px;
-        }
-        .chat-bubble {
-            position: absolute; right: 20px; top: -60px;
-            background: #333; width: 50px; height: 50px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .chat-bubble svg { fill: white; width: 24px; }
-
-        /* --- ZUBEHÖR LISTE --- */
-        .accessory-box {
-            background: white; border-radius: 16px; padding: 20px; margin-top: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .accessory-item {
-            display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee;
-        }
-        .accessory-item:last-child { border-bottom: none; }
-        .acc-img { width: 40px; height: 50px; object-fit: contain; margin-right: 15px; }
-        .acc-info { flex-grow: 1; }
-        .acc-price { color: var(--price-color); font-weight: 700; font-size: 14px; }
-        .acc-name { font-size: 14px; margin: 2px 0; }
-        .add-circle {
-            width: 35px; height: 35px; background: var(--green-btn); border-radius: 50%;
-            color: white; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer;
-        }
-
+        .main-image { width: 100%; max-height: 400px; object-fit: contain; }
+        .price-section { font-size: 32px; font-weight: 700; color: #ea4335; margin: 20px 0; }
     </style>
 </head>
 <body>
-
     <header>
-        <div class="header-left">
-            <a href="shop.html" class="logo-link"><div class="logo">AO Mobile</div></a>
-        </div>
-        <div class="header-right">
-            <div class="icon-btn">
-                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            </div>
-        </div>
+        <a href="shop.html" class="back-link">Zurück zur Übersicht</a>
+        <div style="font-size: 24px; font-weight: 600;">AO Mobile</div>
     </header>
-
     <div class="detail-container">
-        <div class="left-col">
-            <div class="image-gallery">
-                <img id="main-img" src="" class="main-image">
-                <div class="gallery-thumbs">
-                    <img src="" class="thumb main-thumb">
-                    <div style="width:50px; height:60px; background:#eee; border-radius:8px;"></div>
-                    <div style="width:50px; height:60px; background:#eee; border-radius:8px;"></div>
-                </div>
-                <div class="usage-banner">
-                    <img src="https://via.placeholder.com/30" style="border-radius:4px; margin-right:10px;">
-                    <span>Beispiele für Gebrauchsspuren</span>
-                    <span>→</span>
-                </div>
+        <div><img id="main-img" src="" class="main-image"></div>
+        <div>
+            <h1 id="product-name">Laden...</h1>
+            <div id="condition-options" style="margin-top:20px;">
+                <div style="font-weight:600; margin-bottom:10px;">Zustand</div>
+                <div id="pill-container"></div>
             </div>
-        </div>
-
-        <div class="product-info">
-            <div class="delivery-status">
-                <svg class="check-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                <span>Donnerstag geliefert</span>
-            </div>
-
-            <h1 id="product-name">Lade Produkt...</h1>
-
-            <div class="option-group">
-                <div class="option-title">Optischer Zustand ⓘ</div>
-                <div class="option-pills">
-                    <div class="pill disabled">Schnäppchen</div>
-                    <div class="pill active" id="cond-used">Gebraucht</div>
-                    <div class="pill">Sehr gut</div>
-                    <div class="pill disabled">Wie neu</div>
-                    <div class="pill disabled">Neu</div>
-                </div>
-            </div>
-
-            <div class="option-group">
-                <div class="option-title">Akkuzustand ⓘ</div>
-                <div class="option-pills">
-                    <div class="pill active">Gebraucht</div>
-                    <div class="pill">Neu</div>
-                </div>
-            </div>
-
-            <div class="option-group">
-                <div class="option-title">Speicher: <span id="storage-text">128 GB</span></div>
-                <div class="option-pills">
-                    <div class="pill">64 GB</div>
-                    <div class="pill">256 GB</div>
-                    <div class="pill active">128 GB</div>
-                </div>
-            </div>
-
-            <div class="option-group">
-                <div class="option-title">Farbe: <span id="color-text">Schwarz</span></div>
-                <div class="option-pills">
-                    <div class="color-circle active" style="background:black;"></div>
-                    <div class="color-circle" style="background:#1c3959;"></div> <div class="color-circle" style="background:#eaffea;"></div> <div class="color-circle" style="background:white; border:1px solid #ccc;"></div>
-                    <div class="color-circle" style="background:#e11c1c;"></div> </div>
-            </div>
-
-            <div class="option-group">
-                <div class="option-title">Garantie</div>
-                <div class="option-pills">
-                    <div class="pill active">1 Jahr</div>
-                    <div class="pill">3 Jahre (+34.00 CHF)</div>
-                </div>
-            </div>
-
-            <div class="price-section">
-                <span class="big-price" id="price-display">200 CHF</span>
-                <span class="old-price" id="old-price-display">212 CHF</span>
-                <span class="discount-tag" id="discount-display">-6%</span>
-                <div style="font-size:12px; color:#666; margin-top:5px;">inkl. MwSt. <span style="color:var(--green-btn); text-decoration:underline;">Versand</span> wird beim Checkout berechnet</div>
-            </div>
-
-            <div class="option-title" style="margin-top:30px;">Passendes Zubehör</div>
-            <div class="accessory-box">
-                <div class="accessory-item">
-                    <img src="https://via.placeholder.com/40" class="acc-img">
-                    <div class="acc-info">
-                        <div class="acc-price">25 CHF</div>
-                        <div style="color:var(--green-btn); font-size:12px;">★★★★★</div>
-                        <div class="acc-name">Revendo Glass iPhone 12 Mini Clear</div>
-                    </div>
-                    <div class="add-circle">+</div>
-                </div>
-                <div class="accessory-item">
-                    <img src="https://via.placeholder.com/40" class="acc-img">
-                    <div class="acc-info">
-                        <div class="acc-price">29 CHF</div>
-                        <div style="color:var(--green-btn); font-size:12px;">★★★★★</div>
-                        <div class="acc-name">Revendo Case Everyday Weiss</div>
-                    </div>
-                    <div class="add-circle">+</div>
-                </div>
-                <div class="accessory-item">
-                    <img src="https://via.placeholder.com/40" class="acc-img">
-                    <div class="acc-info">
-                        <div class="acc-price">15 CHF</div>
-                        <div style="color:var(--green-btn); font-size:12px;">★★★★★</div>
-                        <div class="acc-name">20W USB-C Ladegerät</div>
-                    </div>
-                    <div class="add-circle">+</div>
-                </div>
-            </div>
-
-        </div> </div> <div class="sticky-cart-bar">
-        In den Warenkorb legen
-        <div class="chat-bubble">
-            <svg viewBox="0 0 24 24"><path fill="white" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+            <div class="price-section" id="price-display"></div>
         </div>
     </div>
-
     <script>
-        // Funktion zum Lesen der URL Parameter (z.B. ?id=iphone12)
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
-
-        const productId = getQueryParam('id');
-
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                let foundProduct = null;
-
-                // Suche das Produkt in allen Marken
-                for (let brand in data) {
-                    const product = data[brand].products.find(p => p.id === productId);
-                    if (product) {
-                        foundProduct = product;
-                        break;
-                    }
+        const productId = new URLSearchParams(window.location.search).get('id');
+        fetch('data.json').then(r => r.json()).then(data => {
+            let p = null;
+            for (let b in data) { p = data[b].products.find(x => x.id === productId) || p; }
+            if (p) {
+                document.getElementById('product-name').innerText = p.name;
+                document.getElementById('main-img').src = p.img;
+                document.getElementById('price-display').innerText = p.price + " CHF";
+                const container = document.getElementById('pill-container');
+                if(p.availableConditions) {
+                    p.availableConditions.forEach(c => {
+                        const span = document.createElement('span');
+                        span.className = 'pill' + (c === p.condition ? ' active' : '');
+                        span.innerText = c;
+                        container.appendChild(span);
+                    });
                 }
-
-                if (foundProduct) {
-                    // Daten in die HTML Elemente füllen
-                    document.getElementById('product-name').innerText = foundProduct.name;
-                    document.getElementById('main-img').src = foundProduct.img;
-                    document.querySelector('.main-thumb').src = foundProduct.img;
-                    document.getElementById('price-display').innerText = foundProduct.price + " CHF";
-                    document.getElementById('old-price-display').innerText = foundProduct.oldPrice + " CHF";
-                    document.getElementById('discount-display').innerText = "-" + foundProduct.discount;
-                    
-                    document.getElementById('storage-text').innerText = foundProduct.storage;
-                    document.getElementById('color-text').innerText = foundProduct.color || 'Standard';
-
-                    // Update Condition (nur Beispielhaft)
-                    if(foundProduct.condition) {
-                        document.getElementById('cond-used').innerText = foundProduct.condition;
-                    }
-                } else {
-                    document.body.innerHTML = "<h1 style='text-align:center; margin-top:100px;'>Produkt nicht gefunden</h1>";
-                }
-            })
-            .catch(error => console.error('Fehler:', error));
+            }
+        });
     </script>
-
 </body>
 </html>
