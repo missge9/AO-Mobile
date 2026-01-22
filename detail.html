@@ -3,443 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produktdetails | AO Mobile</title>
+    <title>AO Mobile | Shop</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        /* --- GRUNDEINSTELLUNGEN --- */
-        :root {
-            --primary-color: #007bff;
-            --green-btn: #4caf50;
-            --text-color: #333;
-            --bg-color: #f9f9f9;
-            --card-bg: #ffffff;
-            --price-color: #ea4335;
-        }
+        :root { --primary-color: #007bff; --text-color: #333; --bg-color: #f4f4f4; --card-bg: #ffffff; --price-color: #ea4335; --green-color: #00c853; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; padding-bottom: 50px; }
+        header { height: 80px; background: #121212; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
+        .logo { font-size: 24px; font-weight: 600; background: linear-gradient(135deg, #007bff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; margin-bottom: 40px; }
+        .back-btn { display: none; padding: 10px 20px; background: #fff; border: 1px solid #ddd; border-radius: 30px; cursor: pointer; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 20px; cursor: pointer; position: relative; display: flex; flex-direction: column; }
+        .badges-top { display: flex; justify-content: space-between; width: 100%; margin-bottom: 10px; }
+        .discount-badge { background: var(--price-color); color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; }
+        .card-image { width: 100%; height: 200px; object-fit: contain; margin: 20px 0; }
+        .price-current { color: var(--price-color); font-weight: 700; font-size: 20px; }
+        .card-title { font-weight: 700; font-size: 18px; margin-top: 10px; }
+        .brand-card { background: white; border-radius: 16px; padding: 30px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .brand-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <header><div class="logo">AO Mobile</div></header>
+    <div class="container">
+        <button id="back-btn" class="back-btn" onclick="showBrands()">Zurück zur Übersicht</button>
+        <h1 id="page-title">Wähle eine Kategorie</h1>
+        <div id="grid-container" class="grid"></div>
+    </div>
+    <script>
+        const gridContainer = document.getElementById('grid-container');
+        const pageTitle = document.getElementById('page-title');
+        const backBtn = document.getElementById('back-btn');
+        let shopData = {};
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+        fetch('data.json').then(r => r.json()).then(data => { shopData = data; showBrands(); });
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding-top: 110px; /* Platz fuer fixierten Header + Abstand */
-            padding-bottom: 100px; /* Platz fuer Sticky Cart Bar */
-        }
-
-        /* --- HEADER --- */
-        header {
-            height: 80px;
-            background: #121212;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 25px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #007bff, #00d2ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* --- CONTAINER & NAVIGATION --- */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .back-btn {
-            display: inline-block;
-            padding: 10px 25px;
-            background-color: #ffffff;
-            color: #333;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 30px;
-            transition: all 0.2s ease;
-        }
-
-        .back-btn:hover {
-            background-color: #f0f0f0;
-            border-color: #ccc;
-        }
-
-        /* --- PRODUKT GRID --- */
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: start;
-        }
-
-        @media (max-width: 850px) {
-            .detail-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
+        function showBrands() {
+            gridContainer.innerHTML = ''; pageTitle.innerText = "Wähle eine Kategorie"; backBtn.style.display = "none";
+            for (let brand in shopData) {
+                const card = document.createElement('div'); card.className = 'brand-card';
+                card.onclick = () => showModels(brand);
+                card.innerHTML = `<img src="${shopData[brand].logo}" class="brand-img"><div>${brand}</div>`;
+                gridContainer.appendChild(card);
             }
         }
 
-        /* --- LINKE SEITE: BILD --- */
-        .product-image-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            text-align: center;
-        }
+        function showModels(brand) {
+            // Container leeren und Titel anpassen
+            gridContainer.innerHTML = ''; 
+            pageTitle.innerText = brand; 
+            
+            // Zurück-Button anzeigen (erscheint im Container unter dem Header)
+            backBtn.style.display = "inline-block";
 
-        #main-img {
-            max-width: 100%;
-            height: auto;
-            max-height: 500px;
-            object-fit: contain;
-        }
+            shopData[brand].products.forEach(model => {
+                const card = document.createElement('div'); 
+                card.className = 'card';
+                card.onclick = () => window.location.href = 'detail.html?id=' + model.id;
 
-        /* --- RECHTE SEITE: INFOS --- */
-        .product-info {
-            padding-bottom: 50px;
-        }
-
-        h1 {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 25px;
-            color: #111;
-            line-height: 1.2;
-        }
-
-        /* OPTIONEN (Pills) */
-        .option-group {
-            margin-bottom: 30px;
-        }
-
-        .option-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #444;
-        }
-
-        .pill-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .pill {
-            padding: 10px 20px;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            background: white;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            color: #555;
-        }
-
-        .pill:hover {
-            border-color: #bbb;
-        }
-
-        .pill.active {
-            border: 2px solid #333;
-            color: #000;
-            font-weight: 600;
-            background-color: #f8f8f8;
-        }
-
-        /* FARBAUSWAHL */
-        .color-container {
-            display: flex;
-            gap: 15px;
-        }
-
-        .color-circle {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            position: relative;
-            transition: transform 0.2s ease;
-        }
-
-        .color-circle:hover {
-            transform: scale(1.1);
-        }
-
-        .color-circle.active::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border: 2px solid #333;
-            border-radius: 50%;
-        }
-
-        /* PREIS-SEKTION */
-        .price-section {
-            margin-top: 40px;
-            padding: 25px 0;
-            border-top: 1px solid #eee;
-        }
-
-        .price-main {
-            font-size: 36px;
-            font-weight: 700;
-            color: var(--price-color);
-        }
-
-        .price-old {
-            font-size: 20px;
-            text-decoration: line-through;
-            color: #999;
-            margin-left: 15px;
-        }
-
-        .discount-badge {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--price-color);
-            margin-left: 10px;
-        }
-
-        .price-info {
-            font-size: 12px;
-            color: #777;
-            margin-top: 10px;
-            line-height: 1.5;
-        }
-
-        .price-info span {
-            text-decoration: underline;
-            cursor: pointer;
-            color: var(--green-btn);
-        }
-
-        /* ZUBEHÖR */
-        .accessory-box {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid #eee;
-            margin-top: 15px;
-        }
-
-        .acc-item {
-            display: flex;
-            align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #f5f5f5;
-        }
-
-        .acc-item:last-child {
-            border-bottom: none;
-        }
-
-        .acc-image {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
-            margin-right: 20px;
-        }
-
-        .acc-details {
-            flex-grow: 1;
-        }
-
-        .acc-price {
-            font-weight: 700;
-            color: var(--price-color);
-            font-size: 14px;
-        }
-
-        .acc-name {
-            font-size: 14px;
-            color: #333;
-        }
-
-        /* STICKY WARENKORB BAR */
-        .sticky-cart-bar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--green-btn);
-            color: white;
-            height: 70px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            z-index: 1100;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
-        }
-    </style>
-</head>
-
-<body>
-
-    <header>
-        <div class="logo">AO Mobile</div>
-    </header>
-
-    <div class="container">
-        <a href="shop.html" class="back-btn">← Zurück zur Übersicht</a>
-
-        <div class="detail-grid">
-            <div class="product-image-card">
-                <img id="main-img" src="" alt="Produktbild">
-            </div>
-
-            <div class="product-info">
-                <h1 id="product-name">Produkt wird geladen...</h1>
-
-                <div class="option-group">
-                    <div class="option-title">Optischer Zustand ⓘ</div>
-                    <div id="optical-list" class="pill-container"></div>
-                </div>
-
-                <div class="option-group">
-                    <div class="option-title">Akkuzustand ⓘ</div>
-                    <div id="battery-list" class="pill-container"></div>
-                </div>
-
-                <div class="option-group">
-                    <div class="option-title">Speicher</div>
-                    <div id="storage-list" class="pill-container"></div>
-                </div>
-
-                <div class="option-group">
-                    <div class="option-title">Farbe</div>
-                    <div id="color-list" class="color-container"></div>
-                </div>
-
-                <div class="option-group">
-                    <div class="option-title">Garantie</div>
-                    <div id="warranty-list" class="pill-container"></div>
-                </div>
-
-                <div class="price-section">
-                    <span id="price-val" class="price-main">0 CHF</span>
-                    <span id="price-old" class="price-old"></span>
-                    <span id="discount-val" class="discount-badge"></span>
-                    <div class="price-info">
-                        inkl. MwSt. . <span>Versand</span> wird beim Checkout berechnet
+                card.innerHTML = `
+                    <div class="badges-top">
+                        ${model.hasDiscount ? `<div class="discount-badge">Bis zu ${model.discount} Rabatt</div>` : '<div></div>'}
+                        <div class="check-badge">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
                     </div>
-                </div>
+                    <img src="${model.img}" class="card-image">
+                    <div class="price-row">
+                        <span class="price-current">Von ${model.price} CHF</span>
+                    </div>
+                    <div class="card-title">${model.name}</div>
+                `;
 
-                <div class="option-group" style="margin-top: 40px;">
-                    <div class="option-title">Passendes Zubehör</div>
-                    <div id="accessory-list" class="accessory-box"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="sticky-cart-bar">
-        In den Warenkorb legen
-    </div>
-
-    <script>
-        const productId = new URLSearchParams(window.location.search).get('id');
-
-        fetch('data.json?v=' + new Date().getTime())
-            .then(r => r.json())
-            .then(data => {
-                let p = null;
-                for (let b in data) { 
-                    p = data[b].products.find(x => x.id === productId) || p; 
-                }
-
-                if (p) {
-                    document.getElementById('product-name').innerText = p.name;
-                    document.getElementById('main-img').src = p.img;
-                    document.getElementById('price-val').innerText = p.price + " CHF";
-                    document.getElementById('price-old').innerText = p.oldPrice ? p.oldPrice + " CHF" : "";
-                    document.getElementById('discount-val').innerText = p.hasDiscount ? "-" + p.discount : "";
-
-                    // Hilfsfunktion zum Rendern der Pillen
-                    const renderPills = (listId, items) => {
-                        const el = document.getElementById(listId);
-                        el.innerHTML = '';
-                        items.forEach((item, i) => {
-                            const s = document.createElement('span');
-                            s.className = 'pill' + (i === 0 ? ' active' : '');
-                            s.innerText = item;
-                            s.onclick = () => {
-                                el.querySelectorAll('.pill').forEach(btn => btn.classList.remove('active'));
-                                s.classList.add('active');
-                            };
-                            el.appendChild(s);
-                        });
-                    };
-
-                    renderPills('optical-list', p.opticalConditions);
-                    renderPills('battery-list', p.batteryConditions);
-                    renderPills('storage-list', p.storageOptions);
-                    renderPills('warranty-list', p.warranties);
-
-                    // Farben rendern
-                    const colorContainer = document.getElementById('color-list');
-                    colorContainer.innerHTML = '';
-                    p.colors.forEach((c, i) => {
-                        const d = document.createElement('div');
-                        d.className = 'color-circle' + (i === 0 ? ' active' : '');
-                        d.style.background = c.hex;
-                        d.title = c.name;
-                        d.onclick = () => {
-                            colorContainer.querySelectorAll('.color-circle').forEach(circle => circle.classList.remove('active'));
-                            d.classList.add('active');
-                        };
-                        colorContainer.appendChild(d);
-                    });
-
-                    // Zubehör rendern
-                    const accList = document.getElementById('accessory-list');
-                    accList.innerHTML = '';
-                    p.accessories.forEach(acc => {
-                        const div = document.createElement('div');
-                        div.className = 'acc-item';
-                        div.innerHTML = `
-                            <img src="${acc.img}" class="acc-image">
-                            <div class="acc-details">
-                                <div class="acc-price">${acc.price} CHF</div>
-                                <div class="acc-name">${acc.name}</div>
-                            </div>
-                        `;
-                        accList.appendChild(div);
-                    });
-                } else {
-                    document.querySelector('.container').innerHTML = "<h1>Produkt wurde nicht gefunden.</h1>";
-                }
-            })
-            .catch(error => console.error('Fehler beim Laden der Produktdaten:', error));
+                // WICHTIG: Das Element muss dem Grid hinzugefügt werden
+                gridContainer.appendChild(card);
+            });
+        }
     </script>
-
 </body>
 </html>

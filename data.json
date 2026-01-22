@@ -10,8 +10,6 @@
         "hasDiscount": true,
         "discount": "6%",
         "img": "images/1.png",
-        "rating": 4.7,
-        "reviews": 3,
         "opticalConditions": ["Schnäppchen", "Gebraucht", "Sehr gut", "Wie neu", "Neu"],
         "batteryConditions": ["Gebraucht", "Neu"],
         "storageOptions": ["64 GB", "128 GB", "256 GB"],
@@ -23,18 +21,45 @@
         "warranties": ["1 Jahr", "3 Jahre (+34.00 CHF)"],
         "accessories": [
           {"name": "Revendo Glass iPhone 12 Mini Clear", "price": "25", "img": "https://via.placeholder.com/40"},
-          {"name": "Revendo Case Everyday Weiss", "price": "29", "img": "https://via.placeholder.com/40"},
-          {"name": "20W USB.C Ladegerät", "price": "15", "img": "https://via.placeholder.com/40"}
+          {"name": "Revendo Case Everyday Weiss", "price": "29", "img": "https://via.placeholder.com/40"}
         ]
       }
     ]
   },
   "Samsung": {
     "logo": "https://cdn-icons-png.flaticon.com/512/5969/5969240.png",
-    "products": []
+    "products": [
+      { 
+        "id": "s24ultra",
+        "name": "Galaxy S24 Ultra", 
+        "price": "899", 
+        "hasDiscount": false,
+        "img": "images/1.png",
+        "opticalConditions": ["Neu"],
+        "batteryConditions": ["Neu"],
+        "storageOptions": ["256 GB", "512 GB"],
+        "colors": [{"name": "Titan", "hex": "#444"}],
+        "warranties": ["2 Jahre"],
+        "accessories": []
+      }
+    ]
   },
   "Zubehör": {
     "logo": "https://cdn-icons-png.flaticon.com/512/3081/3081648.png",
-    "products": []
+    "products": [
+      {
+        "id": "charger",
+        "name": "20W USB.C Ladegerät",
+        "price": "15",
+        "hasDiscount": false,
+        "img": "https://via.placeholder.com/200",
+        "opticalConditions": ["Neu"],
+        "batteryConditions": [],
+        "storageOptions": [],
+        "colors": [{"name": "Weiss", "hex": "#fff"}],
+        "warranties": ["2 Jahre"],
+        "accessories": []
+      }
+    ]
   }
 }
