@@ -7,73 +7,34 @@
         "name": "iPhone 12 mini . Schwarz", 
         "price": "200", 
         "oldPrice": "212",
-        "storage": "128 GB",
-        "network": "5G",
-        "rating": 4.7,
-        "reviews": 3,
         "hasDiscount": true,
         "discount": "6%",
         "img": "images/1.png",
-        "condition": "Gebraucht",
-        "availableConditions": ["Gebraucht", "Sehr gut"],
-        "color": "Schwarz",
-        "warranty": "1 Jahr"
-      },
-      { 
-        "id": "iphone15pro",
-        "name": "iPhone 15 Pro Max . Titan Natur", 
-        "price": "598", 
-        "oldPrice": "664",
-        "storage": "256 GB",
-        "network": "5G",
-        "rating": 4.1,
-        "reviews": 7,
-        "hasDiscount": true,
-        "discount": "10%",
-        "img": "images/1.png",
-        "condition": "Wie neu",
-        "availableConditions": ["Wie neu", "Neu"],
-        "color": "Titan",
-        "warranty": "1 Jahr"
+        "rating": 4.7,
+        "reviews": 3,
+        "opticalConditions": ["Schnäppchen", "Gebraucht", "Sehr gut", "Wie neu", "Neu"],
+        "batteryConditions": ["Gebraucht", "Neu"],
+        "storageOptions": ["64 GB", "128 GB", "256 GB"],
+        "colors": [
+          {"name": "Schwarz", "hex": "#000000"},
+          {"name": "Blau", "hex": "#1c3959"},
+          {"name": "Weiss", "hex": "#ffffff"}
+        ],
+        "warranties": ["1 Jahr", "3 Jahre (+34.00 CHF)"],
+        "accessories": [
+          {"name": "Revendo Glass iPhone 12 Mini Clear", "price": "25", "img": "https://via.placeholder.com/40"},
+          {"name": "Revendo Case Everyday Weiss", "price": "29", "img": "https://via.placeholder.com/40"},
+          {"name": "20W USB.C Ladegerät", "price": "15", "img": "https://via.placeholder.com/40"}
+        ]
       }
     ]
   },
   "Samsung": {
     "logo": "https://cdn-icons-png.flaticon.com/512/5969/5969240.png",
-    "products": [
-      { 
-        "id": "s24ultra",
-        "name": "Galaxy S24 Ultra", 
-        "price": "899", 
-        "oldPrice": "1100",
-        "storage": "512 GB",
-        "network": "5G",
-        "rating": 4.9,
-        "reviews": 12,
-        "hasDiscount": false,
-        "discount": "0%",
-        "img": "images/1.png",
-        "condition": "Neu",
-        "availableConditions": ["Neu"],
-        "color": "Grau",
-        "warranty": "2 Jahre"
-      }
-    ]
+    "products": []
   },
   "Zubehör": {
     "logo": "https://cdn-icons-png.flaticon.com/512/3081/3081648.png",
-    "products": [
-      {
-        "id": "ladegeraet",
-        "name": "20W USB.C Ladegerät",
-        "price": "15",
-        "hasDiscount": false,
-        "img": "https://via.placeholder.com/200",
-        "condition": "Neu",
-        "availableConditions": ["Neu"],
-        "rating": 5.0,
-        "reviews": 10
-      }
-    ]
+    "products": []
   }
 }

@@ -52,17 +52,33 @@
         }
 
         function showModels(brand) {
-            gridContainer.innerHTML = ''; pageTitle.innerText = brand; backBtn.style.display = "inline-block";
+            // Container leeren und Titel anpassen
+            gridContainer.innerHTML = ''; 
+            pageTitle.innerText = brand; 
+            
+            // Zurück-Button anzeigen (erscheint im Container unter dem Header)
+            backBtn.style.display = "inline-block";
+
             shopData[brand].products.forEach(model => {
-                const card = document.createElement('div'); card.className = 'card';
+                const card = document.createElement('div'); 
+                card.className = 'card';
                 card.onclick = () => window.location.href = 'detail.html?id=' + model.id;
+
                 card.innerHTML = `
                     <div class="badges-top">
-                        ${model.hasDiscount ? `<div class="discount-badge">-${model.discount}</div>` : '<div></div>'}
+                        ${model.hasDiscount ? `<div class="discount-badge">Bis zu ${model.discount} Rabatt</div>` : '<div></div>'}
+                        <div class="check-badge">
+                            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
                     </div>
                     <img src="${model.img}" class="card-image">
-                    <div class="price-current">Von ${model.price} CHF</div>
-                    <div class="card-title">${model.name}</div>`;
+                    <div class="price-row">
+                        <span class="price-current">Von ${model.price} CHF</span>
+                    </div>
+                    <div class="card-title">${model.name}</div>
+                `;
+
+                // WICHTIG: Das Element muss dem Grid hinzugefügt werden
                 gridContainer.appendChild(card);
             });
         }

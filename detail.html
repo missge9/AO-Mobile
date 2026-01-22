@@ -6,34 +6,76 @@
     <title>Produktdetails | AO Mobile</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-color: #007bff; --green-btn: #4caf50; --text-color: #333; }
+        :root { --primary-color: #007bff; --green-btn: #4caf50; --text-color: #333; --price-color: #ea4335; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #f9f9f9; padding-top: 100px; padding-bottom: 100px; }
+        body { background-color: #f9f9f9; color: var(--text-color); padding-top: 100px; padding-bottom: 100px; }
         header { height: 80px; background: #121212; color: white; display: flex; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .back-link { color: white; text-decoration: none; margin-right: 20px; font-size: 14px; border: 1px solid white; padding: 5px 15px; border-radius: 20px; }
-        .detail-container { max-width: 1100px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .pill { padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; background: white; cursor: pointer; font-size: 14px; margin-right: 10px; margin-bottom: 10px; display: inline-block; }
+        .logo { font-size: 24px; font-weight: 600; background: linear-gradient(135deg, #007bff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+        .back-btn { display: inline-block; padding: 8px 20px; background: white; border: 1px solid #ddd; border-radius: 20px; text-decoration: none; color: #333; font-size: 14px; margin-bottom: 20px; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        @media (max-width: 800px) { .detail-grid { grid-template-columns: 1fr; } }
+        .option-group { margin-bottom: 25px; }
+        .option-title { font-weight: 600; margin-bottom: 10px; }
+        .pill { padding: 8px 16px; border: 1px solid #ddd; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; margin-right: 8px; margin-bottom: 8px; display: inline-block; }
         .pill.active { border: 2px solid #333; font-weight: 600; }
-        .main-image { width: 100%; max-height: 400px; object-fit: contain; }
-        .price-section { font-size: 32px; font-weight: 700; color: #ea4335; margin: 20px 0; }
+        .color-circle { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ddd; display: inline-block; margin-right: 10px; cursor: pointer; }
+        .price-big { font-size: 32px; font-weight: 700; color: var(--price-color); }
+        .price-old { text-decoration: line-through; color: #999; margin-left: 10px; }
+        .discount { color: var(--price-color); font-weight: 600; margin-left: 10px; }
+        .accessory-box { background: white; border-radius: 12px; padding: 15px; border: 1px solid #eee; margin-top: 20px; }
+        .acc-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .sticky-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--green-btn); color: white; padding: 15px; text-align: center; font-weight: 700; cursor: pointer; z-index: 1000; }
     </style>
 </head>
 <body>
-    <header>
-        <a href="shop.html" class="back-link">Zurück zur Übersicht</a>
-        <div style="font-size: 24px; font-weight: 600;">AO Mobile</div>
-    </header>
-    <div class="detail-container">
-        <div><img id="main-img" src="" class="main-image"></div>
-        <div>
-            <h1 id="product-name">Laden...</h1>
-            <div id="condition-options" style="margin-top:20px;">
-                <div style="font-weight:600; margin-bottom:10px;">Zustand</div>
-                <div id="pill-container"></div>
+    <header><div class="logo">AO Mobile</div></header>
+    <div class="container">
+        <a href="shop.html" class="back-btn">← Zurück zur Übersicht</a>
+        <div class="detail-grid">
+            <div class="image-section"><img id="main-img" src="" style="width:100%; max-height:450px; object-fit:contain;"></div>
+            <div class="info-section">
+                <h1 id="product-name" style="margin-bottom:20px;"></h1>
+                
+                <div class="option-group">
+                    <div class="option-title">Optischer Zustand ⓘ</div>
+                    <div id="optical-list"></div>
+                </div>
+
+                <div class="option-group">
+                    <div class="option-title">Akkuzustand ⓘ</div>
+                    <div id="battery-list"></div>
+                </div>
+
+                <div class="option-group">
+                    <div class="option-title">Speicher</div>
+                    <div id="storage-list"></div>
+                </div>
+
+                <div class="option-group">
+                    <div class="option-title">Farbe</div>
+                    <div id="color-list"></div>
+                </div>
+
+                <div class="option-group">
+                    <div class="option-title">Garantie</div>
+                    <div id="warranty-list"></div>
+                </div>
+
+                <div class="price-section">
+                    <span class="price-big" id="price-val"></span>
+                    <span class="price-old" id="price-old"></span>
+                    <span class="discount" id="discount-val"></span>
+                    <div style="font-size:12px; color:#666; margin-top:5px;">inkl. MwSt. <span style="text-decoration:underline; cursor:pointer;">Versand</span> wird beim Checkout berechnet</div>
+                </div>
+
+                <div class="option-title" style="margin-top:40px;">Passendes Zubehör</div>
+                <div class="accessory-box" id="accessory-list"></div>
             </div>
-            <div class="price-section" id="price-display"></div>
         </div>
     </div>
+    <div class="sticky-bar">In den Warenkorb legen</div>
+
     <script>
         const productId = new URLSearchParams(window.location.search).get('id');
         fetch('data.json').then(r => r.json()).then(data => {
@@ -42,16 +84,39 @@
             if (p) {
                 document.getElementById('product-name').innerText = p.name;
                 document.getElementById('main-img').src = p.img;
-                document.getElementById('price-display').innerText = p.price + " CHF";
-                const container = document.getElementById('pill-container');
-                if(p.availableConditions) {
-                    p.availableConditions.forEach(c => {
-                        const span = document.createElement('span');
-                        span.className = 'pill' + (c === p.condition ? ' active' : '');
-                        span.innerText = c;
-                        container.appendChild(span);
+                document.getElementById('price-val').innerText = p.price + " CHF";
+                document.getElementById('price-old').innerText = p.oldPrice ? p.oldPrice + " CHF" : "";
+                document.getElementById('discount-val').innerText = p.hasDiscount ? "-" + p.discount : "";
+
+                const renderPills = (listId, items) => {
+                    const el = document.getElementById(listId);
+                    items.forEach((item, i) => {
+                        const s = document.createElement('span');
+                        s.className = 'pill' + (i === 0 ? ' active' : '');
+                        s.innerText = item;
+                        el.appendChild(s);
                     });
-                }
+                };
+
+                renderPills('optical-list', p.opticalConditions);
+                renderPills('battery-list', p.batteryConditions);
+                renderPills('storage-list', p.storageOptions);
+                renderPills('warranty-list', p.warranties);
+
+                p.colors.forEach((c, i) => {
+                    const d = document.createElement('div');
+                    d.className = 'color-circle';
+                    d.style.background = c.hex;
+                    if(i === 0) d.style.border = "2px solid #333";
+                    document.getElementById('color-list').appendChild(d);
+                });
+
+                p.accessories.forEach(acc => {
+                    const div = document.createElement('div');
+                    div.className = 'acc-item';
+                    div.innerHTML = `<img src="${acc.img}" width="40" style="margin-right:15px;"><div><div style="font-weight:600;">${acc.price} CHF</div><div style="font-size:13px;">${acc.name}</div></div>`;
+                    document.getElementById('accessory-list').appendChild(div);
+                });
             }
         });
     </script>
