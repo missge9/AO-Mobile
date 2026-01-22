@@ -23,26 +23,5 @@
         ]
       }
     ]
-  },
-  "Samsung": {
-    "logo": "https://cdn-icons-png.flaticon.com/512/5969/5969240.png",
-    "products": [
-      { 
-        "id": "s24ultra",
-        "name": "Galaxy S24 Ultra", 
-        "baseSellPrice": 450,
-        "opticalConditions": [
-          {"name": "Gebraucht", "price": 0},
-          {"name": "Wie neu", "price": 50}
-        ],
-        "batteryConditions": [
-          {"name": "Gebraucht", "price": 0}
-        ],
-        "storageOptions": [
-          {"name": "256 GB", "price": 0},
-          {"name": "512 GB", "price": 60}
-        ]
-      }
-    ]
   }
 }

@@ -2,39 +2,40 @@
   "Apple": {
     "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
     "products": [
-      {
-  "Apple": {
-    "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
-    "products": [
       { 
         "id": "iphone12mini",
-        "name": "iPhone 12 mini", 
-        "baseSellPrice": 150,
+        "name": "iPhone 12 mini . Schwarz", 
+        "basePrice": 200, 
+        "oldPrice": 212,
+        "hasDiscount": true,
+        "discount": "6%",
         "img": "images/1.png",
         "opticalConditions": [
-          {"name": "Starke Gebrauchsspuren", "price": -30},
+          {"name": "Schnäppchen", "price": -20},
           {"name": "Gebraucht", "price": 0},
-          {"name": "Sehr gut", "price": 20},
-          {"name": "Wie neu", "price": 40}
+          {"name": "Sehr gut", "price": 15},
+          {"name": "Wie neu", "price": 30},
+          {"name": "Neu", "price": 50}
         ],
         "batteryConditions": [
-          {"name": "Gebraucht (über 80%)", "price": 0},
-          {"name": "Neu (100%)", "price": 15}
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Neu", "price": 25}
         ],
         "storageOptions": [
-          {"name": "64 GB", "price": -15},
+          {"name": "64 GB", "price": -10},
           {"name": "128 GB", "price": 0},
-          {"name": "256 GB", "price": 30}
+          {"name": "256 GB", "price": 40}
         ],
         "colors": [
-          {"name": "Schwarz", "hex": "#000000"},
-          {"name": "Blau", "hex": "#1c3959"},
-          {"name": "Weiss", "hex": "#ffffff"}
+          {"name": "Schwarz", "hex": "#000000", "price": 0},
+          {"name": "Blau", "hex": "#1c3959", "price": 5},
+          {"name": "Weiss", "hex": "#ffffff", "price": 0}
+        ],
+        "warranties": [
+          {"name": "1 Jahr", "price": 0},
+          {"name": "3 Jahre", "price": 34}
         ]
       }
-    ]
-  }
-}
     ]
   },
   "Samsung": {

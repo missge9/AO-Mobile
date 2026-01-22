@@ -78,18 +78,26 @@
         }
 
         function showModels(brand) {
-            gridContainer.innerHTML = ''; pageTitle.innerText = brand + " Modelle"; backBtn.style.display = "inline-block";
+            gridContainer.innerHTML = ''; 
+            pageTitle.innerText = brand + " Modelle"; 
+            backBtn.style.display = "inline-block";
+
             shopData[brand].products.forEach(model => {
-                const card = document.createElement('div'); card.className = 'card';
+                const card = document.createElement('div'); 
+                card.className = 'card';
                 card.onclick = () => window.location.href = 'detail.html?id=' + model.id;
+
                 card.innerHTML = `
                     <div style="display:flex; justify-content:space-between;">
                         ${model.hasDiscount ? `<div class="discount-badge">-${model.discount}</div>` : '<div></div>'}
-                        <div style="width:24px; height:24px; background:var(--green-color); border-radius:50%; display:flex; align-items:center; justify-content:center;"><svg fill="white" width="14" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                        <div style="width:24px; height:24px; background:var(--green-color); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                            <svg fill="white" width="14" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
                     </div>
-                    <img src="${model.img}" class="card-image">
-                    <div style="color:var(--price-color); font-weight:600;">Von ${model.price} CHF</div>
-                    <div style="font-weight:600; font-size:18px; margin-top:10px;">${model.name}</div>`;
+                    <img src="${model.img}" class="card-image" onerror="this.src='https://via.placeholder.com/200'">
+                    <div style="color:var(--price-color); font-weight:600;">Von ${model.basePrice} CHF</div>
+                    <div style="font-weight:600; font-size:18px; margin-top:10px;">${model.name}</div>
+                `;
                 gridContainer.appendChild(card);
             });
         }
