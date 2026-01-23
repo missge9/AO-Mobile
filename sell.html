@@ -13,10 +13,38 @@
             --bg-color: #f4f4f4; 
             --price-color: #ea4335; 
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
         body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; padding-bottom: 50px; }
-        header { height: 80px; background: #121212; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 25px; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .logo { font-size: 24px; font-weight: 600; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+
+        /* --- Header & Navigation --- */
+        header { 
+            height: 80px; background: #121212; color: white; display: flex; 
+            justify-content: space-between; align-items: center; padding: 0 25px; 
+            position: fixed; top: 0; width: 100%; z-index: 1000; 
+        }
+
+        .header-left, .header-right { display: flex; align-items: center; gap: 20px; }
+
+        .logo { 
+            font-size: 24px; font-weight: 600; background: var(--primary-gradient); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            text-decoration: none; display: inline-block;
+        }
+
+        .icon-btn svg, .menu-icon svg { fill: white; width: 28px; height: 28px; cursor: pointer; display: block; }
+
+        #dropdown-menu { 
+            position: fixed; top: 0; left: 0; width: 280px; height: 100vh; 
+            background: #1a1a1a; padding-top: 100px; transform: translateX(-100%); 
+            transition: 0.4s; z-index: 999; 
+        }
+
+        #dropdown-menu.open { transform: translateX(0); }
+        #dropdown-menu a { display: block; padding: 20px 30px; color: #ccc; text-decoration: none; font-size: 18px; }
+
+        /* --- Wizard Styling --- */
         .container { max-width: 800px; margin: 0 auto; padding: 20px; }
         .wizard-container { background: white; border-radius: 24px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); min-height: 400px; }
         .wizard-step { display: none; }
@@ -24,7 +52,7 @@
         .wizard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .wizard-card { background: #f9f9f9; padding: 20px; border-radius: 16px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
         .wizard-card:hover { border-color: var(--primary-color); background: #f0f0f0; }
-        .wizard-card img { width: 50px; height: 50px; object-fit: contain; margin-bottom: 10px; }
+        .wizard-card img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; }
         .pill-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; margin-bottom: 25px; }
         .pill { padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; background: white; cursor: pointer; font-size: 14px; }
         .pill.active { border: 2px solid #333; font-weight: 600; background: #f0f0f0; }
@@ -33,7 +61,30 @@
     </style>
 </head>
 <body>
-    <header><a href="index.html" class="logo">AO Mobile</a></header>
+    <header>
+        <div class="header-left">
+            <div class="menu-icon" onclick="toggleMenu()">
+                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+            <a href="/" class="logo">AO Mobile</a>
+        </div>
+        <div class="header-right">
+            <a href="/cart" class="icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            </a>
+            <a href="/login" class="icon-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </a>
+        </div>
+    </header>
+
+    <div id="dropdown-menu">
+        <a href="/shop" onclick="toggleMenu()">Handy kaufen</a>
+        <a href="/sell" onclick="toggleMenu()">Handy verkaufen</a>
+        <a href="/cart" onclick="toggleMenu()">Warenkorb</a>
+        <a href="/login" onclick="toggleMenu()">Profil</a>
+    </div>
+
     <div class="container">
         <div class="wizard-container">
             <div class="wizard-step active" id="step-brand">
@@ -47,7 +98,7 @@
             <div class="wizard-step" id="step-specs">
                 <h2 id="spec-title">Geräte Details</h2>
                 <div class="option-group">
-                    <p style="font-weight:600;">Speicherplatz</p>
+                    <p style="font-weight:600; margin-top: 15px;">Speicherplatz</p>
                     <div id="storage-list" class="pill-container"></div>
                 </div>
                 <div class="option-group">
@@ -66,25 +117,37 @@
                     <div id="final-price" style="font-size: 48px; font-weight: 700; color: var(--primary-color);">0 CHF</div>
                     <p>Voraussichtlicher Ankaufspreis</p>
                 </div>
-                <button class="btn-full" onclick="location.href='index.html'">Zurück zum Start</button>
+                <button class="btn-full" onclick="location.href='/'">Zurück zum Start</button>
             </div>
         </div>
     </div>
+
     <script>
         let sellData = {};
         let selectedProduct = null;
 
-        fetch('sell.json?v=' + new Date().getTime()).then(r => r.json()).then(data => {
-            sellData = data;
-            const grid = document.getElementById('brand-grid');
-            for (let brand in sellData) {
-                const div = document.createElement('div');
-                div.className = 'wizard-card';
-                div.onclick = () => renderModels(brand);
-                div.innerHTML = `<img src="${sellData[brand].logo}"><div>${brand}</div>`;
-                grid.appendChild(div);
-            }
-        });
+        function toggleMenu() { document.getElementById("dropdown-menu").classList.toggle("open"); }
+
+        // WICHTIG: Absoluter Pfad zu den Daten
+        fetch('/data/sell.json?v=' + new Date().getTime())
+            .then(r => r.json())
+            .then(data => {
+                sellData = data;
+                const grid = document.getElementById('brand-grid');
+                for (let brand in sellData) {
+                    const div = document.createElement('div');
+                    div.className = 'wizard-card';
+                    div.onclick = () => renderModels(brand);
+                    
+                    // Wir stellen sicher, dass das Logo korrekt geladen wird
+                    // Falls in der JSON nur 'apple.png' steht, musst du '/images/' davor setzen
+                    let logoPath = sellData[brand].logo;
+                    if(!logoPath.startsWith('/')) logoPath = '/' + logoPath;
+
+                    div.innerHTML = `<img src="${logoPath}" onerror="this.src='https://via.placeholder.com/60'"><div>${brand}</div>`;
+                    grid.appendChild(div);
+                }
+            });
 
         function renderModels(brand) {
             const grid = document.getElementById('model-grid');

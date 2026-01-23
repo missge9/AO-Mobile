@@ -35,7 +35,7 @@
     <header>
         <div class="logo">AO Mobile</div>
         <div style="display:flex; gap:15px;">
-            <a href="cart.html" class="icon-btn">
+            <a href="cart" class="icon-btn">
                 <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
                 <span id="cart-badge" class="cart-count">0</span>
             </a>
@@ -43,7 +43,7 @@
     </header>
 
     <div class="container">
-        <a href="shop.html" id="back-link" class="back-btn">← Zurück</a>
+        <a href="shop" id="back-link" class="back-btn">← Zurück</a>
         <div class="detail-grid">
             <div class="product-image-card"><img id="main-img" src=""></div>
             <div class="product-info">
@@ -59,12 +59,14 @@
             </div>
         </div>
     </div>
-    <div class="sticky-cart-bar" id="add-to-cart">In den Warenkorb legen</div>
+    <div class="sticky-cart-bar" id="add-to-cart">In den Warenkorb legensadasd</div>
 
     <script>
         const productId = new URLSearchParams(window.location.search).get('id');
         let currentBasePrice = 0;
 
+        function toggleMenu() { document.getElementById("dropdown-menu").classList.toggle("open"); }
+        
         function updateCartBadge() {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             const badge = document.getElementById('cart-badge');
@@ -80,7 +82,7 @@
             document.getElementById('price-val').innerText = total + " CHF";
         }
 
-        fetch('data.json?v=' + new Date().getTime()).then(r => r.json()).then(data => {
+        fetch('/data/data.json?v=' + new Date().getTime()).then(r => r.json()).then(data => {
             let p = null, brand = "";
             for (let b in data) { let found = data[b].products.find(x => x.id === productId); if (found) { p = found; brand = b; break; } }
             if (p) {
