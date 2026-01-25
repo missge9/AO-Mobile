@@ -139,7 +139,7 @@
             }
         };
 
-        form.onsubmit = function(e) {
+        form.onsubmit = async function(e) {
             e.preventDefault();
             statusMsg.innerText = "";
             pass.classList.remove('error');
@@ -153,25 +153,45 @@
                 return;
             }
 
-            // Daten sammeln
+            // Daten sammeln (Feldnamen müssen exakt zum Python-Backend passen)
             const userData = {
                 username: document.getElementById('username').value,
                 email: document.getElementById('email').value,
-                password: pass.value, // In einem echten Shop würde man das verschlüsseln
+                password: pass.value,
                 street: document.getElementById('street').value,
                 house_number: document.getElementById('house_number').value,
                 zip: document.getElementById('zip').value,
                 city: document.getElementById('city').value
             };
 
-            // Speichern
-            localStorage.setItem('ao_user_data', JSON.stringify(userData));
+            // Daten an das Backend senden
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
 
-            statusMsg.innerText = "Profil erfolgreich gespeichert.";
-            statusMsg.style.color = "var(--success-color)";
-            
-            // Felder nach kurzer Zeit wieder normal färben
-            setTimeout(() => { statusMsg.innerText = ""; }, 4000);
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Erfolg
+                    statusMsg.innerText = "Registrierung erfolgreich!";
+                    statusMsg.style.color = "var(--success-color)";
+                    // Optional: Formular leeren oder zur Login-Seite leiten
+                    form.reset();
+                } else {
+                    // Fehler vom Server (z.B. Benutzername vergeben)
+                    statusMsg.innerText = result.message || "Ein Fehler ist aufgetreten.";
+                    statusMsg.style.color = "var(--error-color)";
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusMsg.innerText = "Verbindung zum Server fehlgeschlagen.";
+                statusMsg.style.color = "var(--error-color)";
+            }
         };
     </script>
 </body>

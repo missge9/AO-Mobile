@@ -3,10 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
-# WICHTIG: Wir sagen Flask, dass HTML und statische Dateien eine Ebene höher liegen (..)
+# App Konfiguration
 app = Flask(__name__, template_folder='../', static_folder='../')
 
-# Pfad zur Datenbank im 'data' Ordner festlegen
 base_dir = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(base_dir, '../data/users.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
@@ -20,6 +19,11 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
+    # Adressfelder
+    street = db.Column(db.String(100))
+    house_number = db.Column(db.String(20))
+    zip_code = db.Column(db.String(20))
+    city = db.Column(db.String(100))
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -27,11 +31,11 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-# Erstellt die Tabellen im 'data' Ordner
+# Tabellen erstellen
 with app.app_context():
     db.create_all()
 
-# --- Routen für die HTML-Seiten ---
+# --- HTML Routen (Seiten) ---
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -43,6 +47,10 @@ def shop():
 @app.route('/sell')
 def sell():
     return render_template('sell.html')
+
+@app.route('/register')
+def register_page():  # WICHTIG: Heisst jetzt anders als die API-Funktion!
+    return render_template('account.html')
 
 @app.route('/login')
 def login_page():
@@ -57,18 +65,37 @@ def cart():
     return render_template('cart.html')
 
 
-# --- API Routen für Nutzer ---
+# --- API Routen (Logik) ---
+
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json
+    
+    # Validierung
     if User.query.filter_by(username=data['username']).first():
         return jsonify({"message": "Nutzername bereits vergeben"}), 400
     
-    user = User(username=data['username'], email=data['email'])
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({"message": "E-Mail bereits vergeben"}), 400
+    
+    # User anlegen
+    user = User(
+        username=data['username'], 
+        email=data['email'],
+        street=data.get('street'),
+        house_number=data.get('house_number'),
+        zip_code=data.get('zip'), # Achte darauf, dass im Frontend auch 'zip' gesendet wird
+        city=data.get('city')
+    )
     user.set_password(data['password'])
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({"message": "Konto erfolgreich erstellt"}), 201
+    
+    try:
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({"message": "Konto erfolgreich erstellt"}), 201
+    except Exception as e:
+        print(f"Fehler: {e}")
+        return jsonify({"message": "Datenbankfehler"}), 500
 
 @app.route('/api/login', methods=['POST'])
 def login():
