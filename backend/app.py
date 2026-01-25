@@ -81,9 +81,22 @@ def cart(): return render_template('cart.html')
 def checkout_page():
     return render_template('checkout.html')
 
+# Dashboard (Willkommen)
 @app.route('/admin')
-def admin_page():
+def admin_dashboard():
     return render_template('admin.html')
+
+@app.route('/admin/inventory')
+def admin_inventory():
+    return render_template('inventory_admin.html') # Das neue File
+
+@app.route('/admin/orders')
+def admin_orders():
+    return render_template('orders_admin.html')
+
+@app.route('/admin/sales')
+def admin_sales():
+    return render_template('sales_admin.html')
 
 @app.route('/orders')
 def orders_page(): # Zeigt die Bestell-Verwaltung
