@@ -1,0 +1,229 @@
+[
+  {
+    "order_id": "ORD-1769351058",
+    "date": "2026-01-25 14:24",
+    "status": "Offen",
+    "customer": {
+      "firstname": "samuel",
+      "lastname": "samuel",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "shipping_address": {
+      "firstname": "samuel",
+      "lastname": "samuel",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "payment": "twint",
+    "insurance": false,
+    "items": [
+      {
+        "id": 9058,
+        "name": "iPhone 12 mini",
+        "price": 170,
+        "img": "images/1.png",
+        "options": {
+          "color": "Schwarz",
+          "storage": "64 GB",
+          "condition": "Schnäppchen",
+          "battery": "Gebraucht"
+        }
+      }
+    ],
+    "subtotal": 170.0,
+    "shipping_cost": 0.0,
+    "total": 170.0
+  },
+  {
+    "order_id": "ORD-1769348243",
+    "date": "2026-01-25 13:37",
+    "status": "Offen",
+    "customer": {
+      "firstname": "samuel",
+      "lastname": "samuel",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "shipping_address": {
+      "firstname": "samuel",
+      "lastname": "samuel",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "payment": "twint",
+    "insurance": false,
+    "items": [
+      {
+        "id": 7063,
+        "name": "iPhone 12 mini",
+        "price": 175,
+        "img": "images/1.png",
+        "options": {
+          "color": "Blau",
+          "storage": "64 GB",
+          "condition": "Schnäppchen",
+          "battery": "Gebraucht"
+        }
+      }
+    ],
+    "subtotal": 175.0,
+    "shipping_cost": 0.0,
+    "total": 175.0
+  },
+  {
+    "order_id": "ORD-1769347583",
+    "date": "2026-01-25 13:26",
+    "status": "Offen",
+    "customer": {
+      "firstname": "samuel",
+      "lastname": "bohren",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "shipping_address": {
+      "firstname": "samuel",
+      "lastname": "bohren",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "payment": "twint",
+    "insurance": false,
+    "items": [
+      {
+        "id": 9519,
+        "name": "iPhone 12 mini",
+        "price": 170,
+        "img": "images/1.png",
+        "options": {
+          "color": "Schwarz",
+          "storage": "64 GB",
+          "condition": "Schnäppchen",
+          "battery": "Gebraucht"
+        }
+      }
+    ],
+    "subtotal": 170.0,
+    "shipping_cost": 0.0,
+    "total": 170.0
+  },
+  {
+    "order_id": "ORD-1769347445",
+    "date": "2026-01-25 13:24",
+    "status": "Versendet",
+    "customer": {
+      "firstname": "samuel",
+      "lastname": "bohren",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "shipping_address": {
+      "firstname": "samuel",
+      "lastname": "bohren",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "payment": "twint",
+    "insurance": true,
+    "items": [
+      {
+        "id": 9182,
+        "name": "iPhone 12 mini",
+        "price": 315,
+        "img": "images/1.png",
+        "options": {
+          "color": "Weiss",
+          "storage": "256 GB",
+          "condition": "Neu",
+          "battery": "Neu"
+        }
+      }
+    ],
+    "subtotal": 315.0,
+    "shipping_cost": 10.0,
+    "total": 325.0,
+    "shipped_date": "25.01.2026"
+  },
+  {
+    "order_id": "ORD-1769347027",
+    "date": "2026-01-25 13:17",
+    "status": "Offen",
+    "customer": {
+      "firstname": "samuel",
+      "lastname": "bohren",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "shipping_address": {
+      "firstname": "samuel",
+      "lastname": "bohren",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "payment": "twint",
+    "insurance": true,
+    "items": [
+      {
+        "id": 2580,
+        "name": "iPhone 12 mini",
+        "price": 205,
+        "img": "images/1.png",
+        "options": {
+          "color": "Schwarz",
+          "storage": "128 GB",
+          "condition": "Schnäppchen",
+          "battery": "Neu"
+        }
+      }
+    ],
+    "subtotal": 205.0,
+    "shipping_cost": 10.0,
+    "total": 215.0
+  },
+  {
+    "order_id": "ORD-1769345653",
+    "date": "2026-01-25 12:54",
+    "status": "Versendet",
+    "customer": {
+      "username": "samuel",
+      "email": "samuel@samuel.com",
+      "street": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung"
+    },
+    "items": [
+      {
+        "id": 9938,
+        "name": "iPhone 12 mini",
+        "price": 210,
+        "img": "images/1.png",
+        "options": {
+          "color": "Blau",
+          "storage": "64 GB",
+          "condition": "Sehr gut",
+          "battery": "Gebraucht"
+        }
+      }
+    ],
+    "total": 210.0
+  }
+]

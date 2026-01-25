@@ -1,417 +1,178 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AO Mobile | Premium Smartphones</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+{% extends "base.html" %}
+
+{% block title %}AO Mobile | Premium Smartphones{% endblock %}
+
+{% block styles %}
+<style>
+    /* --- LOKALE VARIABLEN --- */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #007bff, #00d2ff);
+        --modal-bg: rgba(30, 30, 30, 0.95);
+    }
+
+    /* Damit der Slider unter dem fixierten Header der Base.html startet */
+    html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
     
-    <style>
-        /* --- GRUNDEINSTELLUNGEN --- */
-        :root {
-            --primary-color: #007bff;
-            --primary-gradient: linear-gradient(135deg, #007bff, #00d2ff);
-            --dark-bg: #121212;
-            --text-color: #ffffff;
-            --modal-bg: rgba(30, 30, 30, 0.95);
-        }
+    /* --- SEKTIONEN --- */
+    .fullscreen-section {
+        height: 100vh;
+        width: 100%;
+        position: relative;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        /* Wichtig: Minus Header Höhe, damit es passt, oder full overlay */
+        margin-top: -80px; 
+        padding-top: 80px; 
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+    .buy-sell-layout {
+        justify-content: flex-end; 
+        align-items: flex-start;   
+        padding-bottom: 12vh;      
+        padding-left: 8vw;         
+    }
 
-        html {
-            scroll-behavior: smooth;
-            scroll-snap-type: y mandatory;
-        }
+    /* --- SLIDER --- */
+    .slider-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 0; }
+    .slides {
+        display: flex;
+        width: 300%; height: 100%;
+        animation: slide 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+    .slide-wrapper { width: 33.333%; height: 100%; position: relative; }
+    
+    .slide-image {
+        width: 100%; height: 100%;
+        background-size: cover; background-position: center;
+        position: absolute; top: 0; left: 0;
+    }
+    
+    .slide-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; width: 100%; height: 70%;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
 
-        body {
-            background-color: var(--dark-bg);
-            color: var(--text-color);
-            overflow-x: hidden;
-        }
+    .slide-text-area {
+        position: absolute;
+        bottom: 15vh; left: 8vw;
+        width: 85%; max-width: 600px;
+        z-index: 2; color: white;
+    }
 
-        /* --- HEADER --- */
-        header {
-            height: 80px;
-            background: rgba(18, 18, 18, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 25px;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
+    .slide-text-area h2 {
+        font-size: clamp(32px, 5vh, 48px);
+        margin-bottom: 15px; font-weight: 600;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
 
-        .header-left, .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+    .slide-text-area p {
+        font-size: clamp(16px, 2vh, 20px);
+        line-height: 1.6; margin-bottom: 25px; color: #e0e0e0;
+    }
 
-        .menu-icon, .icon-btn {
-            cursor: pointer;
-            width: 28px;
-            height: 28px;
-            transition: transform 0.2s;
-            background: none;
-            border: none;
-            padding: 0;
-        }
-        
-        .menu-icon:hover, .icon-btn:hover { transform: scale(1.1); }
+    /* --- BUTTONS --- */
+    .slide-btn {
+        display: inline-block;
+        padding: 12px 35px;
+        background: var(--primary-gradient);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 500; font-size: 16px;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
 
-        .logo {
-            font-size: 24px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .icon-btn svg, .menu-icon svg {
-            fill: white;
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        }
+    .slide-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+    }
 
-        /* --- SIDEBAR MENÜ --- */
-        #dropdown-menu {
-            position: fixed;
-            top: 0; left: 0;
-            width: 280px; height: 100vh;
-            background: #1a1a1a;
-            padding-top: 100px;
-            transform: translateX(-100%); 
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            z-index: 999;
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-        }
+    @keyframes slide {
+        0%, 28% { transform: translateX(0); }
+        33.33%, 61.33% { transform: translateX(-33.333%); }
+        66.66%, 94.66% { transform: translateX(-66.666%); }
+        100% { transform: translateX(0); }
+    }
 
-        #dropdown-menu.open { transform: translateX(0); }
+    /* --- CONTENT TEXT --- */
+    .text-content-transparent {
+        position: relative;
+        z-index: 5;
+        text-align: left;
+        width: 90%;
+        max-width: 600px;
+        background: transparent;
+        padding: 0;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
 
-        #dropdown-menu a {
-            display: block;
-            padding: 20px 30px;
-            color: #ccc;
-            text-decoration: none;
-            font-size: 18px;
-            border-left: 3px solid transparent;
-            transition: all 0.3s;
-        }
+    .text-content-transparent .content-image {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+        filter: brightness(0) invert(1) drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+    }
 
-        #dropdown-menu a:hover {
-            background-color: #252525;
-            color: white;
-            border-left: 3px solid var(--primary-color);
-            padding-left: 40px;
-        }
+    .text-content-transparent h2 {
+        font-size: clamp(36px, 6vh, 56px);
+        margin-bottom: 20px;
+        color: white;
+        text-shadow: 2px 2px 20px rgba(0,0,0,0.8);
+    }
 
-        /* --- LOGIN OVERLAY --- */
-        .login-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
+    .text-content-transparent p {
+        color: #f0f0f0;
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 10px rgba(0,0,0,0.9);
+        font-weight: 400;
+    }
 
-        .login-overlay.active {
-            display: flex;
-        }
+    .active-view .text-content-transparent { opacity: 1; transform: translateY(0); }
 
-        .login-card {
-            background: var(--modal-bg);
-            width: 90%;
-            max-width: 400px;
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            position: relative;
-        }
+    .bg-image {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-size: cover; background-position: center;
+        z-index: -1;
+        transition: transform 10s ease;
+    }
+    .active-view .bg-image { transform: scale(1.1); }
 
-        .close-login {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #777;
-            font-size: 24px;
-            cursor: pointer;
-        }
+    .buy-section .bg-image { background-image: url('https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=1200&q=80'); }
+    .sell-section .bg-image { background-image: url('https://images.unsplash.com/photo-1556656793-02715d8dd660?auto=format&fit=crop&w=1200&q=80'); }
 
-        .login-card h3 {
-            margin-bottom: 25px;
-            font-size: 24px;
-            text-align: center;
-        }
+    .section-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+        z-index: 0;
+    }
 
-        .login-card input[type="email"],
-        .login-card input[type="password"] {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            background: #2a2a2a;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-        }
+    /* --- FOOTER (Lokal für diese Seite angepasst) --- */
+    footer {
+        min-height: 40vh;
+        background-color: #0a0a0a;
+        color: #777;
+        display: flex; flex-direction: column;
+        justify-content: center; align-items: center;
+        scroll-snap-align: end; padding: 60px 20px;
+        text-align: center;
+    }
+    footer a { color: #aaa; text-decoration: none; margin: 8px 0; font-size: 16px; transition: color 0.3s; }
+    footer a:hover { color: #007bff; }
+    footer p { margin-top: 30px; opacity: 0.5; font-size: 14px; }
+</style>
+{% endblock %}
 
-        .stay-logged-in {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            font-size: 14px;
-            color: #aaa;
-            cursor: pointer;
-        }
-
-        .login-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn-link {
-            color: #aaa;
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s;
-        }
-
-        .btn-link:hover { color: white; }
-
-        .login-submit {
-            padding: 10px 25px;
-            background: var(--primary-gradient);
-            border: none;
-            border-radius: 50px;
-            color: white;
-            font-weight: 500;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-        }
-
-        /* --- SEKTIONEN ALLGEMEIN --- */
-        .fullscreen-section {
-            height: 100vh;
-            width: 100%;
-            position: relative;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .buy-sell-layout {
-            justify-content: flex-end; 
-            align-items: flex-start;   
-            padding-bottom: 12vh;      
-            padding-left: 8vw;         
-        }
-
-        /* --- SLIDER --- */
-        .slider-container { width: 100%; height: 100%; }
-        .slides {
-            display: flex;
-            width: 300%; height: 100%;
-            animation: slide 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-        .slide-wrapper { width: 33.333%; height: 100%; position: relative; }
-        
-        .slide-image {
-            width: 100%; height: 100%;
-            background-size: cover; background-position: center;
-            position: absolute; top: 0; left: 0;
-        }
-        
-        .slide-image::after {
-            content: '';
-            position: absolute;
-            bottom: 0; left: 0; width: 100%; height: 70%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-        }
-
-        .slide-text-area {
-            position: absolute;
-            bottom: 15vh; left: 8vw;
-            width: 85%; max-width: 600px;
-            z-index: 2; color: white;
-        }
-
-        .slide-text-area h2 {
-            font-size: clamp(32px, 5vh, 48px);
-            margin-bottom: 15px; font-weight: 600;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .slide-text-area p {
-            font-size: clamp(16px, 2vh, 20px);
-            line-height: 1.6; margin-bottom: 25px; color: #e0e0e0;
-        }
-
-        /* --- BUTTONS --- */
-        .slide-btn {
-            display: inline-block;
-            padding: 12px 35px;
-            background: var(--primary-gradient);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 500; font-size: 16px;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .slide-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
-        }
-
-        @keyframes slide {
-            0%, 28% { transform: translateX(0); }
-            33.33%, 61.33% { transform: translateX(-33.333%); }
-            66.66%, 94.66% { transform: translateX(-66.666%); }
-            100% { transform: translateX(0); }
-        }
-
-        /* --- CONTENT TEXT --- */
-        .text-content-transparent {
-            position: relative;
-            z-index: 5;
-            text-align: left;
-            width: 90%;
-            max-width: 600px;
-            background: transparent;
-            padding: 0;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .text-content-transparent .content-image {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 20px;
-            filter: brightness(0) invert(1) drop-shadow(0 2px 5px rgba(0,0,0,0.5));
-        }
-
-        .text-content-transparent h2 {
-            font-size: clamp(36px, 6vh, 56px);
-            margin-bottom: 20px;
-            color: white;
-            text-shadow: 2px 2px 20px rgba(0,0,0,0.8);
-        }
-
-        .text-content-transparent p {
-            color: #f0f0f0;
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            text-shadow: 1px 1px 10px rgba(0,0,0,0.9);
-            font-weight: 400;
-        }
-
-        .active-view .text-content-transparent { opacity: 1; transform: translateY(0); }
-
-        .bg-image {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center;
-            z-index: -1;
-            transition: transform 10s ease;
-        }
-        .active-view .bg-image { transform: scale(1.1); }
-
-        .buy-section .bg-image { background-image: url('https://images.unsplash.com/photo-1523206489230-c012c64b2b48?auto=format&fit=crop&w=1200&q=80'); }
-        .sell-section .bg-image { background-image: url('https://images.unsplash.com/photo-1556656793-02715d8dd660?auto=format&fit=crop&w=1200&q=80'); }
-
-        .section-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
-            z-index: 0;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            min-height: 40vh;
-            background-color: #0a0a0a;
-            color: #777;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            scroll-snap-align: end; padding: 60px 20px;
-            text-align: center;
-        }
-        footer a { color: #aaa; text-decoration: none; margin: 8px 0; font-size: 16px; transition: color 0.3s; }
-        footer a:hover { color: var(--primary-color); }
-        footer p { margin-top: 30px; opacity: 0.5; font-size: 14px; }
-
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="header-left">
-            <div class="menu-icon" onclick="toggleMenu()">
-                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-            </div>
-            <div class="logo">AO Mobile</div>
-        </div>
-        <div class="header-right">
-            <a href="cart" class="icon-btn">
-                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            </a>
-            <button class="icon-btn" onclick="toggleLogin()">
-                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-            </button>
-        </div>
-    </header>
-
-    <div id="dropdown-menu">
-        <a href="shop" onclick="toggleMenu()">Handy kaufen</a>
-        <a href="sell" onclick="toggleMenu()">Handy verkaufen</a>
-        <a href="#" onclick="toggleMenu()">Warenkorb</a>
-        <a href="#" onclick="toggleMenu()">Profil</a>
-    </div>
-
-    <div class="login-overlay" id="loginOverlay">
-        <div class="login-card">
-            <button class="close-login" onclick="toggleLogin()">&times;</button>
-            <h3>Login</h3>
-            <input type="email" placeholder="E-Mail Adresse">
-            <input type="password" placeholder="Passwort">
-            
-            <label class="stay-logged-in">
-                <input type="checkbox"> Eingeloggt bleiben
-            </label>
-
-            <div class="login-footer">
-                <a href="register" class="btn-link">Neuer User</a>
-                <button class="login-submit">Einloggen</button>
-            </div>
-        </div>
-    </div>
-
+{% block content %}
     <div class="fullscreen-section slider-section" id="intro">
         <div class="slider-container">
             <div class="slides">
@@ -420,7 +181,7 @@
                     <div class="slide-text-area">
                         <h2>AO Mobile</h2>
                         <p>Dein Partner für Smartphones. Wir stehen für Qualität und Nachhaltigkeit. Jedes Gerät wird von uns geprüft.</p>
-                        <a href="shop" class="slide-btn">Mehr erfahren</a>
+                        <a href="/shop" class="slide-btn">Mehr erfahren</a>
                     </div>
                 </div>
                 <div class="slide-wrapper">
@@ -428,7 +189,7 @@
                     <div class="slide-text-area">
                         <h2>Sonderangebote</h2>
                         <p>Profitiere jetzt von unseren Rabatten. Wir haben diverse Modelle stark reduziert. Nur solange der Vorrat reicht.</p>
-                        <a href="shop" class="slide-btn">Angebote ansehen</a>
+                        <a href="/shop" class="slide-btn">Angebote ansehen</a>
                     </div>
                 </div>
                 <div class="slide-wrapper">
@@ -436,7 +197,7 @@
                     <div class="slide-text-area">
                         <h2>Sicher kaufen</h2>
                         <p>Bei uns kaufst du ohne Risiko mit 14 Tagen Rückgaberecht. Wir garantieren dir zudem immer faire Preise.</p>
-                        <a href="shop" class="slide-btn">Zum Shop</a>
+                        <a href="/shop" class="slide-btn">Zum Shop</a>
                     </div>
                 </div>
             </div>
@@ -451,9 +212,9 @@
             <img src="https://cdn-icons-png.flaticon.com/512/3081/3081648.png" alt="Kaufen Icon" class="content-image">
             <h2>Handy kaufen</h2>
             <p>
-                Suchst du ein neues Smartphone aber willst nicht den vollen Preis bezahlen. Wir bieten dir geprüfte Gebrauchtgeräte in Top Zustand an. Inklusive Garantie.
+                Suchst du ein neues Smartphone aber willst nicht den vollen Preis bezahlen? Wir bieten dir geprüfte Gebrauchtgeräte in Top Zustand an. Inklusive Garantie.
             </p>
-            <a href="shop" class="slide-btn">Zum Shop</a>
+            <a href="/shop" class="slide-btn">Zum Shop</a>
         </div>
     </div>
 
@@ -465,9 +226,9 @@
              <img src="https://cdn-icons-png.flaticon.com/512/2331/2331718.png" alt="Verkaufen Icon" class="content-image">
             <h2>Handy verkaufen</h2>
             <p>
-                Hast du ein altes Smartphone in der Schublade liegen. Lass es nicht verstauben. Bei uns kannst du dein gebrauchtes Handy schnell und sicher zu Geld machen.
+                Hast du ein altes Smartphone in der Schublade liegen? Lass es nicht verstauben. Bei uns kannst du dein gebrauchtes Handy schnell und sicher zu Geld machen.
             </p>
-            <a href="sell" class="slide-btn">Wert ermitteln</a>
+            <a href="/sell" class="slide-btn">Wert ermitteln</a>
         </div>
     </div>
 
@@ -478,38 +239,21 @@
         <a href="#">Kontakt aufnehmen</a>
         <p>&copy; 2024 AO Mobile. Alle Rechte vorbehalten.</p>
     </footer>
+{% endblock %}
 
-    <script>
-        function toggleMenu() {
-            var menu = document.getElementById("dropdown-menu");
-            menu.classList.toggle("open");
-        }
-
-        function toggleLogin() {
-            var overlay = document.getElementById("loginOverlay");
-            overlay.classList.toggle("active");
-        }
-
-        // Schliessen wenn man ausserhalb der Card klickt
-        window.onclick = function(event) {
-            var overlay = document.getElementById("loginOverlay");
-            if (event.target == overlay) {
-                overlay.classList.remove("active");
+{% block scripts %}
+<script>
+    // Intersection Observer für die Einblend-Animationen beim Scrollen
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active-view');
             }
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active-view');
-                }
-            });
-        }, { threshold: 0.3 });
-
-        document.querySelectorAll('.fullscreen-section').forEach((section) => {
-            observer.observe(section);
         });
-    </script>
+    }, { threshold: 0.3 });
 
-</body>
-</html>
+    document.querySelectorAll('.fullscreen-section').forEach((section) => {
+        observer.observe(section);
+    });
+</script>
+{% endblock %}

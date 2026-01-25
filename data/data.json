@@ -2,38 +2,117 @@
   "Apple": {
     "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
     "products": [
-      { 
-        "id": "iphone12mini",
-        "name": "iPhone 12 mini . Schwarz", 
-        "basePrice": 200, 
-        "oldPrice": 212,
-        "hasDiscount": true,
-        "discount": "6%",
-        "img": "images/1.png",
-        "opticalConditions": [
-          {"name": "Schnäppchen", "price": -20},
-          {"name": "Gebraucht", "price": 0},
-          {"name": "Sehr gut", "price": 15},
-          {"name": "Wie neu", "price": 30},
-          {"name": "Neu", "price": 50}
-        ],
+      {
+        "basePrice": 200,
         "batteryConditions": [
-          {"name": "Gebraucht", "price": 0},
-          {"name": "Neu", "price": 25}
-        ],
-        "storageOptions": [
-          {"name": "64 GB", "price": -10},
-          {"name": "128 GB", "price": 0},
-          {"name": "256 GB", "price": 40}
+          {
+            "name": "Gebraucht",
+            "price": 0
+          },
+          {
+            "name": "Neu",
+            "price": 25
+          }
         ],
         "colors": [
-          {"name": "Schwarz", "hex": "#000000", "price": 0},
-          {"name": "Blau", "hex": "#1c3959", "price": 5},
-          {"name": "Weiss", "hex": "#ffffff", "price": 0}
+          {
+            "hex": "#000000",
+            "name": "Schwarz",
+            "price": 0
+          },
+          {
+            "hex": "#1c3959",
+            "name": "Blau",
+            "price": 5
+          },
+          {
+            "hex": "#ffffff",
+            "name": "Weiss",
+            "price": 0
+          }
+        ],
+        "discount": "0",
+        "hasDiscount": true,
+        "id": "iphone12mini",
+        "img": "images/1.png",
+        "inventory": [],
+        "name": "iPhone 12 mini",
+        "oldPrice": 212,
+        "opticalConditions": [
+          {
+            "name": "Schnäppchen",
+            "price": -20
+          },
+          {
+            "name": "Gebraucht",
+            "price": 0
+          },
+          {
+            "name": "Sehr gut",
+            "price": 15
+          },
+          {
+            "name": "Wie neu",
+            "price": 30
+          },
+          {
+            "name": "Neu",
+            "price": 50
+          }
+        ],
+        "storageOptions": [
+          {
+            "name": "64 GB",
+            "price": -10
+          },
+          {
+            "name": "128 GB",
+            "price": 0
+          },
+          {
+            "name": "256 GB",
+            "price": 40
+          }
         ],
         "warranties": [
-          {"name": "1 Jahr", "price": 0},
-          {"name": "3 Jahre", "price": 34}
+          {
+            "name": "1 Jahr",
+            "price": 0
+          },
+          {
+            "name": "3 Jahre",
+            "price": 34
+          }
+        ]
+      },
+      {
+        "basePrice": "60",
+        "batteryConditions": [],
+        "colors": [
+          {
+            "hex": "#556787",
+            "name": "Neu",
+            "price": 0
+          }
+        ],
+        "id": "new-1769340898718",
+        "img": "images/1.png",
+        "name": "Iphone 16",
+        "opticalConditions": [
+          {
+            "name": "Neu",
+            "price": 30
+          }
+        ],
+        "storageOptions": [
+          {
+            "name": "64",
+            "price": null
+          },
+          {
+            "name": "Neu",
+            "price": 0
+          }
         ]
       }
     ]

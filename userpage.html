@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+
+{% block title %}Mein Konto | AO Mobile{% endblock %}
+
+{% block styles %}
+<style>
+    /* Spezifische Layout-Anpassung für die Userpage mit Sidebar */
+    body { 
+        padding-top: 80px; /* Header Platz */
+        background-color: #f4f7f6;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .user-container {
+        display: flex;
+        height: calc(100vh - 80px);
+        width: 100%;
+    }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+        width: 260px;
+        background: #ffffff;
+        border-right: 1px solid #ddd;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        flex-shrink: 0;
+    }
+
+    .menu-link {
+        padding: 12px 15px;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        color: #555;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex; align-items: center; gap: 10px;
+        font-weight: 500;
+    }
+
+    .menu-link:hover, .menu-link.active {
+        background-color: #e3f2fd;
+        color: var(--primary-color);
+    }
+
+    .menu-link svg { width: 20px; height: 20px; fill: currentColor; }
+
+    .logout-btn {
+        margin-top: auto;
+        color: #ea4335;
+        background: #fff5f5;
+    }
+    .logout-btn:hover { background: #fee; }
+
+    /* --- MAIN CONTENT AREA --- */
+    .main-content {
+        flex-grow: 1;
+        padding: 40px;
+        overflow-y: auto;
+    }
+
+    .section { display: none; animation: fadeIn 0.4s; }
+    .section.active { display: block; }
+
+    h2 { margin-bottom: 25px; font-weight: 600; font-size: 24px; }
+
+    .info-card {
+        background: white; padding: 30px; border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
+    }
+
+    .welcome-header {
+        background: var(--primary-gradient);
+        color: white; padding: 30px; border-radius: 16px; margin-bottom: 30px;
+    }
+
+    .data-table {
+        width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden;
+    }
+    .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+    .data-table th { background: #f9f9f9; font-weight: 600; color: #666; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group label { display: block; font-size: 13px; color: #777; margin-bottom: 5px; }
+    .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+    .btn-save { background: var(--primary-color); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 768px) {
+        .user-container { flex-direction: column; height: auto; overflow: visible; }
+        .sidebar { width: 100%; padding: 10px; flex-direction: row; overflow-x: auto; gap: 10px; height: auto; }
+        .logout-btn { margin-top: 0; }
+        .main-content { padding: 20px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-container">
+    <div class="sidebar">
+        <div class="menu-link active" onclick="showSection('start', this)">
+            <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+            Übersicht
+        </div>
+        <div class="menu-link" onclick="showSection('orders', this)">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z"/></svg>
+            Bestellungen
+        </div>
+        <div class="menu-link" onclick="showSection('sales', this)">
+            <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+            Verkäufe
+        </div>
+        <div class="menu-link" onclick="showSection('profile', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Profil
+        </div>
+
+        <div class="menu-link logout-btn" onclick="logout()">
+            <svg viewBox="0 0 24 24"><path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
+            Ausloggen
+        </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="start" class="section active">
+            <div class="welcome-header">
+                <h1>Willkommen zurück, <span id="user-firstname">User</span>!</h1>
+                <p>Schön, dass du wieder da bist. Hier ist deine Übersicht.</p>
+            </div>
+            
+            <div class="form-grid">
+                <div class="info-card">
+                    <h3 style="color:var(--primary-color); font-size:32px; margin-bottom:5px;">0</h3>
+                    <p style="color:#777;">Offene Bestellungen</p>
+                </div>
+                <div class="info-card">
+                    <h3 style="color:#00c853; font-size:32px; margin-bottom:5px;">0 CHF</h3>
+                    <p style="color:#777;">Aktuelles Guthaben</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="orders" class="section">
+            <h2>Deine Bestellungen</h2>
+            <div class="info-card">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Bestell-Nr.</th>
+                            <th>Datum</th>
+                            <th>Status</th>
+                            <th>Betrag</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-list">
+                        <tr>
+                            <td colspan="4" style="text-align:center; color:#999;">Lade Bestellungen...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="sales" class="section">
+            <h2>Deine Verkäufe</h2>
+            <div class="info-card">
+                 <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Verkauf-ID</th>
+                            <th>Gerät</th>
+                            <th>Angebot</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-list">
+                         <tr>
+                            <td colspan="4" style="text-align:center; color:#999;">Du hast noch keine Geräte verkauft.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="profile" class="section">
+            <h2>Profileinstellungen</h2>
+            <div class="info-card">
+                <div class="form-group" style="margin-bottom:15px;">
+                    <label>E-Mail Adresse (nicht änderbar)</label>
+                    <input type="text" id="p-email" disabled style="background:#f0f0f0;">
+                </div>
+                <div class="form-group" style="margin-bottom:15px;">
+                    <label>Benutzername</label>
+                    <input type="text" id="p-username">
+                </div>
+                
+                <h4 style="margin: 20px 0 10px 0; border-bottom:1px solid #eee; padding-bottom:5px;">Anschrift</h4>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Strasse</label>
+                        <input type="text" id="p-street">
+                    </div>
+                    <div class="form-group">
+                        <label>Nr.</label>
+                        <input type="text" id="p-house">
+                    </div>
+                </div>
+                <br>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>PLZ</label>
+                        <input type="text" id="p-zip">
+                    </div>
+                    <div class="form-group">
+                        <label>Ort</label>
+                        <input type="text" id="p-city">
+                    </div>
+                </div>
+
+                <button class="btn-save" onclick="alert('Funktion folgt bald!')">Änderungen speichern</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const userData = JSON.parse(localStorage.getItem('ao_user') || 'null');
+
+    if (!userData) {
+        window.location.href = '/'; 
+    } else {
+        document.getElementById('user-firstname').innerText = userData.username;
+        document.getElementById('p-username').value = userData.username;
+        document.getElementById('p-email').value = userData.email;
+        document.getElementById('p-street').value = userData.street || '';
+        document.getElementById('p-house').value = userData.house_number || '';
+        document.getElementById('p-zip').value = userData.zip_code || '';
+        document.getElementById('p-city').value = userData.city || '';
+
+        loadMyOrders();
+    }
+
+    async function loadMyOrders() {
+        try {
+            const response = await fetch('/api/my-orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: userData.email })
+            });
+            
+            const orders = await response.json();
+            const tbody = document.getElementById('orders-list');
+            const openCount = document.querySelector('.info-card h3');
+
+            tbody.innerHTML = '';
+
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:20px;">Keine Bestellungen gefunden.</td></tr>';
+                openCount.innerText = "0";
+                return;
+            }
+
+            let openOrdersCounter = 0;
+
+            orders.forEach(order => {
+                let statusBadge = '';
+                if(order.status === 'Offen') {
+                    statusBadge = '<span style="background:#fff3cd; color:#856404; padding:4px 8px; border-radius:4px; font-size:12px;">Warten auf Versand</span>';
+                    openOrdersCounter++;
+                } else if (order.status === 'Versendet') {
+                    statusBadge = '<span style="background:#d4edda; color:#155724; padding:4px 8px; border-radius:4px; font-size:12px;">Versendet</span>';
+                } else {
+                    statusBadge = '<span style="background:#eee; color:#333; padding:4px 8px; border-radius:4px; font-size:12px;">' + order.status + '</span>';
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:600;">${order.order_id}</td>
+                    <td>${order.date}</td>
+                    <td>${statusBadge}</td>
+                    <td style="font-weight:bold; color:#333;">${order.total} CHF</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            openCount.innerText = openOrdersCounter;
+
+        } catch (error) {
+            console.error("Fehler beim Laden der Bestellungen:", error);
+        }
+    }
+
+    function showSection(sectionId, element) {
+        document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        if (element) {
+            document.querySelectorAll('.menu-link').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('ao_user');
+        window.location.href = '/';
+    }
+</script>
+{% endblock %}

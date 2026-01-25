@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AO Mobile | Premium Smartphones{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBALE VARIABLEN & RESET --- */
+        :root {
+            --primary-color: #007bff;
+            --primary-gradient: linear-gradient(135deg, #007bff, #00d2ff);
+            --dark-bg: #121212;
+            --text-color: #333;
+            --light-bg: #f4f7f6;
+            --modal-bg: rgba(30, 30, 30, 0.95);
+            --price-color: #ea4335;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            padding-top: 80px; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        header {
+            height: 80px;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 25px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .header-left, .header-right {
+            display: flex; align-items: center; gap: 20px;
+        }
+
+        /* Buttons im Header */
+        .menu-icon, .icon-btn {
+            cursor: pointer;
+            background: none; border: none; padding: 0;
+            transition: transform 0.2s;
+            position: relative;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none;
+        }
+        
+        .menu-icon { width: 28px; height: 28px; }
+        
+        /* Speziell für User Button (kann breiter werden bei Text) */
+        #user-btn { min-width: 28px; height: auto; }
+
+        .menu-icon:hover, .icon-btn:hover { transform: scale(1.05); }
+
+        .icon-btn svg, .menu-icon svg {
+            fill: white;
+            width: 28px; height: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .logo {
+            font-size: 24px; font-weight: 600; letter-spacing: 1px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .cart-count {
+            position: absolute; top: -5px; right: -5px;
+            background: var(--price-color); color: white;
+            font-size: 10px; font-weight: 700; width: 18px; height: 18px;
+            border-radius: 50%; display: none; align-items: center; justify-content: center;
+            border: 2px solid #121212;
+        }
+
+        /* --- SIDEBAR MENÜ --- */
+        #dropdown-menu {
+            position: fixed; top: 0; left: 0;
+            width: 280px; height: 100vh;
+            background: #1a1a1a;
+            padding-top: 100px;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 999;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+
+        #dropdown-menu.open { transform: translateX(0); }
+
+        #dropdown-menu a {
+            display: block; padding: 20px 30px;
+            color: #ccc; text-decoration: none;
+            font-size: 18px; border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        #dropdown-menu a:hover {
+            background-color: #252525; color: white;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 40px;
+        }
+
+        /* --- LOGIN OVERLAY --- */
+        .login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000;
+        }
+
+        .login-overlay.active { display: flex; animation: fadeIn 0.3s; }
+
+        .login-card {
+            background: var(--modal-bg);
+            width: 90%; max-width: 400px;
+            padding: 40px; border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative; color: white;
+        }
+
+        .close-login {
+            position: absolute; top: 20px; right: 20px;
+            background: none; border: none;
+            color: #777; font-size: 24px; cursor: pointer;
+        }
+
+        .login-card h3 { margin-bottom: 25px; font-size: 24px; text-align: center; }
+
+        .login-card input[type="email"], .login-card input[type="password"] {
+            width: 100%; padding: 12px 15px; margin-bottom: 15px;
+            background: #2a2a2a; border: 1px solid #333;
+            border-radius: 8px; color: white; font-size: 16px;
+        }
+
+        .login-footer {
+            display: flex; justify-content: space-between; align-items: center; margin-top: 20px;
+        }
+
+        .btn-link { color: #aaa; text-decoration: none; font-size: 14px; transition: color 0.3s; }
+        .btn-link:hover { color: white; }
+
+        .login-submit {
+            padding: 10px 25px; background: var(--primary-gradient);
+            border: none; border-radius: 50px; color: white;
+            font-weight: 500; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            margin-top: auto;
+            background-color: #0a0a0a; color: #777;
+            padding: 60px 20px; text-align: center;
+        }
+        footer a { color: #aaa; text-decoration: none; margin: 0 10px; font-size: 14px; }
+        footer a:hover { color: var(--primary-color); }
+        footer p { margin-top: 30px; opacity: 0.5; font-size: 12px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        {% block styles %}{% endblock %}
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <button class="menu-icon" onclick="toggleMenu()">
+                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </button>
+            <a href="/" class="logo">AO Mobile</a>
+        </div>
+        <div class="header-right">
+            <a href="/cart" class="icon-btn" style="width:28px; height:28px;">
+                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                <span id="global-cart-badge" class="cart-count">0</span>
+            </a>
+            
+            <button class="icon-btn" id="user-btn" onclick="handleUserClick()">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div id="dropdown-menu">
+        <a href="/shop" onclick="toggleMenu()">Handy kaufen</a>
+        <a href="/sell" onclick="toggleMenu()">Handy verkaufen</a>
+        <a href="/cart" onclick="toggleMenu()">Warenkorb</a>
+        <a href="#" onclick="handleUserClick(); toggleMenu()">Mein Profil</a>
+    </div>
+
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-card">
+            <button class="close-login" onclick="toggleLogin()">&times;</button>
+            <h3>Willkommen zurück</h3>
+            <input type="email" id="login-email" placeholder="E-Mail Adresse">
+            <input type="password" id="login-pass" placeholder="Passwort">
+            
+            <div style="margin-bottom: 20px; font-size: 14px; color: #aaa;">
+                <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                    <input type="checkbox"> Eingeloggt bleiben
+                </label>
+            </div>
+
+            <div class="login-footer">
+                <a href="/register" class="btn-link">Konto erstellen</a>
+                <button class="login-submit" onclick="performLogin()">Einloggen</button>
+            </div>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <div>
+            <a href="#">AGB</a>
+            <a href="#">Impressum</a>
+            <a href="#">Datenschutz</a>
+            <a href="#">Kontakt</a>
+        </div>
+        <p>&copy; 2024 AO Mobile. Alle Rechte vorbehalten.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() { document.getElementById("dropdown-menu").classList.toggle("open"); }
+        function toggleLogin() { document.getElementById("loginOverlay").classList.toggle("active"); }
+        
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("loginOverlay")) toggleLogin();
+        }
+
+        function handleUserClick() {
+            const user = JSON.parse(localStorage.getItem('ao_user') || 'null');
+            if (user) window.location.href = '/userpage';
+            else toggleLogin();
+        }
+
+        // --- BUTTON ANZEIGE (ZENTRIERT) ---
+        function updateLoginVisuals() {
+            const user = JSON.parse(localStorage.getItem('ao_user') || 'null');
+            const btn = document.getElementById('user-btn');
+
+            if (user) {
+                const name = user.username.split(' ')[0]; // Nur Vorname
+                // Hier geändert: text-align: center statt right
+                btn.innerHTML = `
+                    <div style="text-align: center; color: white; font-size: 11px; line-height: 1.2;">
+                        <span style="opacity: 0.7;">Willkommen</span><br>
+                        <span style="font-weight: 600; font-size: 13px;">${name}</span>
+                    </div>
+                `;
+            } else {
+                btn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+            }
+        }
+
+        async function performLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-pass').value;
+            const btn = document.querySelector('.login-submit');
+            const originalText = btn.innerText;
+
+            btn.innerText = "Lade...";
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('ao_user', JSON.stringify(result));
+                    btn.innerText = "Erfolg! ✓";
+                    btn.style.background = "#28a745";
+                    
+                    updateLoginVisuals(); 
+                    
+                    setTimeout(() => {
+                        toggleLogin();
+                        // Hier geändert: Keine Weiterleitung, nur Reload damit man auf der Seite bleibt
+                        window.location.reload(); 
+                    }, 800);
+                } else {
+                    alert(result.message);
+                    btn.innerText = "Fehler";
+                    btn.style.background = "#ea4335";
+                    setTimeout(() => { btn.innerText = originalText; btn.style.background = ""; }, 2000);
+                }
+            } catch (error) {
+                alert("Verbindungsfehler");
+                btn.innerText = originalText;
+            }
+        }
+
+        function updateGlobalBadge() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const badge = document.getElementById('global-cart-badge');
+            if (cart.length > 0) { badge.innerText = cart.length; badge.style.display = 'flex'; }
+            else { badge.style.display = 'none'; }
+        }
+
+        // Start Init
+        document.addEventListener("DOMContentLoaded", function() {
+            updateGlobalBadge();
+            updateLoginVisuals(); 
+        });
+    </script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}Kasse | AO Mobile{% endblock %}
+
+{% block styles %}
+<style>
+    /* Spezifische Styles für die Kasse */
+    .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { margin-top: 0; margin-bottom: 20px; }
+    h2 { font-size: 18px; margin-bottom: 15px; color: #555; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-top: 0; }
+
+    /* Box Design */
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    
+    /* 1. Zahlungsarten */
+    .payment-options { display: flex; gap: 15px; flex-wrap: wrap; }
+    .payment-option { 
+        border: 2px solid #eee; border-radius: 8px; padding: 15px; flex: 1; cursor: pointer; text-align: center; transition: 0.2s; font-weight: 500; min-width: 120px;
+    }
+    .payment-option:hover { border-color: #ccc; }
+    .payment-option.active { border-color: var(--primary-color); background: #e3f2fd; color: var(--primary-color); }
+    
+    /* 2. Formular */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-size: 13px; margin-bottom: 5px; color: #666; }
+    input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; }
+    
+    /* Toggle für Lieferadresse */
+    .toggle-section { margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee; }
+    #shipping-address-form { display: none; margin-top: 15px; }
+    #shipping-address-form.visible { display: block; animation: fadeIn 0.3s; }
+
+    /* 3. Versand & Total */
+    .summary-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 14px; }
+    .total-row { font-size: 20px; font-weight: 700; border-top: 2px solid #eee; padding-top: 15px; margin-top: 10px; color: var(--price-color); }
+    
+    .checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; }
+    .checkbox-label input { width: auto; cursor: pointer; }
+
+    /* Button */
+    .btn-pay { 
+        width: 100%; background: #28a745; color: white; padding: 18px; border: none; 
+        border-radius: 8px; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 20px; 
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); transition: 0.2s;
+    }
+    .btn-pay:hover { background: #218838; transform: translateY(-1px); }
+    .btn-pay:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 20px;">
+        <a href="/cart" style="text-decoration:none; color:#666;">← Zurück zum Warenkorb</a>
+    </div>
+    <h1>Kasse</h1>
+
+    <div class="card">
+        <h2>1. Zahlungsart wählen</h2>
+        <div class="payment-options">
+            <div class="payment-option active" onclick="selectPayment('twint')">TWINT</div>
+            <div class="payment-option" onclick="selectPayment('creditcard')">Kreditkarte</div>
+            <div class="payment-option" onclick="selectPayment('invoice')">Rechnung</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>2. Rechnungsadresse</h2>
+        <div class="form-grid">
+            <div class="form-group"><label>Vorname</label><input type="text" id="bill-firstname"></div>
+            <div class="form-group"><label>Nachname</label><input type="text" id="bill-lastname"></div>
+        </div>
+        <div class="form-group"><label>Strasse & Nr.</label><input type="text" id="bill-street"></div>
+        <div class="form-grid">
+            <div class="form-group"><label>PLZ</label><input type="text" id="bill-zip"></div>
+            <div class="form-group"><label>Ort</label><input type="text" id="bill-city"></div>
+        </div>
+        <div class="form-group"><label>E-Mail</label><input type="email" id="bill-email"></div>
+
+        <div class="toggle-section">
+            <label class="checkbox-label">
+                <input type="checkbox" id="diff-shipping-check" onchange="toggleShippingForm()">
+                An eine andere Adresse senden?
+            </label>
+
+            <div id="shipping-address-form">
+                <h3 style="font-size:16px; margin-top:15px; color:#007bff;">Lieferadresse</h3>
+                <div class="form-grid">
+                    <div class="form-group"><label>Vorname</label><input type="text" id="ship-firstname"></div>
+                    <div class="form-group"><label>Nachname</label><input type="text" id="ship-lastname"></div>
+                </div>
+                <div class="form-group"><label>Strasse & Nr.</label><input type="text" id="ship-street"></div>
+                <div class="form-grid">
+                    <div class="form-group"><label>PLZ</label><input type="text" id="ship-zip"></div>
+                    <div class="form-group"><label>Ort</label><input type="text" id="ship-city"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>3. Versand & Abschluss</h2>
+        
+        <label class="checkbox-label" style="background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #eee;">
+            <input type="checkbox" id="insurance-check" onchange="updateTotal()">
+            <div>
+                <strong>Versicherter Versand</strong> (+ 10.00 CHF)<br>
+                <span style="font-size:12px; color:#777;">Schutz gegen Verlust und Beschädigung</span>
+            </div>
+        </label>
+
+        <div class="summary-row">
+            <span>Warenwert</span>
+            <span id="subtotal">0.00 CHF</span>
+        </div>
+        <div class="summary-row">
+            <span>Versand</span>
+            <span id="shipping-cost">0.00 CHF</span>
+        </div>
+        <div class="summary-row total-row">
+            <span>Gesamtsumme</span>
+            <span id="total-sum">0.00 CHF</span>
+        </div>
+
+        <br>
+        <label class="checkbox-label" style="margin-bottom: 20px;">
+            <input type="checkbox" id="agb-check" onchange="checkForm()">
+            Ich akzeptiere die Allgemeinen Geschäftsbedingungen (AGB) und die Datenschutzbestimmungen.
+        </label>
+
+        <button id="pay-btn" class="btn-pay" disabled onclick="placeOrder()">Kostenpflichtig bestellen</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let selectedPayment = 'twint';
+    let cartTotal = 0;
+    let insuranceCost = 10.00;
+
+    // Init
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const user = JSON.parse(localStorage.getItem('ao_user') || 'null');
+
+    // 1. Warenkorb Wert berechnen
+    cart.forEach(item => cartTotal += parseFloat(item.price));
+    document.getElementById('subtotal').innerText = cartTotal.toFixed(2) + " CHF";
+    updateTotal();
+
+    // 2. User Daten vorbefüllen (falls vorhanden)
+    if (user) {
+        document.getElementById('bill-email').value = user.email || '';
+        document.getElementById('bill-street').value = user.street || '';
+        document.getElementById('bill-city').value = user.city || '';
+        document.getElementById('bill-zip').value = user.zip_code || '';
+        // Namen splitten (einfacher Hack)
+        if(user.username) {
+            const parts = user.username.split(' ');
+            document.getElementById('bill-firstname').value = parts[0] || '';
+            document.getElementById('bill-lastname').value = parts.slice(1).join(' ') || '';
+        }
+    }
+
+    function selectPayment(method) {
+        selectedPayment = method;
+        document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    }
+
+    function toggleShippingForm() {
+        const form = document.getElementById('shipping-address-form');
+        const isChecked = document.getElementById('diff-shipping-check').checked;
+        if (isChecked) form.classList.add('visible');
+        else form.classList.remove('visible');
+    }
+
+    function updateTotal() {
+        const isInsured = document.getElementById('insurance-check').checked;
+        const shipping = isInsured ? insuranceCost : 0;
+        const total = cartTotal + shipping;
+
+        document.getElementById('shipping-cost').innerText = shipping.toFixed(2) + " CHF";
+        document.getElementById('total-sum').innerText = total.toFixed(2) + " CHF";
+    }
+
+    function checkForm() {
+        const agb = document.getElementById('agb-check').checked;
+        document.getElementById('pay-btn').disabled = !agb;
+    }
+
+    async function placeOrder() {
+        if (cart.length === 0) return alert("Warenkorb leer!");
+
+        // Daten sammeln
+        const diffShipping = document.getElementById('diff-shipping-check').checked;
+        const isInsured = document.getElementById('insurance-check').checked;
+        
+        // Rechnungsadresse
+        const billingAddr = {
+            firstname: document.getElementById('bill-firstname').value,
+            lastname: document.getElementById('bill-lastname').value,
+            street: document.getElementById('bill-street').value,
+            zip: document.getElementById('bill-zip').value,
+            city: document.getElementById('bill-city').value,
+            email: document.getElementById('bill-email').value
+        };
+
+        // Validierung (einfach)
+        if(!billingAddr.lastname || !billingAddr.street) return alert("Bitte Rechnungsadresse ausfüllen");
+
+        // Lieferadresse (falls abweichend, sonst gleich Rechnung)
+        let shippingAddr = billingAddr;
+        if (diffShipping) {
+            shippingAddr = {
+                firstname: document.getElementById('ship-firstname').value,
+                lastname: document.getElementById('ship-lastname').value,
+                street: document.getElementById('ship-street').value,
+                zip: document.getElementById('ship-zip').value,
+                city: document.getElementById('ship-city').value
+            };
+            if(!shippingAddr.lastname) return alert("Bitte Lieferadresse ausfüllen");
+        }
+
+        // Button sperren
+        const btn = document.getElementById('pay-btn');
+        btn.innerText = "Verarbeite...";
+        btn.disabled = true;
+
+        try {
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    cart: cart,
+                    paymentMethod: selectedPayment,
+                    insurance: isInsured,
+                    billingAddress: billingAddr,
+                    shippingAddress: shippingAddr
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                // 1. Namen der gekauften Geräte sammeln für die Anzeige
+                const itemNames = cart.map(item => item.name).join(', ');
+
+                // 2. Warenkorb leeren
+                localStorage.removeItem('cart');
+                
+                // 3. Weiterleitung zur Party-Seite (mit Namen in der URL)
+                window.location.href = '/success?items=' + encodeURIComponent(itemNames);
+            } else {
+                alert("Fehler: " + result.message);
+                btn.innerText = "Kostenpflichtig bestellen";
+                btn.disabled = false;
+            }
+        } catch (e) {
+            alert("Serverfehler");
+            btn.disabled = false;
+        }
+    }
+</script>
+{% endblock %}

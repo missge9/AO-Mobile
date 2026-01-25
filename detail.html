@@ -1,132 +1,307 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Produktdetails | AO Mobile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root { --primary-color: #007bff; --green-btn: #4caf50; --text-color: #333; --bg-color: #f9f9f9; --price-color: #ea4335; }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 100px; padding-bottom: 100px; }
-        header { height: 80px; background: #121212; color: white; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .logo { font-size: 20px; font-weight: 600; background: linear-gradient(135deg, #007bff, #00d2ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .icon-btn { cursor: pointer; width: 28px; height: 28px; position: relative; text-decoration: none; display: flex; align-items: center; }
-        .icon-btn svg { fill: white; width: 100%; height: 100%; }
-        .cart-count { position: absolute; top: -5px; right: -5px; background: var(--price-color); color: white; font-size: 10px; font-weight: 700; width: 18px; height: 18px; border-radius: 50%; display: none; align-items: center; justify-content: center; }
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
-        .back-btn { display: inline-block; padding: 8px 20px; background: #fff; border: 1px solid #ddd; border-radius: 30px; text-decoration: none; color: #333; font-size: 13px; margin-bottom: 20px; }
-        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        @media (max-width: 850px) { .detail-grid { grid-template-columns: 1fr; gap: 20px; } #main-img { max-height: 300px; } }
-        .product-image-card { background: white; border-radius: 20px; padding: 30px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        #main-img { max-width: 100%; max-height: 450px; object-fit: contain; }
-        .option-group { margin-bottom: 25px; }
-        .option-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
-        .pill-container { display: flex; flex-wrap: wrap; gap: 8px; }
-        .pill { padding: 8px 16px; border: 1px solid #ddd; border-radius: 30px; background: white; cursor: pointer; font-size: 13px; transition: 0.2s; }
-        .pill.active { border: 2px solid #333; font-weight: 600; background: #f0f0f0; }
-        .color-circle { width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; cursor: pointer; position: relative; margin-right: 12px; }
-        .color-circle.active::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border: 2px solid #333; border-radius: 50%; }
-        .price-main { font-size: 32px; font-weight: 600; color: var(--price-color); }
-        .sticky-cart-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--green-btn); color: white; height: 65px; display: flex; justify-content: center; align-items: center; font-size: 16px; font-weight: 600; cursor: pointer; z-index: 1100; text-transform: uppercase; }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="logo">AO Mobile</div>
-        <div style="display:flex; gap:15px;">
-            <a href="cart" class="icon-btn">
-                <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                <span id="cart-badge" class="cart-count">0</span>
-            </a>
-        </div>
-    </header>
+{% extends "base.html" %}
 
+{% block title %}Produktdetails | AO Mobile{% endblock %}
+
+{% block styles %}
+<style>
+    /* Spezifische Styles für die Detailseite */
+    body { padding-bottom: 100px; } /* Platz für die Sticky Bar unten */
+    
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px 15px; }
+    
+    .back-btn { 
+        display: inline-block; padding: 8px 20px; background: #fff; 
+        border: 1px solid #ddd; border-radius: 30px; text-decoration: none; 
+        color: #333; font-size: 13px; margin-bottom: 20px; transition: 0.2s;
+    }
+    .back-btn:hover { background: #f0f0f0; }
+
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    @media (max-width: 850px) { 
+        .detail-grid { grid-template-columns: 1fr; gap: 20px; } 
+        #main-img { max-height: 300px; } 
+    }
+
+    .product-image-card { 
+        background: white; border-radius: 20px; padding: 30px; 
+        text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+    }
+    #main-img { max-width: 100%; max-height: 450px; object-fit: contain; }
+
+    .option-group { margin-bottom: 25px; }
+    .option-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
+
+    .pill-container { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill { 
+        padding: 8px 16px; border: 1px solid #ddd; border-radius: 30px; 
+        background: white; cursor: pointer; font-size: 13px; transition: 0.2s; 
+    }
+    .pill.active { border: 2px solid #333; font-weight: 600; background: #f0f0f0; border-color: #333; }
+    .pill.disabled { opacity: 0.3; cursor: not-allowed; background: #eee; border-color: #eee; text-decoration: line-through; pointer-events: none; }
+
+    .color-circle { 
+        width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; 
+        cursor: pointer; position: relative; margin-right: 12px; 
+    }
+    .color-circle.active::after { 
+        content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; 
+        border: 2px solid #333; border-radius: 50%; 
+    }
+    .color-circle.disabled { opacity: 0.2; pointer-events: none; }
+
+    .price-main { font-size: 32px; font-weight: 600; color: var(--price-color); }
+    
+    .sticky-cart-bar { 
+        position: fixed; bottom: 0; left: 0; width: 100%; 
+        background: var(--green-btn); color: white; height: 65px; 
+        display: flex; justify-content: center; align-items: center; 
+        font-size: 16px; font-weight: 600; cursor: pointer; z-index: 1100; 
+        text-transform: uppercase; border: none;
+    }
+    .sticky-cart-bar.disabled { background: #ccc; cursor: not-allowed; }
+
+    .stock-info { font-size: 12px; color: #28a745; margin-top: 5px; font-weight: 500; }
+    
+    .device-id { 
+        font-family: monospace; background: #eee; padding: 2px 6px; 
+        border-radius: 4px; font-size: 12px; color: #555; 
+        vertical-align: middle; margin-left: 10px; 
+    }
+</style>
+{% endblock %}
+
+{% block content %}
     <div class="container">
-        <a href="shop" id="back-link" class="back-btn">← Zurück</a>
+        <a href="/shop" id="back-link" class="back-btn">← Zurück</a>
+        
         <div class="detail-grid">
-            <div class="product-image-card"><img id="main-img" src=""></div>
+            <div class="product-image-card">
+                <img id="main-img" src="" alt="Produktbild">
+            </div>
+            
             <div class="product-info">
-                <h1 id="product-name" style="font-size:28px; margin-bottom:20px;"></h1>
-                <div class="option-group"><div class="option-title">Optischer Zustand ⓘ</div><div id="optical-list" class="pill-container"></div></div>
-                <div class="option-group"><div class="option-title">Akkuzustand ⓘ</div><div id="battery-list" class="pill-container"></div></div>
-                <div class="option-group"><div class="option-title">Speicher</div><div id="storage-list" class="pill-container"></div></div>
-                <div class="option-group"><div class="option-title">Farbe</div><div id="color-list" style="display:flex;"></div></div>
-                <div class="option-group"><div class="option-title">Garantie</div><div id="warranty-list" class="pill-container"></div></div>
+                <h1 id="product-name" style="font-size:28px; margin-bottom:10px;">Laden...</h1>
+                
+                <div id="device-id-display" style="margin-bottom:20px; display:none;">
+                    Geräte-ID: <span class="device-id" id="display-id">-</span>
+                </div>
+
+                <div class="option-group">
+                    <div class="option-title">Farbe</div>
+                    <div id="color-list" style="display:flex; flex-wrap:wrap;"></div>
+                </div>
+
+                <div class="option-group">
+                    <div class="option-title">Speicher</div>
+                    <div id="storage-list" class="pill-container"></div>
+                </div>
+
+                <div class="option-group">
+                    <div class="option-title">Optischer Zustand ⓘ</div>
+                    <div id="optical-list" class="pill-container"></div>
+                </div>
+                
+                <div class="option-group">
+                    <div class="option-title">Akkuzustand ⓘ</div>
+                    <div id="battery-list" class="pill-container"></div>
+                </div>
+
                 <div style="border-top:1px solid #eee; padding-top:20px;">
-                    <span id="price-val" class="price-main"></span>
+                    <span id="price-val" class="price-main">-- CHF</span>
+                    <div id="stock-display" class="stock-info"></div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="sticky-cart-bar" id="add-to-cart">In den Warenkorb legensadasd</div>
+    
+    <button class="sticky-cart-bar" id="add-to-cart">In den Warenkorb</button>
+{% endblock %}
 
-    <script>
-        const productId = new URLSearchParams(window.location.search).get('id');
-        let currentBasePrice = 0;
+{% block scripts %}
+<script>
+    const productId = new URLSearchParams(window.location.search).get('id');
+    let productData = null;
+    
+    let selection = {
+        color: null,
+        storage: null,
+        condition: null,
+        battery: null
+    };
 
-        function toggleMenu() { document.getElementById("dropdown-menu").classList.toggle("open"); }
+    // Daten vom Server laden
+    fetch('/api/admin/data').then(r => r.json()).then(data => {
+        let p = null, brand = "";
+        for (let b in data) { 
+            let found = data[b].products.find(x => x.id === productId); 
+            if (found) { p = found; brand = b; break; } 
+        }
         
-        function updateCartBadge() {
-            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const badge = document.getElementById('cart-badge');
-            if (cart.length > 0) { badge.innerText = cart.length; badge.style.display = 'flex'; }
-            else { badge.style.display = 'none'; }
+        if (p) {
+            productData = p;
+            initPage(brand);
+        } else {
+            document.getElementById('product-name').innerText = "Produkt nicht gefunden";
+            document.getElementById('add-to-cart').style.display = 'none';
         }
+    });
 
-        function calculateTotal() {
-            let total = currentBasePrice;
-            document.querySelectorAll('.pill.active, .color-circle.active').forEach(el => {
-                total += parseFloat(el.getAttribute('data-price') || 0);
-            });
-            document.getElementById('price-val').innerText = total + " CHF";
+    function initPage(brand) {
+        document.getElementById('back-link').href = `/shop?brand=${brand}`;
+        document.getElementById('product-name').innerText = productData.name;
+        document.getElementById('main-img').src = productData.img || 'https://placehold.co/400x400?text=No+Image';
+
+        const inventory = productData.inventory || [];
+        if (inventory.length > 0) {
+            applySelectionFromItem(inventory[0]);
+        } else {
+            renderAllOptions();
+            document.getElementById('price-val').innerText = "Ausverkauft";
+            document.getElementById('add-to-cart').classList.add('disabled');
         }
+    }
 
-        fetch('/data/data.json?v=' + new Date().getTime()).then(r => r.json()).then(data => {
-            let p = null, brand = "";
-            for (let b in data) { let found = data[b].products.find(x => x.id === productId); if (found) { p = found; brand = b; break; } }
-            if (p) {
-                currentBasePrice = p.basePrice;
-                document.getElementById('back-link').href = `shop.html?brand=${brand}`;
-                document.getElementById('product-name').innerText = p.name;
-                document.getElementById('main-img').src = p.img;
-                
-                const render = (id, items) => {
-                    const el = document.getElementById(id); el.innerHTML = '';
-                    items.forEach((item, i) => {
-                        const s = document.createElement('span'); s.className = 'pill' + (i === 0 ? ' active' : '');
-                        s.innerText = item.name; s.setAttribute('data-price', item.price);
-                        s.onclick = () => { el.querySelectorAll('.pill').forEach(b => b.classList.remove('active')); s.classList.add('active'); calculateTotal(); };
-                        el.appendChild(s);
-                    });
-                };
-                render('optical-list', p.opticalConditions); render('battery-list', p.batteryConditions);
-                render('storage-list', p.storageOptions); render('warranty-list', p.warranties);
-                
-                const colorBox = document.getElementById('color-list');
-                p.colors.forEach((c, i) => {
-                    const d = document.createElement('div'); d.className = 'color-circle' + (i === 0 ? ' active' : '');
-                    d.style.background = c.hex; d.setAttribute('data-price', c.price); d.setAttribute('data-name', c.name);
-                    d.onclick = () => { colorBox.querySelectorAll('.color-circle').forEach(circle => circle.classList.remove('active')); d.classList.add('active'); calculateTotal(); };
-                    colorBox.appendChild(d);
-                });
-                calculateTotal();
+    function applySelectionFromItem(item) {
+        selection.color = item.color;
+        selection.storage = item.storage;
+        selection.condition = item.condition;
+        selection.battery = item.battery;
+        renderAllOptions();
+    }
 
-                document.getElementById('add-to-cart').onclick = function() {
-                    const item = {
-                        name: p.name, price: document.getElementById('price-val').innerText.split(' ')[0],
-                        img: p.img, options: { 
-                            storage: document.querySelector('#storage-list .pill.active').innerText,
-                            color: document.querySelector('#color-list .color-circle.active').getAttribute('data-name')
-                        }
-                    };
-                    let cart = JSON.parse(localStorage.getItem('cart') || '[]'); cart.push(item);
-                    localStorage.setItem('cart', JSON.stringify(cart)); updateCartBadge();
-                    this.innerText = "Hinzugefügt!"; setTimeout(() => { this.innerText = "In den Warenkorb legen"; }, 2000);
-                };
-            }
+    function renderAllOptions() {
+        const inv = productData.inventory || [];
+
+        const availableColors = [...new Set(inv.map(i => i.color))];
+        renderColorOptions(availableColors);
+
+        const storageInColor = inv.filter(i => i.color === selection.color);
+        const availableStorage = [...new Set(storageInColor.map(i => i.storage))];
+        renderPills('storage-list', productData.storageOptions, availableStorage, 'storage');
+
+        const conditionInColor = inv.filter(i => i.color === selection.color);
+        const availableCond = [...new Set(conditionInColor.map(i => i.condition))];
+        renderPills('optical-list', productData.opticalConditions, availableCond, 'condition');
+
+        const batteryInCond = inv.filter(i => i.color === selection.color && i.condition === selection.condition);
+        const availableBat = [...new Set(batteryInCond.map(i => i.battery))];
+        renderPills('battery-list', productData.batteryConditions, availableBat, 'battery');
+
+        updatePriceAndDisplay();
+    }
+
+    function renderColorOptions(availables) {
+        const container = document.getElementById('color-list');
+        container.innerHTML = '';
+        (productData.colors || []).forEach(opt => {
+            if (!availables.includes(opt.name)) return;
+            const el = document.createElement('div');
+            el.className = 'color-circle' + (selection.color === opt.name ? ' active' : '');
+            el.style.background = opt.hex;
+            el.onclick = () => selectSmart('color', opt.name);
+            container.appendChild(el);
         });
-        updateCartBadge();
-    </script>
-</body>
-</html>
+    }
+
+    function renderPills(containerId, allOptions, availables, type) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        (allOptions || []).forEach(opt => {
+            const isAvailable = availables.includes(opt.name);
+            const el = document.createElement('span');
+            el.className = 'pill';
+            el.innerText = opt.name;
+            if (selection[type] === opt.name) el.classList.add('active');
+            if (!isAvailable) {
+                el.classList.add('disabled');
+            } else {
+                el.onclick = () => selectSmart(type, opt.name);
+            }
+            container.appendChild(el);
+        });
+    }
+
+    function selectSmart(type, value) {
+        selection[type] = value;
+        const inv = productData.inventory || [];
+        let match = inv.find(i => 
+            i.color === selection.color && 
+            i.storage === selection.storage && 
+            i.condition === selection.condition && 
+            i.battery === selection.battery
+        );
+
+        if (!match) {
+            let candidates = inv.filter(i => i[type] === value);
+            if (type === 'color') {
+                match = candidates.find(i => i.storage === selection.storage) || candidates[0];
+            } else if (type === 'condition') {
+                match = candidates.find(i => i.color === selection.color && i.storage === selection.storage) || 
+                        candidates.find(i => i.color === selection.color) || candidates[0];
+            } else {
+                match = candidates.find(i => i.color === selection.color) || candidates[0];
+            }
+            if (match) {
+                applySelectionFromItem(match);
+                return;
+            }
+        }
+        renderAllOptions();
+    }
+
+    function updatePriceAndDisplay() {
+        const inv = productData.inventory || [];
+        const match = inv.find(i => 
+            i.color === selection.color && i.storage === selection.storage && 
+            i.condition === selection.condition && i.battery === selection.battery
+        );
+
+        const priceDisplay = document.getElementById('price-val');
+        const stockDisplay = document.getElementById('stock-display');
+        const btn = document.getElementById('add-to-cart');
+        const idDisplay = document.getElementById('device-id-display');
+
+        if (match) {
+            let price = parseInt(productData.basePrice);
+            const getPrice = (list, val) => (list||[]).find(x=>x.name===val)?.price || 0;
+            price += getPrice(productData.colors, selection.color);
+            price += getPrice(productData.storageOptions, selection.storage);
+            price += getPrice(productData.opticalConditions, selection.condition);
+            price += getPrice(productData.batteryConditions, selection.battery);
+
+            priceDisplay.innerText = price + " CHF";
+            stockDisplay.innerText = "Auf Lager - Sofort lieferbar";
+            stockDisplay.style.color = "#28a745";
+            idDisplay.style.display = 'block';
+            document.getElementById('display-id').innerText = "#" + match.id;
+            btn.classList.remove('disabled');
+            btn.innerText = "In den Warenkorb";
+            btn.onclick = () => addToCart(match.id, price);
+        } else {
+            priceDisplay.innerText = "--";
+            stockDisplay.innerText = "Kombination nicht verfügbar";
+            stockDisplay.style.color = "red";
+            idDisplay.style.display = 'none';
+            btn.classList.add('disabled');
+        }
+    }
+
+    function addToCart(realId, price) {
+        const item = {
+            id: realId,
+            name: productData.name,
+            price: price,
+            img: productData.img,
+            options: { ...selection }
+        };
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        cart.push(item);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateGlobalBadge(); // Aus base.html
+        
+        const btn = document.getElementById('add-to-cart');
+        btn.innerText = "Hinzugefügt! ✓";
+        setTimeout(() => { btn.innerText = "In den Warenkorb"; }, 2000);
+    }
+</script>
+{% endblock %}
