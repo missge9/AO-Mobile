@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin | AO Mobile{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #007bff; --bg: #f4f7f6; --sidebar-bg: #1e1e2d; --text-light: #a2a3b7; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* --- HEADER --- */
+        header {
+            height: 60px; background: white; border-bottom: 1px solid #ddd;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 25px;
+            flex-shrink: 0;
+        }
+        .admin-logo { font-weight: 700; font-size: 20px; color: #333; text-decoration: none; }
+        .back-link { font-size: 13px; color: #666; text-decoration: none; }
+        .back-link:hover { color: var(--primary); }
+
+        /* --- LAYOUT --- */
+        .admin-wrapper { display: flex; flex: 1; overflow: hidden; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px; background: var(--sidebar-bg); color: white;
+            display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0;
+        }
+        
+        .nav-item {
+            padding: 15px 25px; color: var(--text-light); text-decoration: none;
+            display: flex; align-items: center; gap: 15px; font-size: 14px; transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.05); color: white;
+            border-left-color: var(--primary);
+        }
+        .nav-icon { width: 20px; text-align: center; }
+
+        /* --- CONTENT --- */
+        .content-area { flex: 1; padding: 30px; overflow-y: auto; }
+
+        /* Globale Styles für Admin */
+        h1 { margin-top: 0; font-size: 24px; color: #333; }
+        .card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+
+        {% block styles %}{% endblock %}
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="admin-logo">AO Mobile <span style="color:var(--primary); font-weight:400;">Admin</span></div>
+        <a href="/" class="back-link">← Zurück zum Shop</a>
+    </header>
+
+    <div class="admin-wrapper">
+        <div class="sidebar">
+            <a href="/admin" class="nav-item" id="link-dash">
+                <span class="nav-icon">🏠</span> Dashboard
+            </a>
+            <a href="/admin/inventory" class="nav-item" id="link-inv">
+                <span class="nav-icon">📦</span> Lager & Produkte
+            </a>
+            <a href="/admin/orders" class="nav-item" id="link-ord">
+                <span class="nav-icon">🛒</span> Bestellungen
+            </a>
+            <a href="/admin/sales" class="nav-item" id="link-sale">
+                <span class="nav-icon">🤝</span> Ankäufe
+            </a>
+        </div>
+
+        <div class="content-area">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script>
+        // Automatisch den aktiven Link markieren
+        const path = window.location.pathname;
+        if(path === '/admin') document.getElementById('link-dash').classList.add('active');
+        else if(path.includes('inventory')) document.getElementById('link-inv').classList.add('active');
+        else if(path.includes('orders')) document.getElementById('link-ord').classList.add('active');
+        else if(path.includes('sales')) document.getElementById('link-sale').classList.add('active');
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -113,8 +113,93 @@ def my_orders():
                 my_orders_list.append(order)
 
     return jsonify(my_orders_list)
+# --- Verkaufs-Logik (User verkauft an AO Mobile) ---
 
-# --- API Routen ---
+@app.route('/api/sell', methods=['POST'])
+def register_sale():
+    data = request.json
+    sales_path = os.path.join(base_dir, '../data/sales.json')
+    
+    # Datei laden oder Liste erstellen
+    if os.path.exists(sales_path):
+        with open(sales_path, 'r', encoding='utf-8') as f:
+            try:
+                sales = json.load(f)
+            except:
+                sales = []
+    else:
+        sales = []
+        
+    new_sale = {
+        "sale_id": f"SELL-{int(datetime.now().timestamp())}",
+        "date": datetime.now().strftime("%d.%m.%Y"),
+        "user_email": data.get('email'),
+        "device": data.get('device'),
+        "specs": data.get('specs'),
+        "offer_price": data.get('price'),
+        "status": "In Prüfung" # Status für Dashboard
+    }
+    
+    sales.insert(0, new_sale) # Neuste zuerst
+    
+    # Speichern
+    with open(sales_path, 'w', encoding='utf-8') as f:
+        json.dump(sales, f, indent=2, ensure_ascii=False)
+        
+    return jsonify({"message": "Verkauf registriert", "id": new_sale['sale_id']}), 200
+
+# --- ADMIN SALES (ANKAUF) ROUTEN ---
+
+@app.route('/admin/sales')
+def sales_admin_page():
+    return render_template('sales_admin.html')
+
+@app.route('/api/admin/sales', methods=['GET', 'POST'])
+def admin_sales_api():
+    sales_path = os.path.join(base_dir, '../data/sales.json')
+    
+    # 1. Daten laden
+    if request.method == 'GET':
+        if os.path.exists(sales_path):
+            with open(sales_path, 'r', encoding='utf-8') as f:
+                return jsonify(json.load(f))
+        return jsonify([])
+    
+    # 2. Status ändern
+    if request.method == 'POST':
+        req = request.json
+        target_id = req.get('sale_id')
+        new_status = req.get('status')
+        
+        if os.path.exists(sales_path):
+            with open(sales_path, 'r', encoding='utf-8') as f:
+                sales = json.load(f)
+            
+            for s in sales:
+                if s['sale_id'] == target_id:
+                    s['status'] = new_status
+                    # Optional: Wenn angenommen, könnte man hier Logik einbauen, 
+                    # um das Gerät automatisch ins Lager (data.json) zu übertragen.
+                    break
+            
+            with open(sales_path, 'w', encoding='utf-8') as f:
+                json.dump(sales, f, indent=2, ensure_ascii=False)
+            return jsonify({"message": "Status aktualisiert"})
+            
+        return jsonify({"error": "Datei nicht gefunden"}), 404
+        
+@app.route('/api/my-sales', methods=['POST'])
+def my_sales():
+    email = request.json.get('email')
+    sales_path = os.path.join(base_dir, '../data/sales.json')
+    
+    my_list = []
+    if os.path.exists(sales_path):
+        with open(sales_path, 'r', encoding='utf-8') as f:
+            all_sales = json.load(f)
+            my_list = [s for s in all_sales if s.get('user_email') == email]
+            
+    return jsonify(my_list)
 
 @app.route('/api/register', methods=['POST'])
 def register():

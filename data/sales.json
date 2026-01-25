@@ -1,0 +1,15 @@
+[
+  {
+    "sale_id": "SELL-1769358952",
+    "date": "25.01.2026",
+    "user_email": "samuel@samuel.com",
+    "device": "iPhone SE (2020)",
+    "specs": {
+      "storage": "64 GB",
+      "condition": "Starke Gebrauchsspuren",
+      "battery": "Gebraucht (über 80%)"
+    },
+    "offer_price": 95,
+    "status": "In Prüfung"
+  }
+]

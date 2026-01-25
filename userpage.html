@@ -232,22 +232,27 @@
 
 {% block scripts %}
 <script>
+    // 1. User Authentifizierung & Daten laden
     const userData = JSON.parse(localStorage.getItem('ao_user') || 'null');
 
     if (!userData) {
         window.location.href = '/'; 
     } else {
+        // Profilfelder befüllen
         document.getElementById('user-firstname').innerText = userData.username;
-        document.getElementById('p-username').value = userData.username;
-        document.getElementById('p-email').value = userData.email;
-        document.getElementById('p-street').value = userData.street || '';
-        document.getElementById('p-house').value = userData.house_number || '';
-        document.getElementById('p-zip').value = userData.zip_code || '';
-        document.getElementById('p-city').value = userData.city || '';
+        if(document.getElementById('p-username')) document.getElementById('p-username').value = userData.username;
+        if(document.getElementById('p-email')) document.getElementById('p-email').value = userData.email;
+        if(document.getElementById('p-street')) document.getElementById('p-street').value = userData.street || '';
+        if(document.getElementById('p-house')) document.getElementById('p-house').value = userData.house_number || '';
+        if(document.getElementById('p-zip')) document.getElementById('p-zip').value = userData.zip_code || '';
+        if(document.getElementById('p-city')) document.getElementById('p-city').value = userData.city || '';
 
+        // Daten abrufen
         loadMyOrders();
+        loadMySales(); // Neu: Verkäufe laden
     }
 
+    // 2. Bestellungen laden (Käufe)
     async function loadMyOrders() {
         try {
             const response = await fetch('/api/my-orders', {
@@ -258,13 +263,13 @@
             
             const orders = await response.json();
             const tbody = document.getElementById('orders-list');
-            const openCount = document.querySelector('.info-card h3');
+            const openCount = document.querySelector('.info-card h3'); // Zähler Karte oben
 
-            tbody.innerHTML = '';
+            if(tbody) tbody.innerHTML = '';
 
             if (orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:20px;">Keine Bestellungen gefunden.</td></tr>';
-                openCount.innerText = "0";
+                if(tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:20px;">Keine Bestellungen gefunden.</td></tr>';
+                if(openCount) openCount.innerText = "0";
                 return;
             }
 
@@ -281,32 +286,75 @@
                     statusBadge = '<span style="background:#eee; color:#333; padding:4px 8px; border-radius:4px; font-size:12px;">' + order.status + '</span>';
                 }
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-weight:600;">${order.order_id}</td>
-                    <td>${order.date}</td>
-                    <td>${statusBadge}</td>
-                    <td style="font-weight:bold; color:#333;">${order.total} CHF</td>
-                `;
-                tbody.appendChild(tr);
+                if(tbody) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight:600;">${order.order_id}</td>
+                        <td>${order.date}</td>
+                        <td>${statusBadge}</td>
+                        <td style="font-weight:bold; color:#333;">${order.total} CHF</td>
+                    `;
+                    tbody.appendChild(tr);
+                }
             });
 
-            openCount.innerText = openOrdersCounter;
+            if(openCount) openCount.innerText = openOrdersCounter;
 
         } catch (error) {
             console.error("Fehler beim Laden der Bestellungen:", error);
         }
     }
 
+    // 3. Verkäufe laden (Neu: Ankauf durch AO Mobile)
+    async function loadMySales() {
+        try {
+            const response = await fetch('/api/my-sales', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: userData.email })
+            });
+            const sales = await response.json();
+            const tbody = document.getElementById('sales-list');
+            
+            if(!tbody) return; // Falls Tab nicht existiert abbrechen
+            tbody.innerHTML = '';
+
+            if (sales.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:20px;">Du hast noch keine Geräte verkauft.</td></tr>';
+                return;
+            }
+
+            sales.forEach(sale => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:600;">${sale.sale_id}</td>
+                    <td>
+                        <strong>${sale.device}</strong><br>
+                        <span style="font-size:12px; color:#777;">${sale.specs.storage}, ${sale.specs.condition}</span>
+                    </td>
+                    <td style="font-weight:bold; color:#28a745;">${sale.offer_price} CHF</td>
+                    <td><span style="background:#e3f2fd; color:#007bff; padding:4px 8px; border-radius:4px; font-size:12px;">${sale.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (error) {
+            console.error("Fehler beim Laden der Verkäufe:", error);
+        }
+    }
+
+    // 4. Navigation zwischen Tabs (Profil / Bestellungen / Verkäufe)
     function showSection(sectionId, element) {
         document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
-        document.getElementById(sectionId).classList.add('active');
+        const target = document.getElementById(sectionId);
+        if(target) target.classList.add('active');
+        
         if (element) {
             document.querySelectorAll('.menu-link').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
         }
     }
 
+    // 5. Logout Funktion
     function logout() {
         localStorage.removeItem('ao_user');
         window.location.href = '/';

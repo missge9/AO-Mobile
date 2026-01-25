@@ -4,7 +4,6 @@
 
 {% block styles %}
 <style>
-    /* Spezifische Styles für den Verkauf-Wizard */
     .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
     
     .wizard-container { 
@@ -12,98 +11,108 @@
         border-radius: 24px; 
         padding: 40px; 
         box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-        min-height: 400px; 
+        min-height: 500px; 
         color: #333;
     }
+
+    /* --- SUCHE --- */
+    .search-wrapper { position: relative; margin: 20px 0; }
+    .search-input {
+        width: 100%; padding: 12px 20px 12px 45px; font-size: 15px;
+        border: 2px solid #eee; border-radius: 12px; outline: none;
+        transition: border-color 0.3s, background 0.3s; background: #f9f9f9;
+    }
+    .search-input:focus { border-color: var(--primary-color); background: white; }
+    .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #999; width: 18px; height: 18px; }
     
+    /* --- WIZARD --- */
     .wizard-step { display: none; }
     .wizard-step.active { display: block; animation: fadeIn 0.4s; }
     
-    .wizard-grid { 
-        display: grid; 
-        grid-template-columns: 1fr 1fr; 
-        gap: 15px; 
-        margin-top: 20px; 
-    }
+    .wizard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
     
     .wizard-card { 
-        background: #f9f9f9; 
-        padding: 20px; 
-        border-radius: 16px; 
-        text-align: center; 
-        cursor: pointer; 
-        border: 2px solid transparent; 
-        transition: 0.2s; 
+        background: #f9f9f9; padding: 20px; border-radius: 16px; 
+        text-align: center; cursor: pointer; border: 2px solid transparent; transition: 0.2s; 
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
     }
-    .wizard-card:hover { border-color: var(--primary-color); background: #f0f0f0; }
+    .wizard-card:hover { border-color: var(--primary-color); background: #f0f0f0; transform: translateY(-2px); }
     .wizard-card img { width: 60px; height: 60px; object-fit: contain; margin-bottom: 10px; }
 
-    .option-title { font-size: 16px; font-weight: 600; margin-top: 20px; margin-bottom: 10px; }
-    .pill-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .option-title { font-size: 16px; font-weight: 600; margin-top: 25px; margin-bottom: 10px; }
+    .pill-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
     
     .pill { 
-        padding: 10px 20px; 
-        border: 1px solid #ddd; 
-        border-radius: 30px; 
-        background: white; 
-        cursor: pointer; 
-        font-size: 14px; 
-        transition: 0.2s;
+        padding: 10px 20px; border: 1px solid #ddd; border-radius: 30px; 
+        background: white; cursor: pointer; font-size: 14px; transition: 0.2s;
     }
     .pill.active { border: 2px solid var(--primary-color); font-weight: 600; background: #e3f2fd; color: var(--primary-color); }
 
+    /* --- BUTTONS --- */
     .btn-full { 
-        display: block; 
-        width: 100%; 
-        padding: 15px; 
-        background: var(--primary-gradient); 
-        color: white; 
-        border: none; 
-        border-radius: 30px; 
-        font-weight: 600; 
-        cursor: pointer; 
-        margin-top: 30px; 
-        text-transform: uppercase; 
-        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        display: block; width: 100%; padding: 15px; background: var(--primary-gradient); 
+        color: white; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; 
+        margin-top: 15px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        transition: transform 0.2s;
     }
+    .btn-full:hover { transform: translateY(-2px); }
+
+    .btn-outline {
+        background: transparent; border: 2px solid #eee; color: #555; box-shadow: none; margin-top: 10px;
+    }
+    .btn-outline:hover { background: #f9f9f9; border-color: #ddd; transform: none; }
     
     #final-price-box { 
-        text-align: center; 
-        margin-top: 30px; 
-        padding: 40px; 
-        background: #f0f7ff; 
-        border-radius: 20px; 
-        border: 1px solid #e3f2fd;
+        text-align: center; margin-top: 30px; padding: 40px; 
+        background: #f0f7ff; border-radius: 20px; border: 1px solid #e3f2fd;
+        margin-bottom: 30px;
+    }
+
+    .btn-back {
+        background: none; border: none; color: var(--primary-color); cursor: pointer; 
+        margin-bottom: 10px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px;
     }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     @media (max-width: 600px) { .wizard-grid { grid-template-columns: 1fr; } }
 </style>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="wizard-container">
+        
         <div class="wizard-step active" id="step-brand">
-            <h2>Welche Marke hat dein Handy?</h2>
+            <h2 style="text-align:center; margin-bottom:30px;">Marke wählen</h2>
             <div id="brand-grid" class="wizard-grid"></div>
         </div>
 
         <div class="wizard-step" id="step-model">
-            <button onclick="showStep('step-brand')" style="background:none; border:none; color:var(--primary-color); cursor:pointer; margin-bottom:15px;">← Zurück</button>
-            <h2>Welches Modell ist es?</h2>
+            <button class="btn-back" onclick="showStep('step-brand')">← Zurück zur Auswahl</button>
+            <h2 id="model-title">Welches Modell?</h2>
+            
+            <div class="search-wrapper">
+                <svg class="search-icon" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="device-search" class="search-input" placeholder="Modell suchen..." oninput="handleSearch()">
+            </div>
+
             <div id="model-grid" class="wizard-grid"></div>
         </div>
 
         <div class="wizard-step" id="step-specs">
-            <button onclick="showStep('step-model')" style="background:none; border:none; color:var(--primary-color); cursor:pointer; margin-bottom:15px;">← Zurück</button>
+            <button class="btn-back" onclick="goBackToModel()">← Zurück</button>
             <h2 id="spec-title">Geräte Details</h2>
             <div id="specs-content">
                 <div class="option-title">Speicherkapazität</div>
                 <div id="storage-pills" class="pill-container"></div>
 
-                <div class="option-title">Zustand des Geräts</div>
+                <div class="option-title">Optischer Zustand</div>
                 <div id="condition-pills" class="pill-container"></div>
+
+                <div class="option-title" id="battery-title">Akkuzustand</div>
+                <div id="battery-pills" class="pill-container"></div>
             </div>
             <button class="btn-full" onclick="calculateValue()">Wert berechnen</button>
         </div>
@@ -114,10 +123,13 @@
                 <div id="final-price" style="font-size: 54px; font-weight: 700; color: var(--primary-color);">0 CHF</div>
                 <p style="color:#555; margin-top:10px;">Voraussichtlicher Auszahlungsbetrag</p>
             </div>
-            <p style="text-align:center; font-size:13px; color:#999; margin-top:20px;">
-                Nach Erhalt und Prüfung deines Geräts überweisen wir den Betrag direkt auf dein Konto.
+            
+            <p style="text-align:center; font-size:13px; color:#999; margin-bottom:20px;">
+                Der Betrag wird nach Prüfung auf dein Konto überwiesen.
             </p>
-            <button class="btn-full" onclick="location.href='/'">Zurück zum Start</button>
+
+            <button class="btn-full" id="btn-sell-action" onclick="submitSale()">🤝 Jetzt verkaufen</button>
+            <button class="btn-full btn-outline" onclick="goBackToModel()">↻ Anderes Modell wählen</button>
         </div>
     </div>
 </div>
@@ -126,94 +138,199 @@
 {% block scripts %}
 <script>
     let sellData = {};
+    let allProducts = []; 
+    let currentBrand = null;
     let selectedProduct = null;
     let selectedStorage = null;
     let selectedCondition = null;
+    let selectedBattery = null;
+    let calculatedPrice = 0;
 
-    // Daten beim Start laden
+    // Start: Daten laden
     fetch('/data/sell.json?v=' + new Date().getTime())
         .then(r => r.json())
         .then(data => {
             sellData = data;
-            const grid = document.getElementById('brand-grid');
-            for (let brand in sellData) {
-                const div = document.createElement('div');
-                div.className = 'wizard-card';
-                div.onclick = () => renderModels(brand);
-                div.innerHTML = `
-                    <img src="${sellData[brand].logo}" onerror="this.src='https://via.placeholder.com/60'">
-                    <div style="font-weight:500;">${brand}</div>
-                `;
-                grid.appendChild(div);
-            }
+            prepareSearchIndex();
+            renderBrands();
         });
 
-    function renderModels(brand) {
-        const grid = document.getElementById('model-grid');
+    function prepareSearchIndex() {
+        allProducts = [];
+        for (let brand in sellData) {
+            sellData[brand].products.forEach(p => { p.brandName = brand; allProducts.push(p); });
+        }
+    }
+
+    function renderBrands() {
+        const grid = document.getElementById('brand-grid');
         grid.innerHTML = '';
-        sellData[brand].products.forEach(p => {
+        for (let brand in sellData) {
             const div = document.createElement('div');
             div.className = 'wizard-card';
-            div.onclick = () => renderSpecs(p);
-            div.innerHTML = `<div style="font-weight:500;">${p.name}</div>`;
+            div.onclick = () => renderModels(brand);
+            div.innerHTML = `<img src="${sellData[brand].logo}" onerror="this.src='https://via.placeholder.com/60'"><div style="font-weight:600;">${brand}</div>`;
             grid.appendChild(div);
-        });
+        }
+    }
+
+    function renderModels(brand) {
+        currentBrand = brand;
+        const grid = document.getElementById('model-grid');
+        document.getElementById('model-title').innerText = brand + " Modelle";
+        document.getElementById('device-search').value = ""; 
+        document.getElementById('device-search').placeholder = `${brand} durchsuchen...`;
+        
+        grid.innerHTML = '';
+        sellData[brand].products.forEach(p => createProductCard(p, grid));
         showStep('step-model');
+    }
+
+    function handleSearch() {
+        const query = document.getElementById('device-search').value.toLowerCase().trim();
+        const grid = document.getElementById('model-grid');
+        grid.innerHTML = '';
+        
+        if (query.length === 0) {
+            sellData[currentBrand].products.forEach(p => createProductCard(p, grid));
+            return;
+        }
+
+        const filtered = allProducts.filter(p => p.name.toLowerCase().includes(query));
+        if(filtered.length === 0) grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; color:#999; padding:20px;">Kein Gerät gefunden.</div>';
+        else filtered.forEach(p => createProductCard(p, grid));
+    }
+
+    function createProductCard(p, container) {
+        const div = document.createElement('div');
+        div.className = 'wizard-card';
+        div.onclick = () => renderSpecs(p);
+        div.innerHTML = `<div style="font-weight:600;">${p.name}</div>`;
+        container.appendChild(div);
     }
 
     function renderSpecs(p) {
         selectedProduct = p;
         document.getElementById('spec-title').innerText = p.name;
         
-        // Speicher Pills
-        const sContainer = document.getElementById('storage-pills');
-        sContainer.innerHTML = '';
-        p.storageOptions.forEach((opt, i) => {
-            const span = document.createElement('span');
-            span.className = 'pill';
-            if(i === 0) { span.classList.add('active'); selectedStorage = opt; }
-            span.innerText = opt.name;
-            span.onclick = () => {
-                sContainer.querySelectorAll('.pill').forEach(el => el.classList.remove('active'));
-                span.classList.add('active');
-                selectedStorage = opt;
-            };
-            sContainer.appendChild(span);
-        });
+        renderPills('storage-pills', p.storageOptions, (opt) => selectedStorage = opt);
+        const conditions = p.opticalConditions || p.conditions || [];
+        renderPills('condition-pills', conditions, (opt) => selectedCondition = opt);
 
-        // Zustand Pills
-        const cContainer = document.getElementById('condition-pills');
-        cContainer.innerHTML = '';
-        p.conditions.forEach((opt, i) => {
-            const span = document.createElement('span');
-            span.className = 'pill';
-            if(i === 0) { span.classList.add('active'); selectedCondition = opt; }
-            span.innerText = opt.name;
-            span.onclick = () => {
-                cContainer.querySelectorAll('.pill').forEach(el => el.classList.remove('active'));
-                span.classList.add('active');
-                selectedCondition = opt;
-            };
-            cContainer.appendChild(span);
-        });
+        const battContainer = document.getElementById('battery-pills');
+        const battTitle = document.getElementById('battery-title');
+        if (p.batteryConditions && p.batteryConditions.length > 0) {
+            battTitle.style.display = 'block';
+            battContainer.style.display = 'flex';
+            renderPills('battery-pills', p.batteryConditions, (opt) => selectedBattery = opt);
+        } else {
+            battTitle.style.display = 'none';
+            battContainer.style.display = 'none';
+            selectedBattery = { price: 0, name: '-' }; 
+        }
 
         showStep('step-specs');
     }
 
-    function calculateValue() {
-        if (!selectedProduct || !selectedStorage || !selectedCondition) return;
-        
-        let val = selectedProduct.basePrice + selectedStorage.price + selectedCondition.price;
-        if(val < 0) val = 0; // Kein Minus-Ankaufspreis
+    function renderPills(containerId, options, setSelectionCallback) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        if(!options) return;
+        options.forEach((opt, i) => {
+            const span = document.createElement('span');
+            span.className = 'pill';
+            if(i === 0) { span.classList.add('active'); setSelectionCallback(opt); }
+            span.innerText = opt.name;
+            span.onclick = () => {
+                container.querySelectorAll('.pill').forEach(el => el.classList.remove('active'));
+                span.classList.add('active');
+                setSelectionCallback(opt);
+            };
+            container.appendChild(span);
+        });
+    }
 
-        document.getElementById('final-price').innerText = val + " CHF";
+    function calculateValue() {
+        if (!selectedProduct || !selectedStorage || !selectedCondition || !selectedBattery) {
+            alert("Bitte alle Optionen auswählen."); return;
+        }
+        
+        calculatedPrice = (selectedProduct.baseSellPrice || selectedProduct.basePrice || 0);
+        calculatedPrice += (selectedStorage.price || 0);
+        calculatedPrice += (selectedCondition.price || 0);
+        calculatedPrice += (selectedBattery.price || 0);
+        if(calculatedPrice < 0) calculatedPrice = 0;
+
+        document.getElementById('final-price').innerText = calculatedPrice + " CHF";
         showStep('step-result');
+        fireConfetti(); // Animation starten
+    }
+
+    // --- NEUE FUNKTIONEN FÜR VERKAUF ---
+
+    async function submitSale() {
+        const user = JSON.parse(localStorage.getItem('ao_user') || 'null');
+        if (!user) {
+            alert("Bitte logge dich zuerst ein, um ein Gerät zu verkaufen.");
+            toggleLogin(); // Funktion aus base.html
+            return;
+        }
+
+        const btn = document.getElementById('btn-sell-action');
+        btn.innerText = "Verarbeite...";
+        btn.disabled = true;
+
+        const saleData = {
+            email: user.email,
+            device: selectedProduct.name,
+            specs: {
+                storage: selectedStorage.name,
+                condition: selectedCondition.name,
+                battery: selectedBattery.name
+            },
+            price: calculatedPrice
+        };
+
+        try {
+            const res = await fetch('/api/sell', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(saleData)
+            });
+            
+            if (res.ok) {
+                // Weiterleitung zum Dashboard nach erfolgreichem Speichern
+                window.location.href = '/userpage';
+            } else {
+                alert("Fehler beim Speichern des Verkaufs.");
+                btn.disabled = false;
+                btn.innerText = "🤝 Jetzt verkaufen";
+            }
+        } catch (e) {
+            alert("Serverfehler: " + e);
+            btn.disabled = false;
+            btn.innerText = "🤝 Jetzt verkaufen";
+        }
+    }
+
+    function fireConfetti() {
+        var duration = 2000;
+        var end = Date.now() + duration;
+        (function frame() {
+            confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#007bff', '#00d2ff', '#ffffff'] });
+            confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#007bff', '#00d2ff', '#ffffff'] });
+            if (Date.now() < end) requestAnimationFrame(frame);
+        }());
     }
 
     function showStep(id) {
         document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
+    }
+
+    function goBackToModel() {
+        if(currentBrand) renderModels(currentBrand);
+        else showStep('step-brand');
     }
 </script>
 {% endblock %}
