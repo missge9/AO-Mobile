@@ -1,5 +1,45 @@
 [
   {
+    "order_id": "ORD-1769351681",
+    "date": "2026-01-25 14:34",
+    "status": "Offen",
+    "customer": {
+      "firstname": "samuel",
+      "lastname": "samuel",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "shipping_address": {
+      "firstname": "samuel",
+      "lastname": "samuel",
+      "street": "Fehler bei Entschlüsselung",
+      "zip": "Fehler bei Entschlüsselung",
+      "city": "Fehler bei Entschlüsselung",
+      "email": "samuel@samuel.com"
+    },
+    "payment": "twint",
+    "insurance": true,
+    "items": [
+      {
+        "id": 6171,
+        "name": "iPhone 12 mini",
+        "price": 180,
+        "img": "images/1.png",
+        "options": {
+          "color": "Schwarz",
+          "storage": "128 GB",
+          "condition": "Schnäppchen",
+          "battery": "Gebraucht"
+        }
+      }
+    ],
+    "subtotal": 180.0,
+    "shipping_cost": 10.0,
+    "total": 190.0
+  },
+  {
     "order_id": "ORD-1769351058",
     "date": "2026-01-25 14:24",
     "status": "Offen",

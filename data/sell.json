@@ -2,9 +2,331 @@
   "Apple": {
     "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
     "products": [
-      { 
+      {
+        "id": "iphone6",
+        "name": "iPhone 6",
+        "baseSellPrice": 40,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -10},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 10},
+          {"name": "Wie neu", "price": 20}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 10}
+        ],
+        "storageOptions": [
+          {"name": "16 GB", "price": -5},
+          {"name": "32 GB", "price": 0},
+          {"name": "64 GB", "price": 10},
+          {"name": "128 GB", "price": 15}
+        ]
+      },
+      {
+        "id": "iphone6plus",
+        "name": "iPhone 6 Plus",
+        "baseSellPrice": 60,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -15},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 15},
+          {"name": "Wie neu", "price": 25}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 15}
+        ],
+        "storageOptions": [
+          {"name": "16 GB", "price": -10},
+          {"name": "64 GB", "price": 15},
+          {"name": "128 GB", "price": 25}
+        ]
+      },
+      {
+        "id": "iphone6s",
+        "name": "iPhone 6s",
+        "baseSellPrice": 55,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -10},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 15},
+          {"name": "Wie neu", "price": 25}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 12}
+        ],
+        "storageOptions": [
+          {"name": "16 GB", "price": -10},
+          {"name": "32 GB", "price": 0},
+          {"name": "64 GB", "price": 15},
+          {"name": "128 GB", "price": 20}
+        ]
+      },
+      {
+        "id": "iphone6splus",
+        "name": "iPhone 6s Plus",
+        "baseSellPrice": 75,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -15},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 15},
+          {"name": "Wie neu", "price": 30}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 15}
+        ],
+        "storageOptions": [
+          {"name": "16 GB", "price": -10},
+          {"name": "32 GB", "price": 0},
+          {"name": "64 GB", "price": 15},
+          {"name": "128 GB", "price": 25}
+        ]
+      },
+      {
+        "id": "iphone7",
+        "name": "iPhone 7",
+        "baseSellPrice": 85,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -20},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 15},
+          {"name": "Wie neu", "price": 30}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 15}
+        ],
+        "storageOptions": [
+          {"name": "32 GB", "price": 0},
+          {"name": "128 GB", "price": 20},
+          {"name": "256 GB", "price": 35}
+        ]
+      },
+      {
+        "id": "iphone7plus",
+        "name": "iPhone 7 Plus",
+        "baseSellPrice": 120,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -25},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 20},
+          {"name": "Wie neu", "price": 35}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 20}
+        ],
+        "storageOptions": [
+          {"name": "32 GB", "price": 0},
+          {"name": "128 GB", "price": 25},
+          {"name": "256 GB", "price": 40}
+        ]
+      },
+      {
+        "id": "iphone8",
+        "name": "iPhone 8",
+        "baseSellPrice": 110,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -25},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 20},
+          {"name": "Wie neu", "price": 35}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 20}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "128 GB", "price": 20},
+          {"name": "256 GB", "price": 40}
+        ]
+      },
+      {
+        "id": "iphone8plus",
+        "name": "iPhone 8 Plus",
+        "baseSellPrice": 150,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -30},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 25},
+          {"name": "Wie neu", "price": 40}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 20}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "128 GB", "price": 25},
+          {"name": "256 GB", "price": 45}
+        ]
+      },
+      {
+        "id": "iphonex",
+        "name": "iPhone X",
+        "baseSellPrice": 160,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -40},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 25},
+          {"name": "Wie neu", "price": 45}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 25}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "256 GB", "price": 40}
+        ]
+      },
+      {
+        "id": "iphonexr",
+        "name": "iPhone XR",
+        "baseSellPrice": 140,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -35},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 20},
+          {"name": "Wie neu", "price": 35}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 25}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "128 GB", "price": 25},
+          {"name": "256 GB", "price": 45}
+        ]
+      },
+      {
+        "id": "iphonexs",
+        "name": "iPhone XS",
+        "baseSellPrice": 170,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -40},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 25},
+          {"name": "Wie neu", "price": 45}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 25}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "256 GB", "price": 45},
+          {"name": "512 GB", "price": 70}
+        ]
+      },
+      {
+        "id": "iphonexsmax",
+        "name": "iPhone XS Max",
+        "baseSellPrice": 210,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -50},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 30},
+          {"name": "Wie neu", "price": 55}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 30}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "256 GB", "price": 50},
+          {"name": "512 GB", "price": 80}
+        ]
+      },
+      {
+        "id": "iphone11",
+        "name": "iPhone 11",
+        "baseSellPrice": 180,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -40},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 25},
+          {"name": "Wie neu", "price": 45}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 25}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "128 GB", "price": 30},
+          {"name": "256 GB", "price": 55}
+        ]
+      },
+      {
+        "id": "iphone11pro",
+        "name": "iPhone 11 Pro",
+        "baseSellPrice": 240,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -50},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 30},
+          {"name": "Wie neu", "price": 50}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 30}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "256 GB", "price": 50},
+          {"name": "512 GB", "price": 80}
+        ]
+      },
+      {
+        "id": "iphone11promax",
+        "name": "iPhone 11 Pro Max",
+        "baseSellPrice": 280,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -60},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 35},
+          {"name": "Wie neu", "price": 60}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 35}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "256 GB", "price": 60},
+          {"name": "512 GB", "price": 90}
+        ]
+      },
+      {
+        "id": "iphonese2020",
+        "name": "iPhone SE (2020)",
+        "baseSellPrice": 120,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -25},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 20},
+          {"name": "Wie neu", "price": 35}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 20}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "128 GB", "price": 25},
+          {"name": "256 GB", "price": 45}
+        ]
+      },
+      {
         "id": "iphone12mini",
-        "name": "iPhone 12 mini", 
+        "name": "iPhone 12 mini",
         "baseSellPrice": 150,
         "opticalConditions": [
           {"name": "Starke Gebrauchsspuren", "price": -30},
@@ -20,6 +342,331 @@
           {"name": "64 GB", "price": -15},
           {"name": "128 GB", "price": 0},
           {"name": "256 GB", "price": 30}
+        ]
+      },
+      {
+        "id": "iphone12",
+        "name": "iPhone 12",
+        "baseSellPrice": 210,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -40},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 25},
+          {"name": "Wie neu", "price": 45}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 20}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": -20},
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 40}
+        ]
+      },
+      {
+        "id": "iphone12pro",
+        "name": "iPhone 12 Pro",
+        "baseSellPrice": 320,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -60},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 35},
+          {"name": "Wie neu", "price": 60}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 30}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 50},
+          {"name": "512 GB", "price": 90}
+        ]
+      },
+      {
+        "id": "iphone12promax",
+        "name": "iPhone 12 Pro Max",
+        "baseSellPrice": 380,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -70},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 40},
+          {"name": "Wie neu", "price": 70}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 35}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 60},
+          {"name": "512 GB", "price": 100}
+        ]
+      },
+      {
+        "id": "iphone13mini",
+        "name": "iPhone 13 mini",
+        "baseSellPrice": 220,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -45},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 25},
+          {"name": "Wie neu", "price": 45}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 25}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 40},
+          {"name": "512 GB", "price": 80}
+        ]
+      },
+      {
+        "id": "iphone13",
+        "name": "iPhone 13",
+        "baseSellPrice": 290,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -55},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 30},
+          {"name": "Wie neu", "price": 55}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 30}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 50},
+          {"name": "512 GB", "price": 90}
+        ]
+      },
+      {
+        "id": "iphone13pro",
+        "name": "iPhone 13 Pro",
+        "baseSellPrice": 420,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -80},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 45},
+          {"name": "Wie neu", "price": 75}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 40}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 60},
+          {"name": "512 GB", "price": 110},
+          {"name": "1 TB", "price": 170}
+        ]
+      },
+      {
+        "id": "iphone13promax",
+        "name": "iPhone 13 Pro Max",
+        "baseSellPrice": 480,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -90},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 50},
+          {"name": "Wie neu", "price": 85}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 45}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 60},
+          {"name": "512 GB", "price": 120},
+          {"name": "1 TB", "price": 190}
+        ]
+      },
+      {
+        "id": "iphonese2022",
+        "name": "iPhone SE (2022)",
+        "baseSellPrice": 180,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -35},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 25},
+          {"name": "Wie neu", "price": 45}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 25}
+        ],
+        "storageOptions": [
+          {"name": "64 GB", "price": 0},
+          {"name": "128 GB", "price": 30},
+          {"name": "256 GB", "price": 60}
+        ]
+      },
+      {
+        "id": "iphone14",
+        "name": "iPhone 14",
+        "baseSellPrice": 380,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -70},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 40},
+          {"name": "Wie neu", "price": 70}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 35}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 60},
+          {"name": "512 GB", "price": 110}
+        ]
+      },
+      {
+        "id": "iphone14plus",
+        "name": "iPhone 14 Plus",
+        "baseSellPrice": 420,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -80},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 45},
+          {"name": "Wie neu", "price": 75}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 40}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 70},
+          {"name": "512 GB", "price": 130}
+        ]
+      },
+      {
+        "id": "iphone14pro",
+        "name": "iPhone 14 Pro",
+        "baseSellPrice": 480,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -90},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 45},
+          {"name": "Wie neu", "price": 80}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 40}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 70},
+          {"name": "512 GB", "price": 140},
+          {"name": "1 TB", "price": 220}
+        ]
+      },
+      {
+        "id": "iphone14promax",
+        "name": "iPhone 14 Pro Max",
+        "baseSellPrice": 540,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -100},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 50},
+          {"name": "Wie neu", "price": 90}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 45}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 80},
+          {"name": "512 GB", "price": 160},
+          {"name": "1 TB", "price": 250}
+        ]
+      },
+      {
+        "id": "iphone15",
+        "name": "iPhone 15",
+        "baseSellPrice": 460,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -80},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 45},
+          {"name": "Wie neu", "price": 80}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 40}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 70},
+          {"name": "512 GB", "price": 140}
+        ]
+      },
+      {
+        "id": "iphone15plus",
+        "name": "iPhone 15 Plus",
+        "baseSellPrice": 510,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -90},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 50},
+          {"name": "Wie neu", "price": 90}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 40}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 80},
+          {"name": "512 GB", "price": 160}
+        ]
+      },
+      {
+        "id": "iphone15pro",
+        "name": "iPhone 15 Pro",
+        "baseSellPrice": 560,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -100},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 50},
+          {"name": "Wie neu", "price": 100}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 50}
+        ],
+        "storageOptions": [
+          {"name": "128 GB", "price": 0},
+          {"name": "256 GB", "price": 80},
+          {"name": "512 GB", "price": 170},
+          {"name": "1 TB", "price": 280}
+        ]
+      },
+      {
+        "id": "iphone15promax",
+        "name": "iPhone 15 Pro Max",
+        "baseSellPrice": 620,
+        "opticalConditions": [
+          {"name": "Starke Gebrauchsspuren", "price": -110},
+          {"name": "Gebraucht", "price": 0},
+          {"name": "Sehr gut", "price": 60},
+          {"name": "Wie neu", "price": 110}
+        ],
+        "batteryConditions": [
+          {"name": "Gebraucht (über 80%)", "price": 0},
+          {"name": "Neu (100%)", "price": 50}
+        ],
+        "storageOptions": [
+          {"name": "256 GB", "price": 0},
+          {"name": "512 GB", "price": 90},
+          {"name": "1 TB", "price": 200}
         ]
       }
     ]
