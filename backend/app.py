@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from cryptography.fernet import Fernet
+from datetime import datetime
 import os
+import json
 
-# App Konfiguration
 app = Flask(__name__, template_folder='../', static_folder='../')
+
+# Sicherheitsschlüssel
+SECRET_KEY = b'Yiv7xtGkDk1bnlDo2wIhLlXeMbhsfRa4ZI4T52ovF-Y='
+cipher = Fernet(SECRET_KEY)
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(base_dir, '../data/users.db')
@@ -13,17 +19,29 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# Hilfsfunktionen für Verschlüsselung
+def encrypt_data(data):
+    if not data: return None
+    return cipher.encrypt(data.encode()).decode()
+
+def decrypt_data(data):
+    if not data: return None
+    try:
+        return cipher.decrypt(data.encode()).decode()
+    except:
+        return "Fehler bei Entschlüsselung"
+
 # --- Datenbank Modell ---
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
-    # Adressfelder
-    street = db.Column(db.String(100))
-    house_number = db.Column(db.String(20))
-    zip_code = db.Column(db.String(20))
-    city = db.Column(db.String(100))
+    
+    street = db.Column(db.Text)
+    house_number = db.Column(db.Text)
+    zip_code = db.Column(db.Text)
+    city = db.Column(db.Text)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -31,61 +49,88 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-# Tabellen erstellen
 with app.app_context():
     db.create_all()
 
-# --- HTML Routen (Seiten) ---
+# --- HTML Routen ---
 @app.route('/')
-def index():
-    return render_template('index.html')
+def index(): return render_template('index.html')
 
 @app.route('/shop')
-def shop():
-    return render_template('shop.html')
+def shop(): return render_template('shop.html')
 
 @app.route('/sell')
-def sell():
-    return render_template('sell.html')
+def sell(): return render_template('sell.html')
 
 @app.route('/register')
-def register_page():  # WICHTIG: Heisst jetzt anders als die API-Funktion!
-    return render_template('account.html')
+def register_page(): return render_template('account.html')
 
 @app.route('/login')
-def login_page():
-    return render_template('account.html')
+def login_page(): return render_template('account.html')
+
+@app.route('/userpage')
+def userpage_page(): return render_template('userpage.html')
 
 @app.route('/detail')
-def detail():
-    return render_template('detail.html')
+def detail(): return render_template('detail.html')
 
 @app.route('/cart')
-def cart():
-    return render_template('cart.html')
+def cart(): return render_template('cart.html')
+
+@app.route('/checkout') # <--- DIESE ROUTE HAT GEFEHLT
+def checkout_page():
+    return render_template('checkout.html')
+
+@app.route('/admin')
+def admin_page():
+    return render_template('admin.html')
+
+@app.route('/orders')
+def orders_page(): # Zeigt die Bestell-Verwaltung
+    return render_template('orders_admin.html')
+
+@app.route('/success')
+def success_page():
+    return render_template('success.html')
 
 
-# --- API Routen (Logik) ---
+@app.route('/api/my-orders', methods=['POST'])
+def my_orders():
+    user_email = request.json.get('email')
+    
+    orders_path = os.path.join(base_dir, '../data/orders.json')
+    my_orders_list = []
+
+    if os.path.exists(orders_path):
+        with open(orders_path, 'r', encoding='utf-8') as f:
+            all_orders = json.load(f)
+            
+        # Wir suchen alle Bestellungen, wo die E-Mail übereinstimmt
+        for order in all_orders:
+            # Wir prüfen sowohl "customer" (Rechnung) als auch "user" (altes Format)
+            cust_email = order.get('customer', {}).get('email')
+            if cust_email == user_email:
+                my_orders_list.append(order)
+
+    return jsonify(my_orders_list)
+
+# --- API Routen ---
 
 @app.route('/api/register', methods=['POST'])
 def register():
     data = request.json
-    
-    # Validierung
     if User.query.filter_by(username=data['username']).first():
         return jsonify({"message": "Nutzername bereits vergeben"}), 400
-    
     if User.query.filter_by(email=data['email']).first():
         return jsonify({"message": "E-Mail bereits vergeben"}), 400
     
-    # User anlegen
     user = User(
         username=data['username'], 
         email=data['email'],
-        street=data.get('street'),
-        house_number=data.get('house_number'),
-        zip_code=data.get('zip'), # Achte darauf, dass im Frontend auch 'zip' gesendet wird
-        city=data.get('city')
+        street=encrypt_data(data.get('street')),
+        house_number=encrypt_data(data.get('house_number')),
+        zip_code=encrypt_data(data.get('zip')),
+        city=encrypt_data(data.get('city'))
     )
     user.set_password(data['password'])
     
@@ -100,16 +145,147 @@ def register():
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.json
-    user = User.query.filter_by(username=data['username']).first()
+    user = User.query.filter_by(email=data['email']).first()
     
     if user and user.check_password(data['password']):
         return jsonify({
             "message": "Login erfolgreich",
             "username": user.username,
-            "email": user.email
+            "email": user.email,
+            "street": decrypt_data(user.street),
+            "house_number": decrypt_data(user.house_number),
+            "zip_code": decrypt_data(user.zip_code),
+            "city": decrypt_data(user.city)
         }), 200
         
-    return jsonify({"message": "Nutzername oder Passwort falsch"}), 401
+    return jsonify({"message": "E-Mail oder Passwort falsch"}), 401
+
+@app.route('/api/admin/data', methods=['GET', 'POST'])
+def admin_data_handler():
+    json_path = os.path.join(base_dir, '../data/data.json')
+
+    if request.method == 'POST':
+        try:
+            new_data = request.json
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump(new_data, f, indent=2, ensure_ascii=False)
+            return jsonify({"message": "Gespeichert"}), 200
+        except Exception as e:
+            print(f"Fehler beim Speichern: {e}")
+            return jsonify({"message": "Fehler beim Speichern"}), 500
+    else:
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            return jsonify(data)
+        except Exception as e:
+            return jsonify({"error": "Konnte Datei nicht lesen"}), 500
+
+@app.route('/api/admin/orders', methods=['GET', 'POST'])
+def orders_api():
+    orders_path = os.path.join(base_dir, '../data/orders.json')
+    
+    if request.method == 'GET':
+        if os.path.exists(orders_path):
+            with open(orders_path, 'r', encoding='utf-8') as f:
+                return jsonify(json.load(f))
+        return jsonify([])
+    
+    if request.method == 'POST':
+        req = request.json
+        if os.path.exists(orders_path):
+            with open(orders_path, 'r', encoding='utf-8') as f:
+                orders = json.load(f)
+            
+            for o in orders:
+                if o['order_id'] == req['order_id']:
+                    o['status'] = req['status']
+                    # Wenn versendet, Datum setzen (optional)
+                    if req['status'] == 'Versendet':
+                        o['shipped_date'] = datetime.now().strftime("%d.%m.%Y")
+                    break
+            
+            with open(orders_path, 'w', encoding='utf-8') as f:
+                json.dump(orders, f, indent=2, ensure_ascii=False)
+            return jsonify({"message": "Status aktualisiert"})
+        return jsonify({"error": "Fehler"}), 404
+
+# --- DIE HAUPT-LOGIK FÜR DEN CHECKOUT ---
+@app.route('/api/checkout', methods=['POST'])
+def checkout():
+    data = request.json
+    cart_items = data.get('cart', [])
+    
+    # Neue Felder aus dem Frontend
+    billing_address = data.get('billingAddress', {})
+    shipping_address = data.get('shippingAddress', {})
+    payment_method = data.get('paymentMethod', 'unknown')
+    has_insurance = data.get('insurance', False)
+
+    if not cart_items:
+        return jsonify({"message": "Warenkorb leer"}), 400
+
+    json_path = os.path.join(base_dir, '../data/data.json')
+    orders_path = os.path.join(base_dir, '../data/orders.json')
+    
+    with open(json_path, 'r', encoding='utf-8') as f:
+        shop_data = json.load(f)
+    
+    if os.path.exists(orders_path):
+        with open(orders_path, 'r', encoding='utf-8') as f:
+            orders = json.load(f)
+    else:
+        orders = []
+
+    items_bought = []
+    items_total_price = 0
+
+    # Inventar-Logik (Löschen)
+    for cart_item in cart_items:
+        found = False
+        target_id = str(cart_item['id'])
+        for brand in shop_data:
+            for product in shop_data[brand]['products']:
+                if 'inventory' in product:
+                    original_len = len(product['inventory'])
+                    product['inventory'] = [i for i in product['inventory'] if str(i['id']) != target_id]
+                    if len(product['inventory']) < original_len:
+                        found = True
+                        items_bought.append(cart_item)
+                        items_total_price += float(cart_item['price'])
+                        break 
+            if found: break
+        
+        if not found:
+            return jsonify({"message": f"Gerät #{target_id} ist nicht mehr verfügbar!"}), 409
+
+    # Gesamtsumme berechnen
+    shipping_cost = 10.0 if has_insurance else 0.0
+    final_total = items_total_price + shipping_cost
+
+    # Bestellung anlegen
+    new_order = {
+        "order_id": f"ORD-{int(datetime.now().timestamp())}",
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "status": "Offen",
+        "customer": billing_address,
+        "shipping_address": shipping_address,
+        "payment": payment_method,
+        "insurance": has_insurance,
+        "items": items_bought,
+        "subtotal": items_total_price,
+        "shipping_cost": shipping_cost,
+        "total": final_total
+    }
+    orders.insert(0, new_order)
+
+    # Speichern
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(shop_data, f, indent=2, ensure_ascii=False)
+    with open(orders_path, 'w', encoding='utf-8') as f:
+        json.dump(orders, f, indent=2, ensure_ascii=False)
+
+    return jsonify({"message": "Erfolg", "order_id": new_order['order_id']}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
