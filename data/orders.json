@@ -1,8 +1,129 @@
 [
   {
+    "order_id": "ORD-1769375085",
+    "date": "2026-01-25 21:04",
+    "status": "Offen",
+    "customer": {
+      "firstname": "Samuel",
+      "lastname": "Bohren",
+      "street": "Kirchbühlstrasse ",
+      "zip": "5630",
+      "city": "Muri",
+      "email": "samuelbohren@hotmail.com"
+    },
+    "shipping_address": {
+      "firstname": "Samuel",
+      "lastname": "Bohren",
+      "street": "Kirchbühlstrasse ",
+      "zip": "5630",
+      "city": "Muri",
+      "email": "samuelbohren@hotmail.com"
+    },
+    "payment": "twint",
+    "insurance": true,
+    "items": [
+      {
+        "id": 1831,
+        "name": "iPhone 12 mini",
+        "price": 170,
+        "img": "images/1.png",
+        "options": {
+          "color": "Schwarz",
+          "storage": "64 GB",
+          "condition": "Schnäppchen",
+          "battery": "Gebraucht"
+        }
+      }
+    ],
+    "subtotal": 170.0,
+    "shipping_cost": 10.0,
+    "total": 180.0
+  },
+  {
+    "order_id": "ORD-1769364450",
+    "date": "2026-01-25 18:07",
+    "status": "Offen",
+    "customer": {
+      "firstname": "Samuel",
+      "lastname": "Bohren",
+      "street": "Kirchbühlstrasse ",
+      "zip": "5630",
+      "city": "Muri",
+      "email": "samuelbohren@hotmail.com"
+    },
+    "shipping_address": {
+      "firstname": "Samuel",
+      "lastname": "Bohren",
+      "street": "Kirchbühlstrasse ",
+      "zip": "5630",
+      "city": "Muri",
+      "email": "samuelbohren@hotmail.com"
+    },
+    "payment": "twint",
+    "insurance": false,
+    "items": [
+      {
+        "id": 8050,
+        "name": "iPhone 12 mini",
+        "price": 265,
+        "img": "images/1.png",
+        "options": {
+          "color": "Schwarz",
+          "storage": "64 GB",
+          "condition": "Neu",
+          "battery": "Neu"
+        }
+      }
+    ],
+    "subtotal": 265.0,
+    "shipping_cost": 0.0,
+    "total": 265.0
+  },
+  {
+    "order_id": "ORD-1769363525",
+    "date": "2026-01-25 17:52",
+    "status": "Versendet",
+    "customer": {
+      "firstname": "Samuel",
+      "lastname": "Bohren",
+      "street": "Kirchbühlstrasse ",
+      "zip": "5630",
+      "city": "Muri",
+      "email": "samuelbohren@hotmail.com"
+    },
+    "shipping_address": {
+      "firstname": "Samuel",
+      "lastname": "Bohren",
+      "street": "Kirchbühlstrasse ",
+      "zip": "5630",
+      "city": "Muri",
+      "email": "samuelbohren@hotmail.com"
+    },
+    "payment": "invoice",
+    "insurance": true,
+    "items": [
+      {
+        "id": 9204,
+        "name": "iPhone 12 mini",
+        "price": 235,
+        "img": "images/1.png",
+        "options": {
+          "color": "Blau",
+          "storage": "128 GB",
+          "condition": "Wie neu",
+          "battery": "Gebraucht"
+        }
+      }
+    ],
+    "subtotal": 235.0,
+    "shipping_cost": 10.0,
+    "total": 245.0,
+    "shipped_date": "25.01.2026"
+  },
+  {
     "order_id": "ORD-1769351681",
     "date": "2026-01-25 14:34",
-    "status": "Offen",
+    "status": "Versendet",
     "customer": {
       "firstname": "samuel",
       "lastname": "samuel",
@@ -37,12 +158,13 @@
     ],
     "subtotal": 180.0,
     "shipping_cost": 10.0,
-    "total": 190.0
+    "total": 190.0,
+    "shipped_date": "25.01.2026"
   },
   {
     "order_id": "ORD-1769351058",
     "date": "2026-01-25 14:24",
-    "status": "Offen",
+    "status": "Versendet",
     "customer": {
       "firstname": "samuel",
       "lastname": "samuel",
@@ -77,12 +199,13 @@
     ],
     "subtotal": 170.0,
     "shipping_cost": 0.0,
-    "total": 170.0
+    "total": 170.0,
+    "shipped_date": "25.01.2026"
   },
   {
     "order_id": "ORD-1769348243",
     "date": "2026-01-25 13:37",
-    "status": "Offen",
+    "status": "Versendet",
     "customer": {
       "firstname": "samuel",
       "lastname": "samuel",
@@ -117,12 +240,13 @@
     ],
     "subtotal": 175.0,
     "shipping_cost": 0.0,
-    "total": 175.0
+    "total": 175.0,
+    "shipped_date": "25.01.2026"
   },
   {
     "order_id": "ORD-1769347583",
     "date": "2026-01-25 13:26",
-    "status": "Offen",
+    "status": "Versendet",
     "customer": {
       "firstname": "samuel",
       "lastname": "bohren",
@@ -157,7 +281,8 @@
     ],
     "subtotal": 170.0,
     "shipping_cost": 0.0,
-    "total": 170.0
+    "total": 170.0,
+    "shipped_date": "25.01.2026"
   },
   {
     "order_id": "ORD-1769347445",
@@ -203,7 +328,7 @@
   {
     "order_id": "ORD-1769347027",
     "date": "2026-01-25 13:17",
-    "status": "Offen",
+    "status": "Versendet",
     "customer": {
       "firstname": "samuel",
       "lastname": "bohren",
@@ -238,7 +363,8 @@
     ],
     "subtotal": 205.0,
     "shipping_cost": 10.0,
-    "total": 215.0
+    "total": 215.0,
+    "shipped_date": "25.01.2026"
   },
   {
     "order_id": "ORD-1769345653",

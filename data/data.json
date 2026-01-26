@@ -35,7 +35,22 @@
         "hasDiscount": true,
         "id": "iphone12mini",
         "img": "images/1.png",
-        "inventory": [],
+        "inventory": [
+          {
+            "id": 5988,
+            "storage": "64 GB",
+            "color": "Schwarz",
+            "condition": "Schnäppchen",
+            "battery": "Gebraucht"
+          },
+          {
+            "id": 8598,
+            "storage": "64 GB",
+            "color": "Blau",
+            "condition": "Schnäppchen",
+            "battery": "Gebraucht"
+          }
+        ],
         "name": "iPhone 12 mini",
         "oldPrice": 212,
         "opticalConditions": [

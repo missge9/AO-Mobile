@@ -1,65 +1,34 @@
 {% extends "base.html" %}
 
-{% block title %}Mein Konto | AO Mobile{% endblock %}
+{% block title %}Mein Konto | reborn Mobile{% endblock %}
 
 {% block styles %}
 <style>
-    /* Spezifische Layout-Anpassung für die Userpage mit Sidebar */
-    body { 
-        padding-top: 80px; /* Header Platz */
-        background-color: #f4f7f6;
-        height: 100vh;
-        overflow: hidden;
-    }
+    /* Spezifische Layout-Anpassung für die Userpage */
+    body { padding-top: 80px; background-color: #f4f7f6; height: 100vh; overflow: hidden; }
 
-    .user-container {
-        display: flex;
-        height: calc(100vh - 80px);
-        width: 100%;
-    }
+    .user-container { display: flex; height: calc(100vh - 80px); width: 100%; }
 
     /* --- SIDEBAR --- */
     .sidebar {
-        width: 260px;
-        background: #ffffff;
-        border-right: 1px solid #ddd;
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        flex-shrink: 0;
+        width: 260px; background: #ffffff; border-right: 1px solid #ddd;
+        display: flex; flex-direction: column; padding: 20px; flex-shrink: 0;
     }
 
     .menu-link {
-        padding: 12px 15px;
-        margin-bottom: 8px;
-        border-radius: 10px;
-        color: #555;
-        cursor: pointer;
-        transition: 0.3s;
-        display: flex; align-items: center; gap: 10px;
-        font-weight: 500;
+        padding: 12px 15px; margin-bottom: 8px; border-radius: 10px;
+        color: #555; cursor: pointer; transition: 0.3s;
+        display: flex; align-items: center; gap: 10px; font-weight: 500;
     }
 
-    .menu-link:hover, .menu-link.active {
-        background-color: #e3f2fd;
-        color: var(--primary-color);
-    }
-
+    .menu-link:hover, .menu-link.active { background-color: #e3f2fd; color: var(--primary-color); }
     .menu-link svg { width: 20px; height: 20px; fill: currentColor; }
 
-    .logout-btn {
-        margin-top: auto;
-        color: #ea4335;
-        background: #fff5f5;
-    }
+    .logout-btn { margin-top: auto; color: #ea4335; background: #fff5f5; }
     .logout-btn:hover { background: #fee; }
 
-    /* --- MAIN CONTENT AREA --- */
-    .main-content {
-        flex-grow: 1;
-        padding: 40px;
-        overflow-y: auto;
-    }
+    /* --- MAIN CONTENT --- */
+    .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
 
     .section { display: none; animation: fadeIn 0.4s; }
     .section.active { display: block; }
@@ -72,20 +41,22 @@
     }
 
     .welcome-header {
-        background: var(--primary-gradient);
-        color: white; padding: 30px; border-radius: 16px; margin-bottom: 30px;
+        background: var(--primary-gradient); color: white; padding: 30px; 
+        border-radius: 16px; margin-bottom: 30px;
     }
 
-    .data-table {
-        width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden;
-    }
+    .data-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
     .data-table th, .data-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
     .data-table th { background: #f9f9f9; font-weight: 600; color: #666; }
 
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
     .form-group label { display: block; font-size: 13px; color: #777; margin-bottom: 5px; }
     .form-group input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
-    .btn-save { background: var(--primary-color); color: white; border: none; padding: 10px 25px; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+    
+    .btn-save { 
+        background: var(--primary-color); color: white; border: none; 
+        padding: 10px 25px; border-radius: 8px; cursor: pointer; margin-top: 20px; 
+    }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -94,6 +65,7 @@
         .sidebar { width: 100%; padding: 10px; flex-direction: row; overflow-x: auto; gap: 10px; height: auto; }
         .logout-btn { margin-top: 0; }
         .main-content { padding: 20px; }
+        .form-grid { grid-template-columns: 1fr; }
     }
 </style>
 {% endblock %}
@@ -131,10 +103,9 @@
                 <h1>Willkommen zurück, <span id="user-firstname">User</span>!</h1>
                 <p>Schön, dass du wieder da bist. Hier ist deine Übersicht.</p>
             </div>
-            
             <div class="form-grid">
                 <div class="info-card">
-                    <h3 style="color:var(--primary-color); font-size:32px; margin-bottom:5px;">0</h3>
+                    <h3 id="open-orders-count" style="color:var(--primary-color); font-size:32px; margin-bottom:5px;">0</h3>
                     <p style="color:#777;">Offene Bestellungen</p>
                 </div>
                 <div class="info-card">
@@ -148,18 +119,9 @@
             <h2>Deine Bestellungen</h2>
             <div class="info-card">
                 <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Bestell-Nr.</th>
-                            <th>Datum</th>
-                            <th>Status</th>
-                            <th>Betrag</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Bestell-Nr.</th><th>Datum</th><th>Status</th><th>Betrag</th></tr></thead>
                     <tbody id="orders-list">
-                        <tr>
-                            <td colspan="4" style="text-align:center; color:#999;">Lade Bestellungen...</td>
-                        </tr>
+                        <tr><td colspan="4" style="text-align:center; color:#999;">Lade Bestellungen...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -169,18 +131,9 @@
             <h2>Deine Verkäufe</h2>
             <div class="info-card">
                  <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Verkauf-ID</th>
-                            <th>Gerät</th>
-                            <th>Angebot</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>Verkauf-ID</th><th>Gerät</th><th>Angebot</th><th>Status</th></tr></thead>
                     <tbody id="sales-list">
-                         <tr>
-                            <td colspan="4" style="text-align:center; color:#999;">Du hast noch keine Geräte verkauft.</td>
-                        </tr>
+                         <tr><td colspan="4" style="text-align:center; color:#999;">Du hast noch keine Geräte verkauft.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -189,16 +142,37 @@
         <div id="profile" class="section">
             <h2>Profileinstellungen</h2>
             <div class="info-card">
-                <div class="form-group" style="margin-bottom:15px;">
-                    <label>E-Mail Adresse (nicht änderbar)</label>
-                    <input type="text" id="p-email" disabled style="background:#f0f0f0;">
-                </div>
-                <div class="form-group" style="margin-bottom:15px;">
-                    <label>Benutzername</label>
-                    <input type="text" id="p-username">
-                </div>
                 
-                <h4 style="margin: 20px 0 10px 0; border-bottom:1px solid #eee; padding-bottom:5px;">Anschrift</h4>
+                <h4 style="margin: 0 0 15px 0; border-bottom:1px solid #eee; padding-bottom:5px;">Persönliche Angaben</h4>
+                
+                <div class="form-group">
+                    <label>Vorname</label>
+                    <input type="text" id="p-firstname">
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Zweiter Name</label>
+                        <input type="text" id="p-secondname">
+                    </div>
+                    <div class="form-group">
+                        <label>Nachname</label>
+                        <input type="text" id="p-lastname">
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>E-Mail Adresse (nicht änderbar)</label>
+                        <input type="text" id="p-email" disabled style="background:#f0f0f0;">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefonnummer</label>
+                        <input type="text" id="p-phone">
+                    </div>
+                </div>
+
+                <h4 style="margin: 30px 0 15px 0; border-bottom:1px solid #eee; padding-bottom:5px;">Anschrift</h4>
                 
                 <div class="form-grid">
                     <div class="form-group">
@@ -210,7 +184,7 @@
                         <input type="text" id="p-house">
                     </div>
                 </div>
-                <br>
+                
                 <div class="form-grid">
                     <div class="form-group">
                         <label>PLZ</label>
@@ -222,7 +196,7 @@
                     </div>
                 </div>
 
-                <button class="btn-save" onclick="alert('Funktion folgt bald!')">Änderungen speichern</button>
+                <button class="btn-save" onclick="alert('Update-Funktion folgt bald!')">Änderungen speichern</button>
             </div>
         </div>
 
@@ -238,10 +212,21 @@
     if (!userData) {
         window.location.href = '/'; 
     } else {
-        // Profilfelder befüllen
+        // --- PROFIL DATEN FÜLLEN (Updated) ---
+        
+        // Header Begrüßung (Nimmt vollen Namen aus Username)
         document.getElementById('user-firstname').innerText = userData.username;
-        if(document.getElementById('p-username')) document.getElementById('p-username').value = userData.username;
+
+        // Persönliche Angaben
+        if(document.getElementById('p-firstname')) document.getElementById('p-firstname').value = userData.firstname || userData.username.split(' ')[0] || '';
+        if(document.getElementById('p-secondname')) document.getElementById('p-secondname').value = userData.second_name || '';
+        if(document.getElementById('p-lastname')) document.getElementById('p-lastname').value = userData.lastname || userData.username.split(' ').pop() || '';
+        
+        // Kontakt
         if(document.getElementById('p-email')) document.getElementById('p-email').value = userData.email;
+        if(document.getElementById('p-phone')) document.getElementById('p-phone').value = userData.phone || '';
+
+        // Adresse
         if(document.getElementById('p-street')) document.getElementById('p-street').value = userData.street || '';
         if(document.getElementById('p-house')) document.getElementById('p-house').value = userData.house_number || '';
         if(document.getElementById('p-zip')) document.getElementById('p-zip').value = userData.zip_code || '';
@@ -249,10 +234,10 @@
 
         // Daten abrufen
         loadMyOrders();
-        loadMySales(); // Neu: Verkäufe laden
+        loadMySales(); 
     }
 
-    // 2. Bestellungen laden (Käufe)
+    // 2. Bestellungen laden
     async function loadMyOrders() {
         try {
             const response = await fetch('/api/my-orders', {
@@ -260,30 +245,26 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: userData.email })
             });
-            
             const orders = await response.json();
             const tbody = document.getElementById('orders-list');
-            const openCount = document.querySelector('.info-card h3'); // Zähler Karte oben
+            const openCountEl = document.getElementById('open-orders-count');
 
             if(tbody) tbody.innerHTML = '';
 
             if (orders.length === 0) {
                 if(tbody) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:20px;">Keine Bestellungen gefunden.</td></tr>';
-                if(openCount) openCount.innerText = "0";
+                if(openCountEl) openCountEl.innerText = "0";
                 return;
             }
 
-            let openOrdersCounter = 0;
-
+            let openCounter = 0;
             orders.forEach(order => {
-                let statusBadge = '';
+                let badge = `<span style="background:#eee; padding:4px 8px; border-radius:4px; font-size:12px;">${order.status}</span>`;
                 if(order.status === 'Offen') {
-                    statusBadge = '<span style="background:#fff3cd; color:#856404; padding:4px 8px; border-radius:4px; font-size:12px;">Warten auf Versand</span>';
-                    openOrdersCounter++;
+                    badge = `<span style="background:#fff3cd; color:#856404; padding:4px 8px; border-radius:4px; font-size:12px;">Warten auf Versand</span>`;
+                    openCounter++;
                 } else if (order.status === 'Versendet') {
-                    statusBadge = '<span style="background:#d4edda; color:#155724; padding:4px 8px; border-radius:4px; font-size:12px;">Versendet</span>';
-                } else {
-                    statusBadge = '<span style="background:#eee; color:#333; padding:4px 8px; border-radius:4px; font-size:12px;">' + order.status + '</span>';
+                    badge = `<span style="background:#d4edda; color:#155724; padding:4px 8px; border-radius:4px; font-size:12px;">Versendet</span>`;
                 }
 
                 if(tbody) {
@@ -291,21 +272,18 @@
                     tr.innerHTML = `
                         <td style="font-weight:600;">${order.order_id}</td>
                         <td>${order.date}</td>
-                        <td>${statusBadge}</td>
+                        <td>${badge}</td>
                         <td style="font-weight:bold; color:#333;">${order.total} CHF</td>
                     `;
                     tbody.appendChild(tr);
                 }
             });
+            if(openCountEl) openCountEl.innerText = openCounter;
 
-            if(openCount) openCount.innerText = openOrdersCounter;
-
-        } catch (error) {
-            console.error("Fehler beim Laden der Bestellungen:", error);
-        }
+        } catch (error) { console.error("Fehler bei Bestellungen", error); }
     }
 
-    // 3. Verkäufe laden (Neu: Ankauf durch AO Mobile)
+    // 3. Verkäufe laden
     async function loadMySales() {
         try {
             const response = await fetch('/api/my-sales', {
@@ -315,12 +293,11 @@
             });
             const sales = await response.json();
             const tbody = document.getElementById('sales-list');
-            
-            if(!tbody) return; // Falls Tab nicht existiert abbrechen
+            if(!tbody) return;
             tbody.innerHTML = '';
 
             if (sales.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:20px;">Du hast noch keine Geräte verkauft.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:20px;">Noch keine Verkäufe.</td></tr>';
                 return;
             }
 
@@ -328,33 +305,27 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="font-weight:600;">${sale.sale_id}</td>
-                    <td>
-                        <strong>${sale.device}</strong><br>
-                        <span style="font-size:12px; color:#777;">${sale.specs.storage}, ${sale.specs.condition}</span>
-                    </td>
+                    <td><strong>${sale.device}</strong><br><span style="font-size:12px; color:#777;">${sale.specs.storage}</span></td>
                     <td style="font-weight:bold; color:#28a745;">${sale.offer_price} CHF</td>
                     <td><span style="background:#e3f2fd; color:#007bff; padding:4px 8px; border-radius:4px; font-size:12px;">${sale.status}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
-        } catch (error) {
-            console.error("Fehler beim Laden der Verkäufe:", error);
-        }
+        } catch (error) { console.error("Fehler bei Verkäufen", error); }
     }
 
-    // 4. Navigation zwischen Tabs (Profil / Bestellungen / Verkäufe)
+    // 4. Navigation
     function showSection(sectionId, element) {
         document.querySelectorAll('.section').forEach(el => el.classList.remove('active'));
         const target = document.getElementById(sectionId);
         if(target) target.classList.add('active');
-        
         if (element) {
             document.querySelectorAll('.menu-link').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
         }
     }
 
-    // 5. Logout Funktion
+    // 5. Logout
     function logout() {
         localStorage.removeItem('ao_user');
         window.location.href = '/';

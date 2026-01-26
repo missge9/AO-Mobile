@@ -1,18 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Benutzerkonto erstellen | AO Mobile{% endblock %}
+{% block title %}Benutzerkonto erstellen | reborn Mobile{% endblock %}
 
 {% block styles %}
 <style>
-    /* Spezifische Styles für das Registrierungsformular */
     .container-small { max-width: 650px; margin: 40px auto; padding: 0 20px; }
     
     .user-card { 
-        background: white; 
-        border-radius: 20px; 
-        padding: 40px; 
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
-        color: #333;
+        background: white; border-radius: 20px; padding: 40px; 
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08); color: #333;
     }
     
     h1 { margin-bottom: 30px; font-weight: 600; text-align: center; color: var(--dark-bg); }
@@ -38,14 +34,12 @@
         background: var(--primary-gradient); color: white; 
         border: none; border-radius: 30px; font-weight: 600; 
         cursor: pointer; margin-top: 30px; text-transform: uppercase;
-        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-        transition: transform 0.2s;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3); transition: transform 0.2s;
     }
     .btn-save:hover { transform: translateY(-2px); }
+    .btn-save:disabled { background: #ccc; cursor: not-allowed; transform: none; }
 
-    @media (max-width: 500px) {
-        .form-row, .address-row, .city-row { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 500px) { .form-row, .address-row, .city-row { grid-template-columns: 1fr; } }
 </style>
 {% endblock %}
 
@@ -56,23 +50,41 @@
         
         <form id="user-form">
             <h3>Persönliche Angaben</h3>
+            
             <div class="form-group">
-                <label>Vollständiger Name</label>
-                <input type="text" id="username" placeholder="z.B. Max Mustermann" required>
+                <label>Vorname *</label>
+                <input type="text" id="firstname" placeholder="Vorname" required>
             </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Zweiter Name (Optional)</label>
+                    <input type="text" id="second_name" placeholder="Zweiter Name">
+                </div>
+                <div class="form-group">
+                    <label>Nachname *</label>
+                    <input type="text" id="lastname" placeholder="Nachname" required>
+                </div>
+            </div>
+
             <div class="form-group">
-                <label>E-Mail Adresse</label>
+                <label>E-Mail Adresse *</label>
                 <input type="email" id="email" placeholder="beispiel@mail.ch" required>
+            </div>
+
+            <div class="form-group">
+                <label>Telefonnummer</label>
+                <input type="tel" id="phone" placeholder="+41 79 000 00 00">
             </div>
 
             <h3>Sicherheit</h3>
             <div class="form-row">
                 <div class="form-group">
-                    <label>Passwort</label>
+                    <label>Passwort *</label>
                     <input type="password" id="password" required>
                 </div>
                 <div class="form-group">
-                    <label>Passwort wiederholen</label>
+                    <label>Passwort wiederholen *</label>
                     <input type="password" id="password_confirm" required>
                 </div>
             </div>
@@ -80,21 +92,21 @@
             <h3>Anschrift</h3>
             <div class="address-row">
                 <div class="form-group">
-                    <label>Strasse</label>
+                    <label>Strasse *</label>
                     <input type="text" id="street" required>
                 </div>
                 <div class="form-group">
-                    <label>Nr.</label>
+                    <label>Nr. *</label>
                     <input type="text" id="house_number" required>
                 </div>
             </div>
             <div class="city-row">
                 <div class="form-group">
-                    <label>PLZ</label>
+                    <label>PLZ *</label>
                     <input type="text" id="zip" required>
                 </div>
                 <div class="form-group">
-                    <label>Ort</label>
+                    <label>Ort *</label>
                     <input type="text" id="city" required>
                 </div>
             </div>
@@ -123,7 +135,6 @@
         pass.classList.remove('error');
         passConfirm.classList.remove('error');
 
-        // Passwort-Check
         if (pass.value !== passConfirm.value) {
             passConfirm.classList.add('error');
             statusMsg.innerText = "Die Passwörter stimmen nicht überein.";
@@ -131,9 +142,17 @@
             return;
         }
 
+        const btn = document.querySelector('.btn-save');
+        btn.innerText = "Registrierung läuft...";
+        btn.disabled = true;
+
+        // Datenerfassung mit neuen Feldern
         const userData = {
-            username: document.getElementById('username').value,
+            firstname: document.getElementById('firstname').value,
+            second_name: document.getElementById('second_name').value, 
+            lastname: document.getElementById('lastname').value, 
             email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
             password: pass.value,
             street: document.getElementById('street').value,
             house_number: document.getElementById('house_number').value,
@@ -151,23 +170,29 @@
             const result = await response.json();
 
             if (response.ok) {
-                statusMsg.innerText = "Konto erfolgreich erstellt! Du kannst dich jetzt einloggen.";
-                statusMsg.style.color = "var(--primary-color)";
-                form.reset();
+                // User im Browser speichern (Login)
+                const loggedInUser = { ...userData, password: '' };
                 
-                // Nach 2 Sekunden automatisch das Login-Fenster aus der base.html öffnen
-                setTimeout(() => {
-                    toggleLogin();
-                }, 2000);
-                
+                // Wir setzen username für die Anzeige zusammen, falls das Backend es nicht schickt
+                // (Backend schickt es aber gleich zurück, siehe unten)
+                if(result.user) {
+                    localStorage.setItem('ao_user', JSON.stringify(result.user));
+                }
+
+                // Weiterleitung
+                window.location.href = '/register-success';
             } else {
                 statusMsg.innerText = result.message || "Fehler bei der Registrierung.";
                 statusMsg.style.color = "var(--price-color)";
+                btn.innerText = "Registrieren";
+                btn.disabled = false;
             }
         } catch (error) {
             console.error('Error:', error);
             statusMsg.innerText = "Verbindung zum Server fehlgeschlagen.";
             statusMsg.style.color = "var(--price-color)";
+            btn.innerText = "Registrieren";
+            btn.disabled = false;
         }
     };
 </script>

@@ -8,7 +8,7 @@ import json
 
 app = Flask(__name__, template_folder='../', static_folder='../')
 
-# Sicherheitsschlüssel
+# Sicherheitsschlüssel (für Adress-Daten Verschlüsselung)
 SECRET_KEY = b'Yiv7xtGkDk1bnlDo2wIhLlXeMbhsfRa4ZI4T52ovF-Y='
 cipher = Fernet(SECRET_KEY)
 
@@ -34,14 +34,18 @@ def decrypt_data(data):
 # --- Datenbank Modell ---
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    username = db.Column(db.String(150), nullable=False) # Voller Name
+    email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
     
+    # Adresse (Verschlüsselt gespeichert, hier vereinfacht Text)
     street = db.Column(db.Text)
     house_number = db.Column(db.Text)
     zip_code = db.Column(db.Text)
     city = db.Column(db.Text)
+    
+    # NEU: Telefon
+    phone = db.Column(db.String(50)) 
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -77,40 +81,110 @@ def detail(): return render_template('detail.html')
 @app.route('/cart')
 def cart(): return render_template('cart.html')
 
-@app.route('/checkout') # <--- DIESE ROUTE HAT GEFEHLT
-def checkout_page():
-    return render_template('checkout.html')
-
-# Dashboard (Willkommen)
-@app.route('/admin')
-def admin_dashboard():
-    return render_template('admin.html')
-
-@app.route('/admin/inventory')
-def admin_inventory():
-    return render_template('inventory_admin.html') # Das neue File
-
-@app.route('/admin/orders')
-def admin_orders():
-    return render_template('orders_admin.html')
-
-@app.route('/admin/sales')
-def admin_sales():
-    return render_template('sales_admin.html')
-
-@app.route('/orders')
-def orders_page(): # Zeigt die Bestell-Verwaltung
-    return render_template('orders_admin.html')
+@app.route('/checkout')
+def checkout_page(): return render_template('checkout.html')
 
 @app.route('/success')
-def success_page():
-    return render_template('success.html')
+def success_page(): return render_template('success.html')
 
+@app.route('/register-success')
+def register_success_page(): return render_template('register_success.html')
+
+# --- ADMIN ROUTEN ---
+@app.route('/admin')
+def admin_dashboard(): return render_template('admin.html')
+
+@app.route('/admin/inventory')
+def admin_inventory(): return render_template('inventory_admin.html')
+
+@app.route('/admin/orders')
+def admin_orders(): return render_template('orders_admin.html')
+
+@app.route('/orders') # Alias für Admin Orders
+def orders_page(): return render_template('orders_admin.html')
+
+@app.route('/admin/sales')
+def admin_sales(): return render_template('sales_admin.html')
+
+
+# --- API ROUTEN (User & Shop) ---
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.json
+    user = User.query.filter_by(email=data['email']).first()
+    
+    if user and user.check_password(data['password']):
+        return jsonify({
+            "message": "Login erfolgreich",
+            "username": user.username,     # Voller Name (für Anzeige oben)
+            "firstname": getattr(user, 'firstname', '') or user.username.split(' ')[0], # Fallback
+            "second_name": getattr(user, 'second_name', ''),
+            "lastname": getattr(user, 'lastname', '') or user.username.split(' ')[-1], # Fallback
+            "email": user.email,
+            "phone": user.phone,           # <--- Telefonnummer
+            "street": decrypt_data(user.street),
+            "house_number": decrypt_data(user.house_number),
+            "zip_code": decrypt_data(user.zip_code),
+            "city": decrypt_data(user.city)
+        }), 200
+        
+    return jsonify({"message": "E-Mail oder Passwort falsch"}), 401
+
+@app.route('/api/register', methods=['POST'])
+def register_user():
+    data = request.json
+    
+    # 1. Prüfen ob E-Mail existiert
+    if User.query.filter_by(email=data['email']).first():
+        return jsonify({"message": "E-Mail bereits registriert"}), 400
+
+    # 2. Namen zusammenbauen
+    first = data.get('firstname', '')
+    second = data.get('second_name', '')
+    last = data.get('lastname', '')
+    
+    if second:
+        full_name = f"{first} {second} {last}"
+    else:
+        full_name = f"{first} {last}"
+
+    # 3. User erstellen (Daten verschlüsseln wo nötig)
+    new_user = User(
+        username=full_name,
+        email=data['email'],
+        phone=data.get('phone'),
+        street=encrypt_data(data.get('street')),
+        house_number=encrypt_data(data.get('house_number')),
+        zip_code=encrypt_data(data.get('zip') or data.get('zip_code')),
+        city=encrypt_data(data.get('city'))
+    )
+    
+    new_user.set_password(data['password'])
+
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Datenbank Fehler: " + str(e)}), 500
+
+    # 4. Antwort für Frontend
+    user_data = {
+        "username": new_user.username,
+        "email": new_user.email,
+        "phone": new_user.phone,
+        "street": data.get('street'),
+        "house_number": data.get('house_number'),
+        "zip_code": data.get('zip') or data.get('zip_code'),
+        "city": data.get('city')
+    }
+
+    return jsonify({"message": "Erfolgreich registriert", "user": user_data}), 201
 
 @app.route('/api/my-orders', methods=['POST'])
 def my_orders():
     user_email = request.json.get('email')
-    
     orders_path = os.path.join(base_dir, '../data/orders.json')
     my_orders_list = []
 
@@ -118,89 +192,13 @@ def my_orders():
         with open(orders_path, 'r', encoding='utf-8') as f:
             all_orders = json.load(f)
             
-        # Wir suchen alle Bestellungen, wo die E-Mail übereinstimmt
         for order in all_orders:
-            # Wir prüfen sowohl "customer" (Rechnung) als auch "user" (altes Format)
             cust_email = order.get('customer', {}).get('email')
             if cust_email == user_email:
                 my_orders_list.append(order)
 
     return jsonify(my_orders_list)
-# --- Verkaufs-Logik (User verkauft an AO Mobile) ---
 
-@app.route('/api/sell', methods=['POST'])
-def register_sale():
-    data = request.json
-    sales_path = os.path.join(base_dir, '../data/sales.json')
-    
-    # Datei laden oder Liste erstellen
-    if os.path.exists(sales_path):
-        with open(sales_path, 'r', encoding='utf-8') as f:
-            try:
-                sales = json.load(f)
-            except:
-                sales = []
-    else:
-        sales = []
-        
-    new_sale = {
-        "sale_id": f"SELL-{int(datetime.now().timestamp())}",
-        "date": datetime.now().strftime("%d.%m.%Y"),
-        "user_email": data.get('email'),
-        "device": data.get('device'),
-        "specs": data.get('specs'),
-        "offer_price": data.get('price'),
-        "status": "In Prüfung" # Status für Dashboard
-    }
-    
-    sales.insert(0, new_sale) # Neuste zuerst
-    
-    # Speichern
-    with open(sales_path, 'w', encoding='utf-8') as f:
-        json.dump(sales, f, indent=2, ensure_ascii=False)
-        
-    return jsonify({"message": "Verkauf registriert", "id": new_sale['sale_id']}), 200
-
-# --- ADMIN SALES (ANKAUF) ROUTEN ---
-
-@app.route('/admin/sales')
-def sales_admin_page():
-    return render_template('sales_admin.html')
-
-@app.route('/api/admin/sales', methods=['GET', 'POST'])
-def admin_sales_api():
-    sales_path = os.path.join(base_dir, '../data/sales.json')
-    
-    # 1. Daten laden
-    if request.method == 'GET':
-        if os.path.exists(sales_path):
-            with open(sales_path, 'r', encoding='utf-8') as f:
-                return jsonify(json.load(f))
-        return jsonify([])
-    
-    # 2. Status ändern
-    if request.method == 'POST':
-        req = request.json
-        target_id = req.get('sale_id')
-        new_status = req.get('status')
-        
-        if os.path.exists(sales_path):
-            with open(sales_path, 'r', encoding='utf-8') as f:
-                sales = json.load(f)
-            
-            for s in sales:
-                if s['sale_id'] == target_id:
-                    s['status'] = new_status
-                    # Optional: Wenn angenommen, könnte man hier Logik einbauen, 
-                    # um das Gerät automatisch ins Lager (data.json) zu übertragen.
-                    break
-            
-            with open(sales_path, 'w', encoding='utf-8') as f:
-                json.dump(sales, f, indent=2, ensure_ascii=False)
-            return jsonify({"message": "Status aktualisiert"})
-            
-        return jsonify({"error": "Datei nicht gefunden"}), 404
-        
 @app.route('/api/my-sales', methods=['POST'])
 def my_sales():
     email = request.json.get('email')
@@ -214,49 +212,82 @@ def my_sales():
             
     return jsonify(my_list)
 
-@app.route('/api/register', methods=['POST'])
-def register():
-    data = request.json
-    if User.query.filter_by(username=data['username']).first():
-        return jsonify({"message": "Nutzername bereits vergeben"}), 400
-    if User.query.filter_by(email=data['email']).first():
-        return jsonify({"message": "E-Mail bereits vergeben"}), 400
-    
-    user = User(
-        username=data['username'], 
-        email=data['email'],
-        street=encrypt_data(data.get('street')),
-        house_number=encrypt_data(data.get('house_number')),
-        zip_code=encrypt_data(data.get('zip')),
-        city=encrypt_data(data.get('city'))
-    )
-    user.set_password(data['password'])
-    
-    try:
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({"message": "Konto erfolgreich erstellt"}), 201
-    except Exception as e:
-        print(f"Fehler: {e}")
-        return jsonify({"message": "Datenbankfehler"}), 500
 
-@app.route('/api/login', methods=['POST'])
-def login():
+# --- CHECKOUT LOGIK ---
+@app.route('/api/checkout', methods=['POST'])
+def checkout():
     data = request.json
-    user = User.query.filter_by(email=data['email']).first()
+    cart_items = data.get('cart', [])
     
-    if user and user.check_password(data['password']):
-        return jsonify({
-            "message": "Login erfolgreich",
-            "username": user.username,
-            "email": user.email,
-            "street": decrypt_data(user.street),
-            "house_number": decrypt_data(user.house_number),
-            "zip_code": decrypt_data(user.zip_code),
-            "city": decrypt_data(user.city)
-        }), 200
+    billing_address = data.get('billingAddress', {})
+    shipping_address = data.get('shippingAddress', {})
+    payment_method = data.get('paymentMethod', 'unknown')
+    has_insurance = data.get('insurance', False)
+
+    if not cart_items:
+        return jsonify({"message": "Warenkorb leer"}), 400
+
+    json_path = os.path.join(base_dir, '../data/data.json')
+    orders_path = os.path.join(base_dir, '../data/orders.json')
+    
+    with open(json_path, 'r', encoding='utf-8') as f:
+        shop_data = json.load(f)
+    
+    if os.path.exists(orders_path):
+        with open(orders_path, 'r', encoding='utf-8') as f:
+            orders = json.load(f)
+    else:
+        orders = []
+
+    items_bought = []
+    items_total_price = 0
+
+    # Inventar abziehen
+    for cart_item in cart_items:
+        found = False
+        target_id = str(cart_item['id'])
+        for brand in shop_data:
+            for product in shop_data[brand]['products']:
+                if 'inventory' in product:
+                    original_len = len(product['inventory'])
+                    product['inventory'] = [i for i in product['inventory'] if str(i['id']) != target_id]
+                    if len(product['inventory']) < original_len:
+                        found = True
+                        items_bought.append(cart_item)
+                        items_total_price += float(cart_item['price'])
+                        break 
+            if found: break
         
-    return jsonify({"message": "E-Mail oder Passwort falsch"}), 401
+        if not found:
+            return jsonify({"message": f"Gerät #{target_id} ist nicht mehr verfügbar!"}), 409
+
+    shipping_cost = 10.0 if has_insurance else 0.0
+    final_total = items_total_price + shipping_cost
+
+    new_order = {
+        "order_id": f"ORD-{int(datetime.now().timestamp())}",
+        "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "status": "Offen",
+        "customer": billing_address,
+        "shipping_address": shipping_address,
+        "payment": payment_method,
+        "insurance": has_insurance,
+        "items": items_bought,
+        "subtotal": items_total_price,
+        "shipping_cost": shipping_cost,
+        "total": final_total
+    }
+    orders.insert(0, new_order)
+
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(shop_data, f, indent=2, ensure_ascii=False)
+    with open(orders_path, 'w', encoding='utf-8') as f:
+        json.dump(orders, f, indent=2, ensure_ascii=False)
+
+    return jsonify({"message": "Erfolg", "order_id": new_order['order_id']}), 200
+
+
+# --- ADMIN API ROUTEN ---
 
 @app.route('/api/admin/data', methods=['GET', 'POST'])
 def admin_data_handler():
@@ -269,7 +300,6 @@ def admin_data_handler():
                 json.dump(new_data, f, indent=2, ensure_ascii=False)
             return jsonify({"message": "Gespeichert"}), 200
         except Exception as e:
-            print(f"Fehler beim Speichern: {e}")
             return jsonify({"message": "Fehler beim Speichern"}), 500
     else:
         try:
@@ -298,7 +328,6 @@ def orders_api():
             for o in orders:
                 if o['order_id'] == req['order_id']:
                     o['status'] = req['status']
-                    # Wenn versendet, Datum setzen (optional)
                     if req['status'] == 'Versendet':
                         o['shipped_date'] = datetime.now().strftime("%d.%m.%Y")
                     break
@@ -308,82 +337,67 @@ def orders_api():
             return jsonify({"message": "Status aktualisiert"})
         return jsonify({"error": "Fehler"}), 404
 
-# --- DIE HAUPT-LOGIK FÜR DEN CHECKOUT ---
-@app.route('/api/checkout', methods=['POST'])
-def checkout():
+# --- API für Ankauf (Sell) ---
+
+@app.route('/api/sell', methods=['POST'])
+def register_sale():
     data = request.json
-    cart_items = data.get('cart', [])
+    sales_path = os.path.join(base_dir, '../data/sales.json')
     
-    # Neue Felder aus dem Frontend
-    billing_address = data.get('billingAddress', {})
-    shipping_address = data.get('shippingAddress', {})
-    payment_method = data.get('paymentMethod', 'unknown')
-    has_insurance = data.get('insurance', False)
-
-    if not cart_items:
-        return jsonify({"message": "Warenkorb leer"}), 400
-
-    json_path = os.path.join(base_dir, '../data/data.json')
-    orders_path = os.path.join(base_dir, '../data/orders.json')
-    
-    with open(json_path, 'r', encoding='utf-8') as f:
-        shop_data = json.load(f)
-    
-    if os.path.exists(orders_path):
-        with open(orders_path, 'r', encoding='utf-8') as f:
-            orders = json.load(f)
+    if os.path.exists(sales_path):
+        with open(sales_path, 'r', encoding='utf-8') as f:
+            try:
+                sales = json.load(f)
+            except:
+                sales = []
     else:
-        orders = []
-
-    items_bought = []
-    items_total_price = 0
-
-    # Inventar-Logik (Löschen)
-    for cart_item in cart_items:
-        found = False
-        target_id = str(cart_item['id'])
-        for brand in shop_data:
-            for product in shop_data[brand]['products']:
-                if 'inventory' in product:
-                    original_len = len(product['inventory'])
-                    product['inventory'] = [i for i in product['inventory'] if str(i['id']) != target_id]
-                    if len(product['inventory']) < original_len:
-                        found = True
-                        items_bought.append(cart_item)
-                        items_total_price += float(cart_item['price'])
-                        break 
-            if found: break
+        sales = []
         
-        if not found:
-            return jsonify({"message": f"Gerät #{target_id} ist nicht mehr verfügbar!"}), 409
-
-    # Gesamtsumme berechnen
-    shipping_cost = 10.0 if has_insurance else 0.0
-    final_total = items_total_price + shipping_cost
-
-    # Bestellung anlegen
-    new_order = {
-        "order_id": f"ORD-{int(datetime.now().timestamp())}",
-        "date": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "status": "Offen",
-        "customer": billing_address,
-        "shipping_address": shipping_address,
-        "payment": payment_method,
-        "insurance": has_insurance,
-        "items": items_bought,
-        "subtotal": items_total_price,
-        "shipping_cost": shipping_cost,
-        "total": final_total
+    new_sale = {
+        "sale_id": f"SELL-{int(datetime.now().timestamp())}",
+        "date": datetime.now().strftime("%d.%m.%Y"),
+        "user_email": data.get('email'),
+        "device": data.get('device'),
+        "specs": data.get('specs'),
+        "offer_price": data.get('price'),
+        "status": "In Prüfung"
     }
-    orders.insert(0, new_order)
+    
+    sales.insert(0, new_sale)
+    
+    with open(sales_path, 'w', encoding='utf-8') as f:
+        json.dump(sales, f, indent=2, ensure_ascii=False)
+        
+    return jsonify({"message": "Verkauf registriert", "id": new_sale['sale_id']}), 200
 
-    # Speichern
-    with open(json_path, 'w', encoding='utf-8') as f:
-        json.dump(shop_data, f, indent=2, ensure_ascii=False)
-    with open(orders_path, 'w', encoding='utf-8') as f:
-        json.dump(orders, f, indent=2, ensure_ascii=False)
-
-    return jsonify({"message": "Erfolg", "order_id": new_order['order_id']}), 200
+@app.route('/api/admin/sales', methods=['GET', 'POST'])
+def admin_sales_api():
+    sales_path = os.path.join(base_dir, '../data/sales.json')
+    
+    if request.method == 'GET':
+        if os.path.exists(sales_path):
+            with open(sales_path, 'r', encoding='utf-8') as f:
+                return jsonify(json.load(f))
+        return jsonify([])
+    
+    if request.method == 'POST':
+        req = request.json
+        target_id = req.get('sale_id')
+        new_status = req.get('status')
+        
+        if os.path.exists(sales_path):
+            with open(sales_path, 'r', encoding='utf-8') as f:
+                sales = json.load(f)
+            
+            for s in sales:
+                if s['sale_id'] == target_id:
+                    s['status'] = new_status
+                    break
+            
+            with open(sales_path, 'w', encoding='utf-8') as f:
+                json.dump(sales, f, indent=2, ensure_ascii=False)
+            return jsonify({"message": "Status aktualisiert"})
+        return jsonify({"error": "Datei nicht gefunden"}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)

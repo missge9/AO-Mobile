@@ -1,5 +1,31 @@
 [
   {
+    "sale_id": "SELL-1769364659",
+    "date": "25.01.2026",
+    "user_email": "samuelbohren@hotmail.com",
+    "device": "iPhone 6",
+    "specs": {
+      "storage": "32 GB",
+      "condition": "Gebraucht",
+      "battery": "Gebraucht (über 80%)"
+    },
+    "offer_price": 40,
+    "status": "In Prüfung"
+  },
+  {
+    "sale_id": "SELL-1769363570",
+    "date": "25.01.2026",
+    "user_email": "samuelbohren@hotmail.com",
+    "device": "iPhone SE (2022)",
+    "specs": {
+      "storage": "128 GB",
+      "condition": "Gebraucht",
+      "battery": "Gebraucht (über 80%)"
+    },
+    "offer_price": 210,
+    "status": "Angenommen"
+  },
+  {
     "sale_id": "SELL-1769358952",
     "date": "25.01.2026",
     "user_email": "samuel@samuel.com",
@@ -10,6 +36,6 @@
       "battery": "Gebraucht (über 80%)"
     },
     "offer_price": 95,
-    "status": "In Prüfung"
+    "status": "Angenommen"
   }
 ]

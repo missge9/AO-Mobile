@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Willkommen | reborn Mobile{% endblock %}
+
+{% block styles %}
+<style>
+    .success-container {
+        max-width: 600px;
+        margin: 60px auto;
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .success-icon {
+        font-size: 60px;
+        margin-bottom: 20px;
+        display: inline-block;
+        animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    h1 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 32px;
+        background: linear-gradient(135deg, #007bff, #00d2ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    p {
+        color: #666;
+        font-size: 18px;
+        line-height: 1.6;
+        margin-bottom: 40px;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 15px 30px;
+        border-radius: 30px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+    
+    .btn-secondary {
+        background: #f8f9fa;
+        color: #333;
+        border: 1px solid #eee;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary:hover { box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4); }
+    .btn-secondary:hover { background: #e2e6ea; }
+
+    @keyframes popIn {
+        from { transform: scale(0); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-icon">🎉</div>
+    
+    <h1>Willkommen bei reborn-mobile.ch</h1>
+    <p>Danke für deine Registrierung!<br>Dein Konto wurde erfolgreich erstellt.</p>
+
+    <div class="btn-group">
+        <a href="/userpage" class="btn btn-primary">Zum Profil</a>
+        <a href="/" class="btn btn-secondary">Zur Übersicht</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Konfetti Animation beim Laden
+    window.onload = function() {
+        var duration = 3000;
+        var end = Date.now() + duration;
+
+        (function frame() {
+            confetti({
+                particleCount: 5,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#007bff', '#00d2ff', '#ffc107']
+            });
+            confetti({
+                particleCount: 5,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#007bff', '#00d2ff', '#ffc107']
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
+    };
+</script>
+{% endblock %}
