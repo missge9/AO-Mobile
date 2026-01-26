@@ -60,51 +60,58 @@ with app.app_context():
 @app.route('/')
 def index(): return render_template('index.html')
 
+
+# shop routing
 @app.route('/shop')
-def shop(): return render_template('shop.html')
-
-@app.route('/sell')
-def sell(): return render_template('sell.html')
-
-@app.route('/register')
-def register_page(): return render_template('account.html')
-
-@app.route('/login')
-def login_page(): return render_template('account.html')
-
-@app.route('/userpage')
-def userpage_page(): return render_template('userpage.html')
+def shop(): return render_template('shop/shop.html')
 
 @app.route('/detail')
-def detail(): return render_template('detail.html')
+def detail(): return render_template('shop/detail.html')
 
 @app.route('/cart')
-def cart(): return render_template('cart.html')
+def cart(): return render_template('shop/cart.html')
 
 @app.route('/checkout')
-def checkout_page(): return render_template('checkout.html')
+def checkout_page(): return render_template('shop/checkout.html')
 
 @app.route('/success')
-def success_page(): return render_template('success.html')
+def success_page(): return render_template('shop/success.html')
+
+
+#sell routing
+@app.route('/sell')
+def sell(): return render_template('sell/sell.html')
+
+
+#Account routing
+@app.route('/register')
+def register_page(): return render_template('account/account.html')
+
+@app.route('/login')
+def login_page(): return render_template('account/account.html')
+
+@app.route('/userpage')
+def userpage_page(): return render_template('account/userpage.html')
 
 @app.route('/register-success')
-def register_success_page(): return render_template('register_success.html')
+def register_success_page(): return render_template('account/register_success.html')
 
-# --- ADMIN ROUTEN ---
+
+# Admin routing
 @app.route('/admin')
-def admin_dashboard(): return render_template('admin.html')
+def admin_dashboard(): return render_template('admin/admin.html')
 
-@app.route('/admin/inventory')
-def admin_inventory(): return render_template('inventory_admin.html')
+@app.route('/inventory')
+def admin_inventory(): return render_template('admin/inventory_admin.html')
 
-@app.route('/admin/orders')
-def admin_orders(): return render_template('orders_admin.html')
+@app.route('/orders')
+def admin_orders(): return render_template('admin/orders_admin.html')
 
 @app.route('/orders') # Alias für Admin Orders
-def orders_page(): return render_template('orders_admin.html')
+def orders_page(): return render_template('admin/orders_admin.html')
 
-@app.route('/admin/sales')
-def admin_sales(): return render_template('sales_admin.html')
+@app.route('/sales')
+def admin_sales(): return render_template('admin/sales_admin.html')
 
 
 # --- API ROUTEN (User & Shop) ---
@@ -400,4 +407,4 @@ def admin_sales_api():
         return jsonify({"error": "Datei nicht gefunden"}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=8000)
