@@ -54,9 +54,22 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
+    .main-img-wrapper {
+        position: relative;
+        width: 100%;
+        height: 400px; /* WICHTIG: Feste Höhe reservieren */
+        display: flex;
+        align-items: center; /* Vertikal zentrieren */
+        justify-content: center; /* Horizontal zentrieren */
+        margin-bottom: 20px;
+    }
+    
     #main-img { 
-        max-width: 100%; max-height: 380px; 
-        object-fit: contain; margin-bottom: 20px; 
+        max-width: 100%; 
+        max-height: 100%; 
+        width: auto;
+        height: auto;
+        object-fit: contain; /* Bild wird nicht verzerrt */
         transition: transform 0.3s;
     }
     
@@ -223,13 +236,13 @@
         <div class="detail-card product-layout-grid">
             
             <div class="p-col-left">
-                <div style="position: relative; display: inline-block; width:100%;">
+                <div class="main-img-wrapper">
                     <span id="condition-badge" class="product-badge">Geprüft</span>
                     <img id="main-img" src="" alt="Produktbild">
                 </div>
                 
                 <div class="gallery-thumbs" id="gallery-container">
-                    </div>
+                </div>
             </div>
 
             <div class="p-col-right">

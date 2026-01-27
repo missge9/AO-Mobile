@@ -1,5 +1,45 @@
 [
   {
+    "order_id": "ORD-1769547290",
+    "date": "2026-01-27 20:54",
+    "status": "Offen",
+    "customer": {
+      "firstname": "Arlind",
+      "lastname": " Emini",
+      "street": "jsjsj",
+      "zip": "6273",
+      "city": "Zprich",
+      "email": "arlindemini1992@gmail.com"
+    },
+    "shipping_address": {
+      "firstname": "Arlind",
+      "lastname": " Emini",
+      "street": "jsjsj",
+      "zip": "6273",
+      "city": "Zprich",
+      "email": "arlindemini1992@gmail.com"
+    },
+    "payment": "invoice",
+    "insurance": false,
+    "items": [
+      {
+        "id": 9968,
+        "name": "IPhone 16",
+        "price": 650,
+        "img": "/images/16_1.avif",
+        "options": {
+          "color": "Blau",
+          "storage": "64GB",
+          "condition": "Sehr gut",
+          "battery": "80%+"
+        }
+      }
+    ],
+    "subtotal": 650.0,
+    "shipping_cost": 0.0,
+    "total": 650.0
+  },
+  {
     "order_id": "ORD-1769469475",
     "date": "2026-01-26 23:17",
     "status": "Offen",

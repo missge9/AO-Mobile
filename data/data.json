@@ -37,13 +37,6 @@
         "inventory": [
           {
             "battery": "80%+",
-            "color": "Blau",
-            "condition": "Sehr gut",
-            "id": 9968,
-            "storage": "64GB"
-          },
-          {
-            "battery": "80%+",
             "color": "Schwarz",
             "condition": "Wie neu",
             "id": 9651,
@@ -55,9 +48,407 @@
             "condition": "Sehr gut",
             "id": 1065,
             "storage": "128GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Schnäppchen",
+            "id": 9783,
+            "storage": "128GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Wie neu",
+            "id": 9646,
+            "storage": "64GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Blau",
+            "condition": "Schnäppchen",
+            "id": 7344,
+            "storage": "128GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Wie neu",
+            "id": 3586,
+            "storage": "128GB"
           }
         ],
         "name": "IPhone 16",
+        "opticalConditions": [
+          {
+            "name": "Schnäppchen",
+            "price": -20
+          },
+          {
+            "name": "Gebraucht",
+            "price": 0
+          },
+          {
+            "name": "Sehr gut",
+            "price": 50
+          },
+          {
+            "name": "Wie neu",
+            "price": 100
+          },
+          {
+            "name": "Neu",
+            "price": 200
+          }
+        ],
+        "storageOptions": [
+          {
+            "name": "64GB",
+            "price": 0
+          },
+          {
+            "name": "128GB",
+            "price": 60
+          },
+          {
+            "name": "512GB",
+            "price": 120
+          }
+        ]
+      },
+      {
+        "basePrice": "445",
+        "batteryConditions": [
+          {
+            "name": "80%+",
+            "price": 0
+          }
+        ],
+        "colors": [
+          {
+            "hex": "#000000",
+            "name": "Schwarz",
+            "price": 0
+          },
+          {
+            "hex": "#272c6d",
+            "name": "Blau",
+            "price": 0
+          },
+          {
+            "hex": "#f2f2f2",
+            "name": "Weiss",
+            "price": 0
+          }
+        ],
+        "gallery": [
+          "/images/13_1.avif",
+          "/images/13_2.avif",
+          "/images/13_4.avif"
+        ],
+        "id": "MOD6442",
+        "img": "/images/13_1.avif",
+        "inventory": [
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Schnäppchen",
+            "id": 9220,
+            "storage": "64GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Gebraucht",
+            "id": 9067,
+            "storage": "64GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Wie neu",
+            "id": 2356,
+            "storage": "64GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Neu",
+            "id": 5457,
+            "storage": "64GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Gebraucht",
+            "id": 5131,
+            "storage": "128GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Blau",
+            "condition": "Neu",
+            "id": 8127,
+            "storage": "128GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Blau",
+            "condition": "Schnäppchen",
+            "id": 3842,
+            "storage": "128GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Blau",
+            "condition": "Wie neu",
+            "id": 5209,
+            "storage": "64GB"
+          }
+        ],
+        "name": "IPhone 13",
+        "opticalConditions": [
+          {
+            "name": "Schnäppchen",
+            "price": -20
+          },
+          {
+            "name": "Gebraucht",
+            "price": 0
+          },
+          {
+            "name": "Sehr gut",
+            "price": 50
+          },
+          {
+            "name": "Wie neu",
+            "price": 100
+          },
+          {
+            "name": "Neu",
+            "price": 200
+          }
+        ],
+        "storageOptions": [
+          {
+            "name": "64GB",
+            "price": 0
+          },
+          {
+            "name": "128GB",
+            "price": 60
+          },
+          {
+            "name": "512GB",
+            "price": 120
+          }
+        ]
+      },
+      {
+        "basePrice": "875",
+        "batteryConditions": [
+          {
+            "name": "80%+",
+            "price": 0
+          }
+        ],
+        "colors": [
+          {
+            "hex": "#000000",
+            "name": "Schwarz",
+            "price": 0
+          },
+          {
+            "hex": "#272c6d",
+            "name": "Blau",
+            "price": 0
+          },
+          {
+            "hex": "#f2f2f2",
+            "name": "Weiss",
+            "price": 0
+          }
+        ],
+        "gallery": [
+          "/images/15_1.avif",
+          "/images/15_2.avif",
+          "/images/15_3.avif"
+        ],
+        "id": "MOD7086",
+        "img": "/images/15_1.avif",
+        "inventory": [
+          {
+            "id": 6121,
+            "storage": "128GB",
+            "color": "Blau",
+            "condition": "Schnäppchen",
+            "battery": "80%+"
+          },
+          {
+            "id": 7341,
+            "storage": "128GB",
+            "color": "Schwarz",
+            "condition": "Sehr gut",
+            "battery": "80%+"
+          },
+          {
+            "id": 3847,
+            "storage": "512GB",
+            "color": "Blau",
+            "condition": "Schnäppchen",
+            "battery": "80%+"
+          },
+          {
+            "id": 1782,
+            "storage": "128GB",
+            "color": "Schwarz",
+            "condition": "Sehr gut",
+            "battery": "80%+"
+          },
+          {
+            "id": 3127,
+            "storage": "128GB",
+            "color": "Weiss",
+            "condition": "Schnäppchen",
+            "battery": "80%+"
+          },
+          {
+            "id": 8786,
+            "storage": "64GB",
+            "color": "Blau",
+            "condition": "Sehr gut",
+            "battery": "80%+"
+          },
+          {
+            "id": 7460,
+            "storage": "512GB",
+            "color": "Schwarz",
+            "condition": "Wie neu",
+            "battery": "80%+"
+          },
+          {
+            "id": 5225,
+            "storage": "64GB",
+            "color": "Blau",
+            "condition": "Schnäppchen",
+            "battery": "80%+"
+          },
+          {
+            "id": 2047,
+            "storage": "64GB",
+            "color": "Weiss",
+            "condition": "Schnäppchen",
+            "battery": "80%+"
+          }
+        ],
+        "name": "IPhone 15",
+        "opticalConditions": [
+          {
+            "name": "Schnäppchen",
+            "price": -20
+          },
+          {
+            "name": "Gebraucht",
+            "price": 0
+          },
+          {
+            "name": "Sehr gut",
+            "price": 50
+          },
+          {
+            "name": "Wie neu",
+            "price": 100
+          },
+          {
+            "name": "Neu",
+            "price": 200
+          }
+        ],
+        "storageOptions": [
+          {
+            "name": "64GB",
+            "price": 0
+          },
+          {
+            "name": "128GB",
+            "price": 60
+          },
+          {
+            "name": "512GB",
+            "price": 120
+          }
+        ]
+      },
+      {
+        "basePrice": "999",
+        "batteryConditions": [
+          {
+            "name": "80%+",
+            "price": 0
+          }
+        ],
+        "colors": [
+          {
+            "hex": "#000000",
+            "name": "Schwarz",
+            "price": 0
+          },
+          {
+            "hex": "#272c6d",
+            "name": "Blau",
+            "price": 0
+          },
+          {
+            "hex": "#f2f2f2",
+            "name": "Weiss",
+            "price": 0
+          }
+        ],
+        "gallery": [
+          "/images/17_1.avif",
+          "/images/17_2.avif",
+          "/images/17_3.avif"
+        ],
+        "id": "MOD4651",
+        "img": "/images/17_1.avif",
+        "inventory": [
+          {
+            "id": 8592,
+            "storage": "128GB",
+            "color": "Schwarz",
+            "condition": "Sehr gut",
+            "battery": "80%+"
+          },
+          {
+            "id": 3034,
+            "storage": "128GB",
+            "color": "Blau",
+            "condition": "Neu",
+            "battery": "80%+"
+          },
+          {
+            "id": 9882,
+            "storage": "128GB",
+            "color": "Blau",
+            "condition": "Schnäppchen",
+            "battery": "80%+"
+          },
+          {
+            "id": 6102,
+            "storage": "128GB",
+            "color": "Blau",
+            "condition": "Sehr gut",
+            "battery": "80%+"
+          },
+          {
+            "id": 5458,
+            "storage": "128GB",
+            "color": "Blau",
+            "condition": "Wie neu",
+            "battery": "80%+"
+          }
+        ],
+        "name": "IPhone 17",
         "opticalConditions": [
           {
             "name": "Schnäppchen",

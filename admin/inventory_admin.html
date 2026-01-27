@@ -134,6 +134,12 @@
                             <button class="btn btn-primary" onclick="commitNewInventoryItem()">+ Einlagern</button>
                         </div>
                     </div>
+                    
+                    <div style="margin-top:50px; border-top:1px solid #eee; padding-top:20px; text-align:right; display:flex; justify-content:flex-end; gap:10px;">
+                        <button class="btn" style="background:#ff9800; color:white;" onclick="duplicateProduct()">📋 Dieses Gerät kopieren</button>
+                        
+                        <button class="btn btn-danger" onclick="deleteProduct()">⚠️ Modell-Serie komplett löschen</button>
+                    </div>
 
                     <h4 style="margin-bottom:5px; color:#555;">Aktueller Lagerbestand (Geräte)</h4>
                     <table class="inventory-table">
@@ -425,6 +431,38 @@
             img.style.background = '#fff';
             container.appendChild(img);
         });
+    }
+    
+    // --- FUNKTION ZUM KOPIEREN ---
+    async function duplicateProduct() {
+        if (!currentBrand || currentProductIndex === -1) return;
+
+        // 1. Das aktuelle Produkt holen
+        const original = shopData[currentBrand].products[currentProductIndex];
+
+        // 2. Eine "tiefe Kopie" erstellen (damit wir das Original nicht versehentlich ändern)
+        const copy = JSON.parse(JSON.stringify(original));
+
+        // 3. Kopie anpassen
+        copy.id = generateId('MOD');        // Neue einzigartige ID
+        copy.name = copy.name + " (Kopie)"; // Name ändern damit man es erkennt
+        copy.inventory = [];                // WICHTIG: Lagerbestand leeren! (Physische Geräte gibt es ja noch nicht)
+        
+        // Optional: Wenn du das Bild nicht kopieren willst, kannst du hier copy.img = "" setzen.
+        // Aber meistens ist das Bild ja ähnlich, also lassen wir es drin.
+
+        // 4. Zur Liste hinzufügen
+        shopData[currentBrand].products.push(copy);
+
+        // 5. Speichern und UI aktualisieren
+        await saveToServer();
+        renderProductList();
+        
+        // 6. Direkt zur neuen Kopie springen (sie ist jetzt das letzte Element)
+        const newIndex = shopData[currentBrand].products.length - 1;
+        loadEditor(currentBrand, newIndex);
+
+        alert("Gerät wurde erfolgreich kopiert! Du kannst es jetzt anpassen.");
     }
 
     async function uploadImages() {
