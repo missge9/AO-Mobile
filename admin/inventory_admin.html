@@ -281,7 +281,7 @@
         document.getElementById('inp-discount').value = p.discount || '';
 
         // FIX: Neue Funktion für Bilder aufrufen
-        updateImageUI(p.img);
+        updateImageUI(p.gallery || p.img);
 
         renderTable('optical-container', p.opticalConditions, 'opticalConditions');
         renderTable('storage-container', p.storageOptions, 'storageOptions');
@@ -371,60 +371,63 @@
         }
     }
 
-    // --- FIX: BILD UPLOAD & UI (WICHTIGSTE ÄNDERUNG) ---
-    
-    // 1. UI Update Funktion repariert
-    function updateImageUI(imgUrl) {
+
+    function updateImageUI(imgData) {
         const container = document.getElementById('preview-container');
         const noText = document.getElementById('no-img-text');
         const delBtn = document.getElementById('btn-delete-all');
         const hiddenInp = document.getElementById('inp-img');
 
-        // Reset
+        // Container leeren & Text wieder rein (versteckt)
         container.innerHTML = '';
-        container.appendChild(noText); // Text wieder reinpacken für den Fall dass leer
+        container.appendChild(noText);
 
-        // hidden input updaten
-        hiddenInp.value = imgUrl || '';
-
-        if (imgUrl) {
-            noText.style.display = 'none';
-            delBtn.style.display = 'inline-block';
-
-            // Prüfen ob JSON String (Liste) oder einzelner String
-            let urls = [];
-            try {
-                // Versuchen als JSON zu parsen (falls wir mehrere Bilder speichern)
-                if(imgUrl.startsWith('[')) {
-                    urls = JSON.parse(imgUrl);
-                } else {
-                    urls = [imgUrl];
-                }
-            } catch(e) {
-                urls = [imgUrl];
-            }
-
-            urls.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.style.width = '100px';
-                img.style.height = '100px';
-                img.style.objectFit = 'contain';
-                img.style.border = '1px solid #ddd';
-                img.style.borderRadius = '8px';
-                img.style.marginRight = '10px';
-                container.appendChild(img);
-            });
-
-        } else {
+        // Fallback: Wenn imgData leer ist
+        if (!imgData || imgData.length === 0) {
             noText.style.display = 'block';
             delBtn.style.display = 'none';
+            hiddenInp.value = '';
+            return;
         }
+
+        // --- HIER IST DER FIX ---
+        // Wir prüfen: Ist es schon ein Array? Oder ein String?
+        let urls = [];
+        if (Array.isArray(imgData)) {
+            urls = imgData; // Es ist schon eine Liste (kommt vom Upload oder JSON)
+        } else if (typeof imgData === 'string') {
+            // Alte Logik für Strings
+            if (imgData.startsWith('[')) {
+                try { urls = JSON.parse(imgData); } catch(e) { urls = [imgData]; }
+            } else {
+                urls = [imgData];
+            }
+        }
+
+        // Hidden Input bekommt nur das erste Bild (für Formulare/Legacy)
+        hiddenInp.value = urls.length > 0 ? urls[0] : '';
+
+        // UI Anzeigen
+        noText.style.display = 'none';
+        delBtn.style.display = 'inline-block';
+
+        urls.forEach(url => {
+            const img = document.createElement('img');
+            img.src = url;
+            // Kleines Styling für die Admin-Vorschau
+            img.style.width = '80px'; 
+            img.style.height = '80px';
+            img.style.objectFit = 'contain';
+            img.style.border = '1px solid #ddd';
+            img.style.borderRadius = '6px';
+            img.style.marginRight = '8px';
+            img.style.marginBottom = '8px';
+            img.style.background = '#fff';
+            container.appendChild(img);
+        });
     }
 
-    // 2. Upload Funktion repariert (ID korrigiert)
     async function uploadImages() {
-        // HIER WAR DER FEHLER: id="file-upload" statt "imageInput"
         const input = document.getElementById('file-upload'); 
         const files = input.files;
         
@@ -436,7 +439,7 @@
         }
 
         try {
-            const response = await fetch('/api/admin/upload', { // Pfad muss zur Python Route passen
+            const response = await fetch('/api/admin/upload', {
                 method: 'POST',
                 body: formData
             });
@@ -444,26 +447,26 @@
             if (response.ok) {
                 const result = await response.json();
                 
-                // Wir nehmen vereinfacht das erste Bild als Hauptbild, oder speichern alle als Liste
-                // Hier: Wir speichern nur das erste Bild als String für Kompatibilität mit dem Rest
-                // Wenn du Mehrfachbilder willst, musst du 'img' im JSON als Array behandeln
-                
-                // LÖSUNG: Wir speichern nur das erste Bild (wie vorher), da deine Logik auf p.img (String) basiert
                 if(result.urls.length > 0) {
-                     // Update Daten
-                     const newUrl = result.urls[0]; 
-                     updateCurrentProduct('img', newUrl);
-                     updateImageUI(newUrl);
+                     // 1. Hauptbild setzen (String) - damit die Vorschau im Shop geht
+                     updateCurrentProduct('img', result.urls[0]);
+
+                     // 2. WICHTIG: Galerie setzen (Liste) - damit Detailseite alle Bilder hat
+                     // Wir greifen direkt auf das Daten-Objekt zu:
+                     shopData[currentBrand].products[currentProductIndex].gallery = result.urls;
+                     
+                     // 3. Anzeige aktualisieren (wir übergeben die ganze Liste)
+                     updateImageUI(result.urls);
                 }
                 
-                alert("Bild hochgeladen!");
+                alert(result.urls.length + " Bilder hochgeladen!");
             } else {
                 alert("Fehler beim Hochladen.");
             }
         } catch (error) {
             console.error("Upload Error:", error);
         } finally {
-            input.value = ""; // Reset
+            input.value = ""; 
         }
     }
 

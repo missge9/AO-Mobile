@@ -344,23 +344,36 @@
     }
 
     function setupGallery() {
+        // Das Hauptbild als Fallback
         const mainImg = productData.img || 'https://placehold.co/400x400?text=No+Image';
         document.getElementById('main-img').src = mainImg;
 
         const container = document.getElementById('gallery-container');
         container.innerHTML = '';
-        // Dummy Bilder für Galerie (3 Stück)
-        const images = [mainImg, mainImg, mainImg]; 
+        
+        // HIER IST DIE ÄNDERUNG:
+        // Wir schauen, ob es 'productData.gallery' gibt. 
+        // Falls ja, nutzen wir diese Liste. Falls nein, nehmen wir nur das Hauptbild.
+        let images = productData.gallery || [];
+
+        // Falls die Liste leer ist, packen wir zumindest das Hauptbild rein
+        if (images.length === 0) {
+            images = [mainImg];
+        }
+
         images.forEach((src, idx) => {
             const img = document.createElement('img');
             img.src = src;
-            img.className = 'thumb' + (idx === 0 ? ' active' : '');
+            // Wenn das Bild dem grossen Bild entspricht, markieren wir es als aktiv
+            const isActive = (idx === 0); 
+            img.className = 'thumb' + (isActive ? ' active' : '');
+            
             img.onclick = () => {
                 const main = document.getElementById('main-img');
                 
-                // Fade Animation Trigger
+                // Fade Animation neu auslösen
                 main.classList.remove('fade-in-anim');
-                void main.offsetWidth; // Reflow
+                void main.offsetWidth; 
                 main.classList.add('fade-in-anim');
 
                 main.src = src;

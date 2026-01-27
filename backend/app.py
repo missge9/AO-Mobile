@@ -18,7 +18,7 @@ db_path = os.path.join(base_dir, '../data/users.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-UPLOAD_FOLDER = os.path.join(base_dir, '../static/uploads')
+UPLOAD_FOLDER = os.path.join(base_dir, '../images')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
@@ -437,7 +437,7 @@ def upload_files():
             file.save(save_path)
             
             # URL zur Liste hinzufügen
-            uploaded_urls.append(f"/static/uploads/{filename}")
+            uploaded_urls.append(f"/images/{filename}")
     
     # Gibt eine Liste aller hochgeladenen URLs zurück
     return jsonify({'urls': uploaded_urls})
@@ -450,15 +450,19 @@ def delete_image():
     if not image_url:
         return jsonify({'message': 'Keine URL übergeben'}), 400
 
-    # Aus "/static/uploads/bild.jpg" machen wir den echten Pfad
     filename = os.path.basename(image_url)
+    
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
     if os.path.exists(file_path):
-        os.remove(file_path)
-        return jsonify({'message': 'Datei gelöscht'}), 200
+        try:
+            os.remove(file_path)
+            return jsonify({'message': 'Datei erfolgreich gelöscht'}), 200
+        except Exception as e:
+            return jsonify({'message': f'Fehler beim Löschen: {str(e)}'}), 500
     else:
-        return jsonify({'message': 'Datei nicht gefunden (aber aus DB entfernt)'}), 200
+        # Falls die Datei im Dateisystem fehlt, die Datenbank aber bereits bereinigt wurde
+        return jsonify({'message': 'Datei im Ordner nicht gefunden'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True,port=8000)

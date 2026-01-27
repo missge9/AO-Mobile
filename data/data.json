@@ -3,15 +3,11 @@
     "logo": "https://cdn-icons-png.flaticon.com/512/0/747.png",
     "products": [
       {
-        "basePrice": 200,
+        "basePrice": "600",
         "batteryConditions": [
           {
-            "name": "Gebraucht",
+            "name": "80%+",
             "price": 0
-          },
-          {
-            "name": "Neu",
-            "price": 25
           }
         ],
         "colors": [
@@ -21,31 +17,47 @@
             "price": 0
           },
           {
-            "hex": "#1c3959",
+            "hex": "#272c6d",
             "name": "Blau",
-            "price": 5
+            "price": 0
           },
           {
-            "hex": "#ffffff",
+            "hex": "#f2f2f2",
             "name": "Weiss",
             "price": 0
           }
         ],
-        "discount": "",
-        "hasDiscount": true,
-        "id": "iphone12mini",
-        "img": "images/1.png",
+        "gallery": [
+          "/images/16_1.avif",
+          "/images/16_2.avif",
+          "/images/16_3.avif"
+        ],
+        "id": "MOD8558",
+        "img": "/images/16_1.avif",
         "inventory": [
           {
-            "battery": "Gebraucht",
+            "battery": "80%+",
             "color": "Blau",
-            "condition": "Schnäppchen",
-            "id": 8598,
-            "storage": "64 GB"
+            "condition": "Sehr gut",
+            "id": 9968,
+            "storage": "64GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Wie neu",
+            "id": 9651,
+            "storage": "128GB"
+          },
+          {
+            "battery": "80%+",
+            "color": "Schwarz",
+            "condition": "Sehr gut",
+            "id": 1065,
+            "storage": "128GB"
           }
         ],
-        "name": "iPhone 12 mini",
-        "oldPrice": 212,
+        "name": "IPhone 16",
         "opticalConditions": [
           {
             "name": "Schnäppchen",
@@ -57,107 +69,29 @@
           },
           {
             "name": "Sehr gut",
-            "price": 15
+            "price": 50
           },
           {
             "name": "Wie neu",
-            "price": 30
+            "price": 100
           },
           {
             "name": "Neu",
-            "price": 50
-          }
-        ],
-        "storageOptions": [
-          {
-            "name": "64 GB",
-            "price": -10
-          },
-          {
-            "name": "128 GB",
-            "price": 0
-          },
-          {
-            "name": "256 GB",
-            "price": 40
-          }
-        ],
-        "warranties": [
-          {
-            "name": "1 Jahr",
-            "price": 0
-          },
-          {
-            "name": "3 Jahre",
-            "price": 34
-          }
-        ]
-      },
-      {
-        "basePrice": "60",
-        "batteryConditions": [],
-        "colors": [
-          {
-            "hex": "#556787",
-            "name": "Neu",
-            "price": 0
-          }
-        ],
-        "discount": "40%",
-        "id": "new-1769340898718",
-        "img": "/static/uploads/13_1.png",
-        "name": "Iphone 16",
-        "opticalConditions": [
-          {
-            "name": "Neu",
-            "price": 30
-          }
-        ],
-        "storageOptions": [
-          {
-            "name": "64",
-            "price": null
-          },
-          {
-            "name": "Neu",
-            "price": 0
-          }
-        ]
-      },
-      {
-        "basePrice": "300",
-        "batteryConditions": [
-          {
-            "name": "80%+",
-            "price": 0
-          }
-        ],
-        "colors": [
-          {
-            "hex": "#000",
-            "name": "Midnight",
-            "price": 0
-          },
-          {
-            "hex": "#000000",
-            "name": "Neu",
-            "price": 0
-          }
-        ],
-        "id": "MOD5245",
-        "img": "/static/uploads/13_1.avif",
-        "inventory": [],
-        "name": "Iphone 13",
-        "opticalConditions": [
-          {
-            "name": "Gut",
-            "price": 0
+            "price": 200
           }
         ],
         "storageOptions": [
           {
             "name": "64GB",
             "price": 0
+          },
+          {
+            "name": "128GB",
+            "price": 60
+          },
+          {
+            "name": "512GB",
+            "price": 120
           }
         ]
       }
