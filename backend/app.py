@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from cryptography.fernet import Fernet
 from datetime import datetime
 import os
@@ -17,7 +18,18 @@ db_path = os.path.join(base_dir, '../data/users.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+UPLOAD_FOLDER = os.path.join(base_dir, '../static/uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 db = SQLAlchemy(app)
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'avif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # Hilfsfunktionen für Verschlüsselung
 def encrypt_data(data):
@@ -65,8 +77,9 @@ def index(): return render_template('index.html')
 @app.route('/shop')
 def shop(): return render_template('shop/shop.html')
 
-@app.route('/detail')
-def detail(): return render_template('shop/detail.html')
+@app.route('/detail')  
+def detail(): 
+    return render_template('shop/detail.html')
 
 @app.route('/cart')
 def cart(): return render_template('shop/cart.html')
@@ -101,16 +114,16 @@ def register_success_page(): return render_template('account/register_success.ht
 @app.route('/admin')
 def admin_dashboard(): return render_template('admin/admin.html')
 
-@app.route('/inventory')
+@app.route('/admin/inventory')
 def admin_inventory(): return render_template('admin/inventory_admin.html')
 
-@app.route('/orders')
+@app.route('/admin/orders')
 def admin_orders(): return render_template('admin/orders_admin.html')
 
 @app.route('/orders') # Alias für Admin Orders
 def orders_page(): return render_template('admin/orders_admin.html')
 
-@app.route('/sales')
+@app.route('/admin/sales')
 def admin_sales(): return render_template('admin/sales_admin.html')
 
 
@@ -405,6 +418,47 @@ def admin_sales_api():
                 json.dump(sales, f, indent=2, ensure_ascii=False)
             return jsonify({"message": "Status aktualisiert"})
         return jsonify({"error": "Datei nicht gefunden"}), 404
+
+@app.route('/api/admin/upload', methods=['POST'])
+def upload_files():
+    # Prüfen, ob Dateien im Request sind
+    if 'files' not in request.files:
+        return jsonify({'error': 'Keine Dateien gefunden'}), 400
+    
+    # WICHTIG: .getlist() verwenden statt nur brackets []
+    files = request.files.getlist('files')
+    uploaded_urls = []
+
+    for file in files:
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            # Hier dein Speicher-Pfad
+            save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(save_path)
+            
+            # URL zur Liste hinzufügen
+            uploaded_urls.append(f"/static/uploads/{filename}")
+    
+    # Gibt eine Liste aller hochgeladenen URLs zurück
+    return jsonify({'urls': uploaded_urls})
+
+@app.route('/api/admin/delete-image', methods=['POST'])
+def delete_image():
+    data = request.json
+    image_url = data.get('url')
+    
+    if not image_url:
+        return jsonify({'message': 'Keine URL übergeben'}), 400
+
+    # Aus "/static/uploads/bild.jpg" machen wir den echten Pfad
+    filename = os.path.basename(image_url)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        return jsonify({'message': 'Datei gelöscht'}), 200
+    else:
+        return jsonify({'message': 'Datei nicht gefunden (aber aus DB entfernt)'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True,port=8000)

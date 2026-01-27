@@ -1,5 +1,45 @@
 [
   {
+    "order_id": "ORD-1769469475",
+    "date": "2026-01-26 23:17",
+    "status": "Offen",
+    "customer": {
+      "firstname": "Samuel",
+      "lastname": "Bohren",
+      "street": "Kirchbühlstrasse ",
+      "zip": "5630",
+      "city": "Muri",
+      "email": "samuelbohren@hotmail.com"
+    },
+    "shipping_address": {
+      "firstname": "Samuel",
+      "lastname": "Bohren",
+      "street": "Kirchbühlstrasse ",
+      "zip": "5630",
+      "city": "Muri",
+      "email": "samuelbohren@hotmail.com"
+    },
+    "payment": "twint",
+    "insurance": false,
+    "items": [
+      {
+        "id": 5988,
+        "name": "iPhone 12 mini",
+        "price": 170,
+        "img": "images/1.png",
+        "options": {
+          "color": "Schwarz",
+          "storage": "64 GB",
+          "condition": "Schnäppchen",
+          "battery": "Gebraucht"
+        }
+      }
+    ],
+    "subtotal": 170.0,
+    "shipping_cost": 0.0,
+    "total": 170.0
+  },
+  {
     "order_id": "ORD-1769375085",
     "date": "2026-01-25 21:04",
     "status": "Offen",

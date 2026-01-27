@@ -4,136 +4,312 @@
 
 {% block styles %}
 <style>
-    /* Spezifische Styles für die Detailseite */
-    body { padding-bottom: 100px; } /* Platz für die Sticky Bar unten */
+    /* --- ANIMATIONEN --- */
+    @keyframes fadeIn {
+        from { opacity: 0.6; transform: scale(0.98); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .fade-in-anim { animation: fadeIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+
+    /* --- GLOBAL & LAYOUT --- */
+    body { padding-bottom: 120px; background-color: #f5f7fa; }
     
-    .container { max-width: 1100px; margin: 0 auto; padding: 20px 15px; }
-    
+    .container { 
+        max-width: 700px; /* Standard Mobile Breite */
+        margin: 0 auto; 
+        padding: 20px 15px; 
+        transition: max-width 0.3s;
+    }
+
     .back-btn { 
-        display: inline-block; padding: 8px 20px; background: #fff; 
-        border: 1px solid #ddd; border-radius: 30px; text-decoration: none; 
-        color: #333; font-size: 13px; margin-bottom: 20px; transition: 0.2s;
+        display: inline-block; padding: 8px 0; background: transparent; 
+        border: none; text-decoration: none; 
+        color: #666; font-size: 14px; margin-bottom: 15px; font-weight: 500;
+        transition: color 0.2s;
     }
-    .back-btn:hover { background: #f0f0f0; }
+    .back-btn:hover { color: #111; }
 
-    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-    @media (max-width: 850px) { 
-        .detail-grid { grid-template-columns: 1fr; gap: 20px; } 
-        #main-img { max-height: 300px; } 
+    /* KARTEN BASIS-STYLE */
+    .detail-card {
+        background: white;
+        border-radius: 24px;
+        padding: 30px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+        margin-bottom: 25px;
     }
 
-    .product-image-card { 
-        background: white; border-radius: 20px; padding: 30px; 
-        text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-    }
-    #main-img { max-width: 100%; max-height: 450px; object-fit: contain; }
+    /* --- MOBILE FIRST LAYOUT (Block) --- */
+    .product-layout-grid { display: block; }
 
-    .option-group { margin-bottom: 25px; }
-    .option-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; }
-
-    .pill-container { display: flex; flex-wrap: wrap; gap: 8px; }
-    .pill { 
-        padding: 8px 16px; border: 1px solid #ddd; border-radius: 30px; 
-        background: white; cursor: pointer; font-size: 13px; transition: 0.2s; 
-    }
-    .pill.active { border: 2px solid #333; font-weight: 600; background: #f0f0f0; border-color: #333; }
-    .pill.disabled { opacity: 0.3; cursor: not-allowed; background: #eee; border-color: #eee; text-decoration: line-through; pointer-events: none; }
-
-    .color-circle { 
-        width: 32px; height: 32px; border-radius: 50%; border: 1px solid #ddd; 
-        cursor: pointer; position: relative; margin-right: 12px; 
-    }
-    .color-circle.active::after { 
-        content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; 
-        border: 2px solid #333; border-radius: 50%; 
-    }
-    .color-circle.disabled { opacity: 0.2; pointer-events: none; }
-
-    .price-main { font-size: 32px; font-weight: 600; color: #ea4335; /* oder var(--price-color) */ }
+    /* --- LINKE SPALTE: BILDER --- */
+    .p-col-left { text-align: center; margin-bottom: 30px; position: relative; }
     
+    /* Badge über dem Bild */
+    .product-badge {
+        position: absolute; top: 0; left: 0;
+        background: #f0f0f0; color: #333;
+        padding: 6px 12px; border-radius: 20px;
+        font-size: 11px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 0.5px; z-index: 10;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    #main-img { 
+        max-width: 100%; max-height: 380px; 
+        object-fit: contain; margin-bottom: 20px; 
+        transition: transform 0.3s;
+    }
+    
+    .gallery-thumbs { display: flex; justify-content: center; gap: 12px; overflow-x: auto; padding: 5px; }
+    .thumb { 
+        width: 60px; height: 60px; 
+        border: 2px solid transparent; border-radius: 14px; background: #f9f9f9;
+        cursor: pointer; object-fit: contain; padding: 5px; opacity: 0.7; transition: all 0.2s; 
+    }
+    .thumb.active, .thumb:hover { border-color: #111; opacity: 1; transform: translateY(-2px); }
+
+    /* --- RECHTE SPALTE: INFOS --- */
+    .p-col-right { text-align: center; }
+    
+    .product-title { font-size: 28px; margin: 0 0 8px 0; font-weight: 800; color: #111; line-height: 1.2; letter-spacing: -0.5px; }
+    .device-id-wrapper { margin-bottom: 25px; }
+    .device-id { font-family: 'Courier New', monospace; background: #eee; padding: 4px 8px; border-radius: 6px; font-size: 12px; color: #555; }
+
+    /* Optionen / Specs */
+    .option-group { margin-bottom: 24px; }
+    .option-title { font-size: 12px; text-transform: uppercase; color: #888; font-weight: 700; margin-bottom: 10px; letter-spacing: 0.5px; }
+    
+    .pill-container, .color-container { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+    /* Stylische Pills (Buttons) */
+    .pill { 
+        padding: 12px 20px; border: 1px solid #e5e5e5; border-radius: 14px; 
+        background: #fff; cursor: pointer; font-size: 14px; color: #333; font-weight: 500;
+        transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .pill:hover { border-color: #bbb; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
+    .pill:active { transform: scale(0.96); }
+    
+    .pill.active { 
+        background: #111; border-color: #111; color: #fff; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15); 
+    }
+    .pill.disabled { opacity: 0.4; cursor: not-allowed; text-decoration: line-through; pointer-events: none; background: #f5f5f5; border-color: #f5f5f5; box-shadow: none; }
+
+    /* Color Circles */
+    .color-circle { 
+        width: 44px; height: 44px; border-radius: 50%; border: 1px solid #eee; 
+        cursor: pointer; position: relative; transition: transform 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .color-circle:hover { transform: scale(1.15); }
+    .color-circle.active { transform: scale(1.1); border-color: transparent; }
+    .color-circle.active::after { 
+        content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; 
+        border: 2px solid #111; border-radius: 50%; 
+    }
+
+    /* Preis Box & Desktop Button */
+    .price-box { 
+        background: #fdfdfd; border-radius: 18px; padding: 25px; 
+        border: 1px dashed #ddd; margin-top: 35px; position: relative; overflow: hidden;
+    }
+    .price-main { font-size: 36px; font-weight: 800; color: #111; display: block; letter-spacing: -1px; }
+    .stock-info { font-size: 13px; color: #28a745; margin-top: 5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Button nur für Desktop (Initial ausgeblendet) */
+    .desktop-cart-btn { display: none; }
+    
+    .mobile-divider { border: 0; border-top: 1px solid #eee; margin: 30px 0; }
+
+    /* --- USP BOX --- */
+    .usp-card { 
+        background: #eefcf3; padding: 20px; 
+        display: flex; justify-content: space-evenly; align-items: center; 
+        border: 1px solid #c8eacf; color: #0f5132;
+    }
+    .usp-item { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .usp-icon { font-size: 18px; }
+
+    /* --- EMPFEHLUNGEN --- */
+    .rec-title { font-size: 22px; font-weight: 700; margin: 0 0 25px 0; color: #111; }
+    .rec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+    .rec-card { 
+        background: #fff; padding: 20px; border-radius: 18px; text-align: center; 
+        text-decoration: none; color: inherit; transition: 0.2s; border: 1px solid #f0f0f0; 
+        display: flex; flex-direction: column; align-items: center; 
+    }
+    .rec-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.06); border-color: #ddd; }
+    .rec-img { width: 100px; height: 100px; object-fit: contain; margin-bottom: 15px; mix-blend-mode: multiply; }
+    .rec-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
+    .rec-price { font-size: 13px; color: #666; font-weight: 500; }
+
+    /* --- STICKY MOBILE BAR --- */
     .sticky-cart-bar { 
         position: fixed; bottom: 0; left: 0; width: 100%; 
-        background: #28a745; /* HIER WAR DAS PROBLEM: Jetzt hardcoded Grün */
-        color: white; height: 65px; 
-        display: flex; justify-content: center; align-items: center; 
+        background: #111; color: white; height: 80px; 
+        display: flex; justify-content: space-between; align-items: center; 
+        padding: 0 25px; box-sizing: border-box;
         font-size: 16px; font-weight: 600; cursor: pointer; z-index: 1100; 
-        text-transform: uppercase; border: none;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        border: none; box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+        border-top-left-radius: 20px; border-top-right-radius: 20px; /* Abgerundet oben */
     }
-    .sticky-cart-bar:hover { background: #218838; }
-    .sticky-cart-bar.disabled { background: #ccc; cursor: not-allowed; }
+    .sticky-cart-bar:active { background: #000; }
+    .sticky-cart-bar.disabled { background: #dcdcdc; color: #888; cursor: not-allowed; }
 
-    .stock-info { font-size: 12px; color: #28a745; margin-top: 5px; font-weight: 500; }
+    /* ============================================== */
+    /* === DESKTOP ANSICHT (ab 900px)             === */
+    /* ============================================== */
+    @media (min-width: 900px) {
+        .container { max-width: 1150px; padding: 50px 20px; }
+
+        .product-layout-grid {
+            display: grid;
+            grid-template-columns: 48% 46%; /* Etwas Platz dazwischen */
+            gap: 6%;
+            align-items: start; /* WICHTIG damit Sticky funktioniert */
+            position: relative;
+        }
+
+        .p-col-left { 
+            margin-bottom: 0; 
+            text-align: center;
+            /* STICKY LOGIK */
+            position: -webkit-sticky;
+            position: sticky; 
+            top: 40px; /* Abstand zum oberen Rand */
+            height: fit-content;
+        }
+        
+        .p-col-right { text-align: left; }
+        .pill-container, .color-container { justify-content: flex-start; }
+        
+        .product-title { font-size: 38px; margin-bottom: 15px; }
+        .device-id-wrapper { text-align: left; margin-bottom: 35px; }
+        .price-box { text-align: left; padding: 30px; margin-top: 40px; }
+        
+        .mobile-divider { display: none; }
+        .rec-grid { grid-template-columns: repeat(4, 1fr); gap: 25px; }
+
+        /* STICKY BAR AUSBLENDEN */
+        .sticky-cart-bar { display: none !important; }
+
+        /* DESKTOP BUTTON EINBLENDEN */
+        .desktop-cart-btn {
+            display: block;
+            width: 100%;
+            background: #111; color: white;
+            border: none; padding: 18px; border-radius: 14px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            margin-top: 20px; transition: 0.2s;
+        }
+        .desktop-cart-btn:hover { background: #000; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .desktop-cart-btn.disabled { background: #eee; color: #aaa; cursor: not-allowed; transform: none; box-shadow: none; }
+    }
     
-    .device-id { 
-        font-family: monospace; background: #eee; padding: 2px 6px; 
-        border-radius: 4px; font-size: 12px; color: #555; 
-        vertical-align: middle; margin-left: 10px; 
+    @media (max-width: 500px) {
+        .usp-card { justify-content: space-between; padding: 15px 10px; }
+        .usp-item { font-size: 11px; flex-direction: column; text-align: center; gap: 4px; }
+        .rec-grid { grid-template-columns: 1fr 1fr; }
+        .price-main { font-size: 30px; }
     }
 </style>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <a href="/shop" id="back-link" class="back-btn">← Zurück</a>
+        <a href="/shop" id="back-link" class="back-btn">← Zurück zur Übersicht</a>
         
-        <div class="detail-grid">
-            <div class="product-image-card">
-                <img id="main-img" src="" alt="Produktbild">
-            </div>
+        <div class="detail-card product-layout-grid">
             
-            <div class="product-info">
-                <h1 id="product-name" style="font-size:28px; margin-bottom:10px;">Laden...</h1>
+            <div class="p-col-left">
+                <div style="position: relative; display: inline-block; width:100%;">
+                    <span id="condition-badge" class="product-badge">Geprüft</span>
+                    <img id="main-img" src="" alt="Produktbild">
+                </div>
                 
-                <div id="device-id-display" style="margin-bottom:20px; display:none;">
-                    Geräte-ID: <span class="device-id" id="display-id">-</span>
+                <div class="gallery-thumbs" id="gallery-container">
+                    </div>
+            </div>
+
+            <div class="p-col-right">
+                
+                <h1 id="product-name" class="product-title">Laden...</h1>
+                <div class="device-id-wrapper" id="device-id-display" style="display:none;">
+                    <span class="device-id" id="display-id">-</span>
+                </div>
+
+                <hr class="mobile-divider">
+
+                <div class="option-group">
+                    <div class="option-title">Farbe wählen</div>
+                    <div id="color-list" class="color-container"></div>
                 </div>
 
                 <div class="option-group">
-                    <div class="option-title">Farbe</div>
-                    <div id="color-list" style="display:flex; flex-wrap:wrap;"></div>
-                </div>
-
-                <div class="option-group">
-                    <div class="option-title">Speicher</div>
+                    <div class="option-title">Speicherplatz</div>
                     <div id="storage-list" class="pill-container"></div>
                 </div>
 
                 <div class="option-group">
-                    <div class="option-title">Optischer Zustand ⓘ</div>
+                    <div class="option-title">Optischer Zustand</div>
                     <div id="optical-list" class="pill-container"></div>
                 </div>
                 
                 <div class="option-group">
-                    <div class="option-title">Akkuzustand ⓘ</div>
+                    <div class="option-title">Akkuzustand</div>
                     <div id="battery-list" class="pill-container"></div>
                 </div>
 
-                <div style="border-top:1px solid #eee; padding-top:20px;">
+                <div class="price-box">
                     <span id="price-val" class="price-main">-- CHF</span>
                     <div id="stock-display" class="stock-info"></div>
+                    
+                    <button id="desktop-add-cart" class="desktop-cart-btn" onclick="document.getElementById('add-to-cart').click()">
+                        In den Warenkorb
+                    </button>
                 </div>
             </div>
         </div>
+
+        <div class="detail-card usp-card">
+            <div class="usp-item"><span class="usp-icon">↺</span> 14 Tage Rückgabe</div>
+            <div class="usp-item"><span class="usp-icon">🛡</span> 1 Jahr Garantie</div>
+            <div class="usp-item"><span class="usp-icon">⚡</span> Kostenloser Versand</div>
+        </div>
+
+        <div class="detail-card description-section">
+            <h3 style="margin-top:0; font-size:20px; font-weight:700; margin-bottom:15px;">Über das Produkt</h3>
+            <p id="product-desc" style="line-height:1.7; color:#555; font-size:15px;">
+                Unsere generalüberholten Geräte funktionieren technisch wie neu. Jedes Gerät wird von Experten geprüft, gereinigt und für ein zweites Leben vorbereitet.
+            </p>
+        </div>
+
+        <div class="detail-card">
+            <h3 class="rec-title">Das könnte dir auch gefallen</h3>
+            <div class="rec-grid" id="recommendation-list">
+                </div>
+        </div>
+
     </div>
     
-    <button class="sticky-cart-bar" id="add-to-cart">In den Warenkorb</button>
+    <button class="sticky-cart-bar" id="add-to-cart">
+        <span id="sticky-price-display" style="font-weight:400; opacity:0.9; font-size:15px;">-- CHF</span>
+        <span>In den Warenkorb</span>
+    </button>
 {% endblock %}
 
 {% block scripts %}
 <script>
     const productId = new URLSearchParams(window.location.search).get('id');
     let productData = null;
+    let allData = {};
     
-    let selection = {
-        color: null,
-        storage: null,
-        condition: null,
-        battery: null
-    };
+    let selection = { color: null, storage: null, condition: null, battery: null };
 
-    // Daten vom Server laden
+    // Fetch Data
     fetch('/api/admin/data').then(r => r.json()).then(data => {
+        allData = data;
         let p = null, brand = "";
         for (let b in data) { 
             let found = data[b].products.find(x => x.id === productId); 
@@ -143,6 +319,7 @@
         if (p) {
             productData = p;
             initPage(brand);
+            renderRecommendations(brand);
         } else {
             document.getElementById('product-name').innerText = "Produkt nicht gefunden";
             document.getElementById('add-to-cart').style.display = 'none';
@@ -152,7 +329,9 @@
     function initPage(brand) {
         document.getElementById('back-link').href = `/shop?brand=${brand}`;
         document.getElementById('product-name').innerText = productData.name;
-        document.getElementById('main-img').src = productData.img || 'https://placehold.co/400x400?text=No+Image';
+        if(productData.description) document.getElementById('product-desc').innerText = productData.description;
+
+        setupGallery();
 
         const inventory = productData.inventory || [];
         if (inventory.length > 0) {
@@ -160,8 +339,61 @@
         } else {
             renderAllOptions();
             document.getElementById('price-val').innerText = "Ausverkauft";
-            document.getElementById('add-to-cart').classList.add('disabled');
+            toggleButtons(false);
         }
+    }
+
+    function setupGallery() {
+        const mainImg = productData.img || 'https://placehold.co/400x400?text=No+Image';
+        document.getElementById('main-img').src = mainImg;
+
+        const container = document.getElementById('gallery-container');
+        container.innerHTML = '';
+        // Dummy Bilder für Galerie (3 Stück)
+        const images = [mainImg, mainImg, mainImg]; 
+        images.forEach((src, idx) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.className = 'thumb' + (idx === 0 ? ' active' : '');
+            img.onclick = () => {
+                const main = document.getElementById('main-img');
+                
+                // Fade Animation Trigger
+                main.classList.remove('fade-in-anim');
+                void main.offsetWidth; // Reflow
+                main.classList.add('fade-in-anim');
+
+                main.src = src;
+                document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                img.classList.add('active');
+            };
+            container.appendChild(img);
+        });
+    }
+
+    function renderRecommendations(brand) {
+        const container = document.getElementById('recommendation-list');
+        let allProducts = [];
+        for (let b in allData) {
+            allData[b].products.forEach(prod => {
+                if(prod.id !== productId) allProducts.push(prod);
+            });
+        }
+        // Random 4 Produkte
+        allProducts.sort(() => 0.5 - Math.random());
+        allProducts.slice(0, 4).forEach(prod => {
+            const a = document.createElement('a');
+            a.href = `/detail?id=${prod.id}`;
+            a.className = 'rec-card';
+            a.innerHTML = `
+                <img src="${prod.img || ''}" class="rec-img">
+                <div style="width:100%;">
+                    <div class="rec-name">${prod.name}</div>
+                    <div class="rec-price">ab ${prod.basePrice} CHF</div>
+                </div>
+            `;
+            container.appendChild(a);
+        });
     }
 
     function applySelectionFromItem(item) {
@@ -174,7 +406,6 @@
 
     function renderAllOptions() {
         const inv = productData.inventory || [];
-
         const availableColors = [...new Set(inv.map(i => i.color))];
         renderColorOptions(availableColors);
 
@@ -215,11 +446,8 @@
             el.className = 'pill';
             el.innerText = opt.name;
             if (selection[type] === opt.name) el.classList.add('active');
-            if (!isAvailable) {
-                el.classList.add('disabled');
-            } else {
-                el.onclick = () => selectSmart(type, opt.name);
-            }
+            if (!isAvailable) el.classList.add('disabled');
+            else el.onclick = () => selectSmart(type, opt.name);
             container.appendChild(el);
         });
     }
@@ -228,28 +456,15 @@
         selection[type] = value;
         const inv = productData.inventory || [];
         let match = inv.find(i => 
-            i.color === selection.color && 
-            i.storage === selection.storage && 
-            i.condition === selection.condition && 
-            i.battery === selection.battery
+            i.color === selection.color && i.storage === selection.storage && 
+            i.condition === selection.condition && i.battery === selection.battery
         );
-
         if (!match) {
             let candidates = inv.filter(i => i[type] === value);
-            if (type === 'color') {
-                match = candidates.find(i => i.storage === selection.storage) || candidates[0];
-            } else if (type === 'condition') {
-                match = candidates.find(i => i.color === selection.color && i.storage === selection.storage) || 
-                        candidates.find(i => i.color === selection.color) || candidates[0];
-            } else {
-                match = candidates.find(i => i.color === selection.color) || candidates[0];
-            }
-            if (match) {
-                applySelectionFromItem(match);
-                return;
-            }
+            if (candidates.length > 0) applySelectionFromItem(candidates[0]);
+        } else {
+            renderAllOptions();
         }
-        renderAllOptions();
     }
 
     function updatePriceAndDisplay() {
@@ -261,8 +476,9 @@
 
         const priceDisplay = document.getElementById('price-val');
         const stockDisplay = document.getElementById('stock-display');
-        const btn = document.getElementById('add-to-cart');
         const idDisplay = document.getElementById('device-id-display');
+        const stickyPrice = document.getElementById('sticky-price-display');
+        const badge = document.getElementById('condition-badge');
 
         if (match) {
             let price = parseInt(productData.basePrice);
@@ -273,38 +489,85 @@
             price += getPrice(productData.batteryConditions, selection.battery);
 
             priceDisplay.innerText = price + " CHF";
-            stockDisplay.innerText = "Auf Lager - Sofort lieferbar";
+            stickyPrice.innerText = price + " CHF";
+            
+            stockDisplay.innerText = "● Sofort lieferbar";
             stockDisplay.style.color = "#28a745";
+            
             idDisplay.style.display = 'block';
             document.getElementById('display-id').innerText = "#" + match.id;
-            btn.classList.remove('disabled');
-            btn.innerText = "In den Warenkorb";
-            btn.onclick = () => addToCart(match.id, price);
+
+            // Badge Text Update (nimmt den optischen Zustand als Label)
+            badge.innerText = selection.condition || "Geprüft";
+            badge.style.background = "#e6f4ea"; // Leichtes Grün bei Verfügbarkeit
+
+            toggleButtons(true, match.id, price);
         } else {
             priceDisplay.innerText = "--";
-            stockDisplay.innerText = "Kombination nicht verfügbar";
-            stockDisplay.style.color = "red";
+            stickyPrice.innerText = "";
+            stockDisplay.innerText = "Diese Kombination ist nicht verfügbar";
+            stockDisplay.style.color = "#ea4335";
             idDisplay.style.display = 'none';
-            btn.classList.add('disabled');
+            badge.innerText = "Nicht verfügbar";
+            badge.style.background = "#fce8e6"; // Leichtes Rot
+            toggleButtons(false);
+        }
+    }
+
+    function toggleButtons(enabled, realId = null, price = 0) {
+        const mobileBtn = document.getElementById('add-to-cart');
+        const deskBtn = document.getElementById('desktop-add-cart');
+
+        if (enabled) {
+            mobileBtn.classList.remove('disabled');
+            mobileBtn.onclick = () => addToCart(realId, price);
+            
+            deskBtn.classList.remove('disabled');
+            deskBtn.innerText = "In den Warenkorb";
+            // Onclick ist im HTML via Trigger geregelt oder kann hier gesetzt werden
+        } else {
+            mobileBtn.classList.add('disabled');
+            mobileBtn.onclick = null;
+            
+            deskBtn.classList.add('disabled');
+            deskBtn.innerText = "Nicht verfügbar";
         }
     }
 
     function addToCart(realId, price) {
         const item = {
-            id: realId,
-            name: productData.name,
-            price: price,
-            img: productData.img,
-            options: { ...selection }
+            id: realId, name: productData.name, price: price,
+            img: productData.img, options: { ...selection }
         };
         let cart = JSON.parse(localStorage.getItem('cart') || '[]');
         cart.push(item);
         localStorage.setItem('cart', JSON.stringify(cart));
-        updateGlobalBadge(); // Aus base.html
+        if(typeof updateGlobalBadge === 'function') updateGlobalBadge();
         
+        // Feedback Mobile
         const btn = document.getElementById('add-to-cart');
-        btn.innerText = "Hinzugefügt! ✓";
-        setTimeout(() => { btn.innerText = "In den Warenkorb"; }, 2000);
+        const oldHTML = btn.innerHTML;
+        btn.innerHTML = "<span>Hinzugefügt! ✓</span>";
+        btn.style.background = "#1e7e34";
+
+        // Feedback Desktop
+        const deskBtn = document.getElementById('desktop-add-cart');
+        const oldDeskText = deskBtn.innerText;
+        deskBtn.innerText = "Hinzugefügt! ✓";
+        deskBtn.style.background = "#1e7e34";
+        
+        setTimeout(() => { 
+            // Reset Mobile
+            btn.innerHTML = `
+                <span id="sticky-price-display" style="font-weight:400; opacity:0.9; font-size:15px;">${price} CHF</span>
+                <span>In den Warenkorb</span>
+            `;
+            btn.style.background = ""; 
+
+            // Reset Desktop
+            deskBtn.innerText = "In den Warenkorb";
+            deskBtn.style.background = "";
+        }, 2000);
     }
 </script>
 {% endblock %}

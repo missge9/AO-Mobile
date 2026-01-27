@@ -31,24 +31,17 @@
             "price": 0
           }
         ],
-        "discount": "0",
+        "discount": "",
         "hasDiscount": true,
         "id": "iphone12mini",
         "img": "images/1.png",
         "inventory": [
           {
-            "id": 5988,
-            "storage": "64 GB",
-            "color": "Schwarz",
-            "condition": "Schnäppchen",
-            "battery": "Gebraucht"
-          },
-          {
-            "id": 8598,
-            "storage": "64 GB",
+            "battery": "Gebraucht",
             "color": "Blau",
             "condition": "Schnäppchen",
-            "battery": "Gebraucht"
+            "id": 8598,
+            "storage": "64 GB"
           }
         ],
         "name": "iPhone 12 mini",
@@ -110,8 +103,9 @@
             "price": 0
           }
         ],
+        "discount": "40%",
         "id": "new-1769340898718",
-        "img": "images/1.png",
+        "img": "/static/uploads/13_1.png",
         "name": "Iphone 16",
         "opticalConditions": [
           {
@@ -126,6 +120,43 @@
           },
           {
             "name": "Neu",
+            "price": 0
+          }
+        ]
+      },
+      {
+        "basePrice": "300",
+        "batteryConditions": [
+          {
+            "name": "80%+",
+            "price": 0
+          }
+        ],
+        "colors": [
+          {
+            "hex": "#000",
+            "name": "Midnight",
+            "price": 0
+          },
+          {
+            "hex": "#000000",
+            "name": "Neu",
+            "price": 0
+          }
+        ],
+        "id": "MOD5245",
+        "img": "/static/uploads/13_1.avif",
+        "inventory": [],
+        "name": "Iphone 13",
+        "opticalConditions": [
+          {
+            "name": "Gut",
+            "price": 0
+          }
+        ],
+        "storageOptions": [
+          {
+            "name": "64GB",
             "price": 0
           }
         ]

@@ -1,118 +1,253 @@
 {% extends "base.html" %}
 
-{% block title %}Shop | reborn Mobile{% endblock %}
+{% block title %}Shop Übersicht | reborn Mobile{% endblock %}
 
 {% block styles %}
 <style>
-    /* Spezifische Styles für die Shop-Übersicht */
-    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+    /* --- ANIMATIONEN --- */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- LAYOUT --- */
+    body { background-color: #f8f9fa; }
+
+    .container { 
+        max-width: 1100px; 
+        margin: 0 auto; 
+        padding: 40px 20px; 
+    }
     
+    .header-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    h1#page-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #111;
+        margin: 0;
+        letter-spacing: -0.5px;
+    }
+
     .back-btn { 
-        display: none; padding: 10px 20px; background: #fff; 
-        border: 1px solid #ddd; border-radius: 30px; cursor: pointer; 
-        margin-bottom: 20px; font-size: 14px; transition: 0.2s;
+        display: none; /* Wird per JS eingeblendet */
+        padding: 10px 20px; 
+        background: #fff; 
+        border: 1px solid #e5e5e5; 
+        border-radius: 30px; 
+        cursor: pointer; 
+        font-size: 14px; 
+        font-weight: 600;
+        color: #333;
+        transition: all 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
-    .back-btn:hover { background: #f0f0f0; }
+    .back-btn:hover { background: #111; color: #fff; border-color: #111; transform: translateX(-3px); }
 
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-
-    /* Produkt-Karte */
-    .card { 
-        background: white; border-radius: 16px; padding: 20px; 
-        cursor: pointer; display: flex; flex-direction: column; 
-        transition: transform 0.3s, box-shadow 0.3s;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    /* --- GRID SYSTEM --- */
+    .grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+        gap: 25px; 
     }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-
-    .discount-badge { background: var(--price-color); color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-    .card-image { width: 100%; height: 200px; object-fit: contain; margin: 20px 0; }
-
-    /* Marken-Karte */
-    .brand-card { 
-        background: white; border-radius: 16px; padding: 30px; 
-        display: flex; flex-direction: column; align-items: center; 
-        cursor: pointer; transition: 0.2s;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    
+    @media (max-width: 500px) { 
+        .grid { 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+        } 
+        .container { padding: 20px 15px; }
+        h1#page-title { font-size: 22px; }
     }
-    .brand-card:hover { transform: scale(1.02); border-color: var(--primary-color); }
-    .brand-img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 15px; }
+
+    /* --- ALLGEMEINE KARTE --- */
+    .shop-card { 
+        background: white; 
+        border-radius: 20px; 
+        padding: 20px; 
+        cursor: pointer; 
+        display: flex; 
+        flex-direction: column; 
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        border: 1px solid white; 
+        position: relative;
+        overflow: hidden;
+        
+        /* Animation Startzustand */
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+    .shop-card:hover { 
+        transform: translateY(-7px); 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.08); 
+    }
+
+    /* --- MARKEN KARTE --- */
+    .brand-card {
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+    .brand-img { 
+        width: 100px; height: 100px; 
+        object-fit: contain; margin-bottom: 20px; 
+        filter: grayscale(100%); opacity: 0.8; transition: 0.3s;
+    }
+    .brand-card:hover .brand-img { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+    .brand-name { font-weight: 700; font-size: 18px; color: #333; }
+
+    /* --- PRODUKT KARTE --- */
+    .card-top {
+        display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;
+    }
+    
+    .discount-badge { 
+        background: #ea4335; color: white; 
+        padding: 4px 10px; border-radius: 6px; 
+        font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    
+    .check-icon {
+        width: 28px; height: 28px; 
+        background: #e6f4ea; 
+        border-radius: 50%; 
+        display: flex; align-items: center; justify-content: center;
+        color: #28a745;
+    }
+
+    .card-image { 
+        width: 100%; height: 180px; 
+        object-fit: contain; margin: 15px 0 25px 0; 
+        transition: transform 0.3s;
+    }
+    .shop-card:hover .card-image { transform: scale(1.05); }
+
+    .card-info { text-align: center; }
+    
+    .model-name { 
+        font-weight: 700; font-size: 16px; color: #111; 
+        margin-bottom: 5px; line-height: 1.3;
+    }
+    
+    .price-tag { 
+        color: #555; font-size: 14px; font-weight: 500; 
+    }
+    .price-highlight {
+        color: #111; font-weight: 700; font-size: 15px;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <button id="back-btn" class="back-btn" onclick="showBrands()">← Zurück zur Markenübersicht</button>
-        <h1 id="page-title" style="margin-bottom: 20px;">Wähle eine Kategorie</h1>
+        
+        <div class="header-section">
+            <h1 id="page-title">Shop</h1>
+            <button id="back-btn" class="back-btn" onclick="showBrands()">← Zurück</button>
+        </div>
         
         <div id="grid-container" class="grid">
-            </div>
+            <div style="text-align:center; width:100%; grid-column: span 2; color:#888;">Laden...</div>
+        </div>
+
     </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-    const gridContainer = document.getElementById('grid-container');
-    const pageTitle = document.getElementById('page-title');
-    const backBtn = document.getElementById('back-btn');
-    let shopData = {};
-
-    // Daten vom Server laden (API Route)
-    fetch('/api/admin/data?v=' + new Date().getTime())
-        .then(r => r.json())
-        .then(data => {
-            shopData = data;
-            const brandParam = new URLSearchParams(window.location.search).get('brand');
-            if (brandParam && shopData[brandParam]) { 
-                showModels(brandParam); 
-            } else { 
-                showBrands(); 
-            }
-        });
-
-    function showBrands() {
-        gridContainer.innerHTML = ''; 
-        pageTitle.innerText = "Wähle eine Kategorie"; 
-        backBtn.style.display = "none";
+    // Wir holen die Elemente erst, wenn wir sie brauchen oder warten auf DOMContentLoaded
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("DOM ist geladen, starte Script...");
         
-        for (let brand in shopData) {
-            const card = document.createElement('div'); 
-            card.className = 'brand-card';
-            card.onclick = () => showModels(brand);
-            card.innerHTML = `
-                <img src="${shopData[brand].logo}" class="brand-img" alt="${brand}">
-                <div style="font-weight:600; font-size:18px;">${brand}</div>
-            `;
-            gridContainer.appendChild(card);
+        let shopData = {};
+        
+        // Daten laden
+        fetch('/api/admin/data?v=' + new Date().getTime())
+            .then(r => r.json())
+            .then(data => {
+                console.log("Daten erfolgreich geladen:", data);
+                shopData = data;
+                
+                const brandParam = new URLSearchParams(window.location.search).get('brand');
+                
+                if (brandParam && shopData[brandParam]) { 
+                    console.log("Zeige Modelle für:", brandParam);
+                    showModels(brandParam); 
+                } else { 
+                    console.log("Zeige Markenübersicht...");
+                    showBrands(); 
+                }
+            })
+            .catch(error => console.error("Fehler beim Fetch:", error));
+
+        function showBrands() {
+            // Elemente HIER abrufen, um sicherzugehen, dass sie existieren
+            const gridContainer = document.getElementById('grid-container');
+            const pageTitle = document.getElementById('page-title');
+            const backBtn = document.getElementById('back-btn');
+
+            if (!gridContainer) { console.error("FEHLER: grid-container nicht gefunden!"); return; }
+            if (!pageTitle) { console.error("FEHLER: page-title nicht gefunden!"); return; }
+
+            console.log("Rendere Marken...");
+            gridContainer.innerHTML = ''; 
+            pageTitle.innerText = "Wähle eine Kategorie"; 
+            if(backBtn) backBtn.style.display = "none";
+            
+            // Loop prüfen
+            for (let brand in shopData) {
+                console.log("Erstelle Karte für:", brand); // Debugging
+                
+                const card = document.createElement('div'); 
+                card.className = 'brand-card';
+                card.onclick = () => showModels(brand);
+                card.innerHTML = `
+                    <img src="${shopData[brand].logo}" class="brand-img" alt="${brand}" onerror="this.src='https://via.placeholder.com/80'">
+                    <div style="font-weight:600; font-size:18px;">${brand}</div>
+                `;
+                gridContainer.appendChild(card);
+            }
         }
-    }
 
-    function showModels(brand) {
-        gridContainer.innerHTML = ''; 
-        pageTitle.innerText = brand + " Modelle"; 
-        backBtn.style.display = "inline-block";
+        function showModels(brand) {
+            const gridContainer = document.getElementById('grid-container');
+            const pageTitle = document.getElementById('page-title');
+            const backBtn = document.getElementById('back-btn');
 
-        if (!shopData[brand] || !shopData[brand].products) return;
+            gridContainer.innerHTML = ''; 
+            pageTitle.innerText = brand + " Modelle"; 
+            if(backBtn) {
+                backBtn.style.display = "inline-block";
+                backBtn.onclick = showBrands; // Wichtig: onclick hier neu setzen
+            }
 
-        shopData[brand].products.forEach(model => {
-            const card = document.createElement('div'); 
-            card.className = 'card';
-            card.onclick = () => window.location.href = '/detail?id=' + model.id;
+            if (!shopData[brand] || !shopData[brand].products) return;
 
-            card.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    ${model.discount ? `<div class="discount-badge">${model.discount}</div>` : '<div></div>'}
-                    <div style="width:24px; height:24px; background:var(--green-color, #00c853); border-radius:50%; display:flex; align-items:center; justify-content:center;">
-                        <svg fill="white" width="14" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            shopData[brand].products.forEach(model => {
+                const card = document.createElement('div'); 
+                card.className = 'card';
+                card.onclick = () => window.location.href = '/detail?id=' + model.id;
+
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        ${model.discount ? `<div class="discount-badge">${model.discount}</div>` : '<div></div>'}
+                        <div style="width:24px; height:24px; background:#00c853; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                            <svg fill="white" width="14" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        </div>
                     </div>
-                </div>
-                <img src="${model.img}" class="card-image" onerror="this.src='https://via.placeholder.com/200?text=Handy'">
-                <div style="color:var(--price-color); font-weight:600; font-size:14px;">Ab ${model.basePrice} CHF</div>
-                <div style="font-weight:600; font-size:18px; margin-top:5px;">${model.name}</div>
-            `;
-            gridContainer.appendChild(card);
-        });
-    }
+                    <img src="${model.img}" class="card-image" onerror="this.src='https://via.placeholder.com/200'">
+                    <div style="color:green; font-weight:600; font-size:14px;">Ab ${model.basePrice} CHF</div>
+                    <div style="font-weight:600; font-size:18px; margin-top:5px;">${model.name}</div>
+                `;
+                gridContainer.appendChild(card);
+            });
+        }
+    });
 </script>
 {% endblock %}

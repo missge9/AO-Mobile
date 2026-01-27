@@ -4,66 +4,42 @@
 
 {% block styles %}
 <style>
-    /* Wir nutzen lokale Variablen für diesen Bereich */
     :root { --primary: #007bff; --border: #ddd; --danger: #ea4335; --success: #28a745; }
 
-    /* Layout für den Inhalt (Erbt Höhe von admin_base content-area) */
-    .inventory-wrapper {
-        display: flex;
-        flex-direction: column;
-        height: 100%; /* Füllt den Content-Bereich */
-    }
-
-    .inventory-header {
-        display: flex; justify-content: space-between; align-items: center; 
-        margin-bottom: 20px; flex-shrink: 0;
-    }
-
-    .inventory-container { 
-        display: flex; gap: 20px; flex: 1; overflow: hidden; 
-    }
+    /* Layout */
+    .inventory-wrapper { display: flex; flex-direction: column; height: 100%; }
+    .inventory-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-shrink: 0; }
+    .inventory-container { display: flex; gap: 20px; flex: 1; overflow: hidden; }
     
-    /* --- Linke Liste (Lokale Sidebar) --- */
-    .list-sidebar { 
-        width: 320px; background: white; border-radius: 12px; padding: 20px; 
-        display: flex; flex-direction: column; box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-        flex-shrink: 0;
-    }
-
-    /* --- Rechter Editor --- */
-    .editor-area { 
-        flex: 1; background: white; border-radius: 12px; padding: 0; 
-        overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
-        display: none; flex-direction: column; 
-    }
+    /* Sidebar */
+    .list-sidebar { width: 320px; background: white; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; box-shadow: 0 2px 10px rgba(0,0,0,0.05); flex-shrink: 0; }
+    .editor-area { flex: 1; background: white; border-radius: 12px; padding: 0; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: none; flex-direction: column; }
     .editor-area.active { display: flex; }
     .editor-scroll { padding: 30px; overflow-y: auto; flex: 1; }
 
     /* Listen Items */
-    .list-item { 
-        padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; 
-        transition: 0.2s; border-radius: 6px; margin-bottom: 5px; 
-        display: flex; justify-content: space-between; align-items: center;
-    }
+    .list-item { padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s; border-radius: 6px; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
     .list-item:hover { background: #f9f9f9; }
     .list-item.active { background: #e3f2fd; color: var(--primary); font-weight: 500; }
     
-    /* Formulare Allgemein */
+    /* Formulare */
     h2 { margin-top: 0; color: var(--primary); border-bottom: 2px solid #f0f0f0; padding-bottom: 10px; font-size: 20px; }
     h3 { font-size: 15px; margin-top: 25px; margin-bottom: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
     
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
     label { display: block; font-size: 12px; color: #777; margin-bottom: 4px; }
-    input, select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+    input[type="text"], input[type="number"], select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+    
+    /* Color Picker Style */
+    input[type="color"] { -webkit-appearance: none; border: none; width: 40px; height: 40px; cursor: pointer; padding: 0; background: none; }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: 1px solid #ddd; border-radius: 8px; }
 
-    /* Tabellen Editor (Konfiguration) */
+    /* Tabellen */
     .variant-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
     .variant-table th { text-align: left; background: #f9f9f9; padding: 8px; font-size: 12px; color: #666; }
-    .variant-table td { padding: 5px; border-bottom: 1px solid #eee; }
-    .variant-table input { border: 1px solid transparent; background: transparent; width: 100%; }
-    .variant-table input:focus { border-color: var(--primary); background: white; }
-
-    /* --- INVENTAR TABELLE --- */
+    .variant-table td { padding: 5px; border-bottom: 1px solid #eee; vertical-align: middle; }
+    
     .inventory-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 20px; font-size: 13px; }
     .inventory-table th { text-align: left; padding: 10px; color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
     .inventory-table tr { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #eee; }
@@ -71,44 +47,43 @@
     .inventory-table td:first-child { border-left: 1px solid #eee; border-radius: 8px 0 0 8px; }
     .inventory-table td:last-child { border-right: 1px solid #eee; border-radius: 0 8px 8px 0; }
 
-    /* "Großer Plus Button" */
-    .add-inventory-card {
-        border: 2px dashed #ccc; border-radius: 12px; padding: 30px; text-align: center;
-        cursor: pointer; transition: 0.3s; color: #777; background: #fafafa; margin-bottom: 30px;
-    }
+    /* Inventar Hinzufügen */
+    .add-inventory-card { border: 2px dashed #ccc; border-radius: 12px; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s; color: #777; background: #fafafa; margin-bottom: 30px; }
     .add-inventory-card:hover { border-color: var(--primary); color: var(--primary); background: #f0f7ff; }
     .add-icon { font-size: 40px; line-height: 40px; margin-bottom: 10px; display: block; }
-    
-    /* Ausklapp-Formular */
-    .add-inventory-form {
-        display: none; background: white; border: 1px solid #007bff; border-radius: 12px;
-        padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,123,255,0.1);
-        animation: slideDown 0.3s ease-out;
-    }
+    .add-inventory-form { display: none; background: white; border: 1px solid #007bff; border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 5px 20px rgba(0,123,255,0.1); animation: slideDown 0.3s ease-out; }
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Buttons & Badges */
+    /* Buttons */
     .btn { padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
     .btn-save { background: var(--success); color: white; padding: 10px 20px; font-size: 14px; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2); }
     .btn-primary { background: var(--primary); color: white; }
+    .btn-danger { background: #ffebee; color: var(--danger); border: 1px solid #ffcdd2; }
+    .btn-danger:hover { background: var(--danger); color: white; border-color: var(--danger); }
+    
     .btn-add { background: var(--primary); color: white; width: 100%; margin-top: 10px; font-weight: 600; padding: 15px; }
     .btn-small { background: #eee; color: #333; padding: 4px 10px; font-size: 12px; border-radius: 4px; border:none; cursor:pointer;}
-    
     .stock-badge { background: #e3f2fd; color: #007bff; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
     .id-badge { background: #343a40; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 12px; }
 
-    /* Tabs Navigation */
+    /* Tabs */
     .tab-nav { display: flex; border-bottom: 1px solid #eee; background: #fafafa; padding: 0 20px; }
     .tab-btn { padding: 15px 20px; cursor: pointer; color: #666; font-weight: 500; border-bottom: 3px solid transparent; }
     .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
     .tab-content { display: none; padding-top: 20px; }
     .tab-content.active { display: block; }
+
+    /* Bild Upload */
+    .image-upload-wrapper { border: 2px dashed #ddd; border-radius: 12px; padding: 20px; text-align: center; background: #fdfdfd; position: relative; }
+    .image-preview { max-width: 100%; max-height: 150px; object-fit: contain; display: none; margin: 0 auto 10px auto; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .image-preview.visible { display: block; }
+    .image-actions { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+    .hidden-file-input { display: none; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="inventory-wrapper">
-    
     <div class="inventory-header">
         <div>
             <h1 style="margin:0; font-size:24px;">Lagerverwaltung</h1>
@@ -122,10 +97,7 @@
             <select id="brand-select" onchange="renderProductList()" style="margin-bottom:15px;">
                 <option value="">Alle Marken anzeigen</option>
             </select>
-
-            <div id="product-list" style="overflow-y: auto; flex: 1;">
-                </div>
-            
+            <div id="product-list" style="overflow-y: auto; flex: 1;"></div>
             <button class="btn btn-add" onclick="addNewProduct()">+ Neues Modell-Serie</button>
         </div>
 
@@ -141,44 +113,29 @@
                 </div>
 
                 <div id="tab-inventory" class="tab-content active">
-                    <h3>Lagerbestand & neue Geräte hinzufügen</h3>
-
+                    <h3>Gerät hinzufügen</h3>
                     <div id="add-trigger" class="add-inventory-card" onclick="toggleAddForm()">
                         <span class="add-icon">+</span>
-                        <div>Gerät hinzufügen</div>
+                        <div>Neues Gerät einlagern</div>
                     </div>
 
                     <div id="add-form" class="add-inventory-form">
-                        <h4 style="margin-top:0; color:#007bff;">Neues Gerät konfigurieren</h4>
-                        
+                        <h4 style="margin-top:0; color:#007bff;">Eigenschaften wählen</h4>
                         <div class="form-row">
-                            <div>
-                                <label>Speichergröße</label>
-                                <select id="new-storage"></select>
-                            </div>
-                            <div>
-                                <label>Farbe</label>
-                                <select id="new-color"></select>
-                            </div>
+                            <div><label>Speichergröße</label><select id="new-storage"></select></div>
+                            <div><label>Farbe</label><select id="new-color"></select></div>
                         </div>
                         <div class="form-row">
-                            <div>
-                                <label>Optischer Zustand</label>
-                                <select id="new-condition"></select>
-                            </div>
-                            <div>
-                                <label>Akku Zustand</label>
-                                <select id="new-battery"></select>
-                            </div>
+                            <div><label>Optischer Zustand</label><select id="new-condition"></select></div>
+                            <div><label>Akku Zustand</label><select id="new-battery"></select></div>
                         </div>
-
                         <div style="text-align:right; margin-top:20px;">
                             <button class="btn" style="background:#eee; color:#333; margin-right:10px;" onclick="toggleAddForm()">Abbrechen</button>
-                            <button class="btn btn-primary" onclick="commitNewInventoryItem()">Gerät Hinzufügen</button>
+                            <button class="btn btn-primary" onclick="commitNewInventoryItem()">+ Einlagern</button>
                         </div>
                     </div>
 
-                    <h4 style="margin-bottom:5px; color:#555;">Aktueller Bestand</h4>
+                    <h4 style="margin-bottom:5px; color:#555;">Aktueller Lagerbestand (Geräte)</h4>
                     <table class="inventory-table">
                         <thead>
                             <tr>
@@ -186,27 +143,55 @@
                                 <th>Details</th>
                                 <th>Zustand</th>
                                 <th>Preis</th>
-                                <th style="width:50px"></th>
+                                <th style="width:50px">Löschen</th>
                             </tr>
                         </thead>
-                        <tbody id="inventory-list">
-                            </tbody>
+                        <tbody id="inventory-list"></tbody>
                     </table>
                 </div>
 
                 <div id="tab-config" class="tab-content">
-                    <p style="background:#fff3cd; padding:10px; border-radius:6px; color:#856404; font-size:13px;">
-                        ⚠️ Hier definierst du, welche Optionen (Farben, Speicher) für dieses Modell <b>generell existieren</b>. <br>
-                        Erst wenn du sie hier anlegst, kannst du sie im anderen Tab auswählen.
-                    </p>
+                    <div class="form-row">
+                        <div>
+                            <label>Modell Name</label>
+                            <input type="text" id="inp-name" oninput="updateCurrentProduct('name', this.value)">
+                            <div style="margin-top:15px;">
+                                <label>Rabatt Badge</label>
+                                <input type="text" id="inp-discount" oninput="updateCurrentProduct('discount', this.value)">
+                            </div>
+                            <div style="margin-top:15px;">
+                                <label>Basis Preis (CHF)</label>
+                                <input type="number" id="inp-basePrice" oninput="updateCurrentProduct('basePrice', this.value)">
+                            </div>
+                        </div>
 
-                    <div class="form-row">
-                        <div><label>Modell Name</label><input type="text" id="inp-name" oninput="updateCurrentProduct('name', this.value)"></div>
-                        <div><label>Basis Preis (CHF)</label><input type="number" id="inp-basePrice" oninput="updateCurrentProduct('basePrice', this.value)"></div>
-                    </div>
-                    <div class="form-row">
-                        <div><label>Bild URL</label><input type="text" id="inp-img" oninput="updateCurrentProduct('img', this.value)"></div>
-                        <div><label>Rabatt Badge</label><input type="text" id="inp-discount" oninput="updateCurrentProduct('discount', this.value)"></div>
+                        <div>
+                            <label>Produktbild</label>
+                            <div class="image-upload-wrapper">
+                                
+                                <div id="preview-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; min-height: 20px;">
+                                    <div id="no-img-text" style="color:#999; font-size:13px; width:100%; padding: 10px 0;">
+                                        Noch keine Bilder vorhanden
+                                    </div>
+                                </div>
+
+                                <input type="file" id="file-upload" class="hidden-file-input" 
+                                    accept="image/png, image/jpeg, image/webp, image/avif, image/*" 
+                                    multiple 
+                                    onchange="uploadImages()">
+
+                                <div class="image-actions">
+                                    <button class="btn-small" onclick="document.getElementById('file-upload').click()">
+                                        📂 Bilder hochladen
+                                    </button>
+                                    <button id="btn-delete-all" class="btn-small" style="background:#fce8e6; color:#ea4335; display:none;" onclick="clearAllImages()">
+                                        🗑️ Alle löschen
+                                    </button>
+                                </div>
+
+                                <input type="hidden" id="inp-img">
+                            </div>
+                        </div>
                     </div>
 
                     <h3>Farben (Generell)</h3>
@@ -225,8 +210,8 @@
                     <div id="battery-container"></div>
                     <button class="btn-small" onclick="addItem('batteryConditions')">+ Akku Option</button>
                     
-                    <div style="margin-top:50px; text-align:right;">
-                        <button style="color:#ea4335; background:none; border:none; cursor:pointer; text-decoration:underline;" onclick="deleteProduct()">Modell-Serie löschen</button>
+                    <div style="margin-top:50px; border-top:1px solid #eee; padding-top:20px; text-align:right;">
+                        <button class="btn btn-danger" onclick="deleteProduct()">⚠️ Modell-Serie komplett löschen</button>
                     </div>
                 </div>
             </div>
@@ -241,7 +226,7 @@
     let currentBrand = null;
     let currentProductIndex = -1;
 
-    // Daten laden
+    // --- INIT ---
     fetch('/api/admin/data')
         .then(r => r.json())
         .then(data => {
@@ -260,6 +245,7 @@
         }
     }
 
+    // --- LISTE RENDERN ---
     function renderProductList() {
         const filterBrand = document.getElementById('brand-select').value;
         const list = document.getElementById('product-list');
@@ -290,49 +276,232 @@
         renderProductList(); 
 
         document.getElementById('edit-title').innerText = p.name;
-        
-        // Konfiguration Laden
         document.getElementById('inp-name').value = p.name || '';
         document.getElementById('inp-basePrice').value = p.basePrice || 0;
-        document.getElementById('inp-img').value = p.img || '';
         document.getElementById('inp-discount').value = p.discount || '';
+
+        // FIX: Neue Funktion für Bilder aufrufen
+        updateImageUI(p.img);
 
         renderTable('optical-container', p.opticalConditions, 'opticalConditions');
         renderTable('storage-container', p.storageOptions, 'storageOptions');
         renderTable('battery-container', p.batteryConditions, 'batteryConditions');
         renderColorTable('color-container', p.colors);
 
-        // INVENTAR LADEN
         renderInventoryTable(p);
         
-        // Formular zurücksetzen beim Laden
         document.getElementById('add-trigger').style.display = 'block';
         document.getElementById('add-form').style.display = 'none';
     }
 
-    // --- NEW INVENTAR LOGIK ---
-    
-    // 1. Ausklappen
-    function toggleAddForm() {
-        const trigger = document.getElementById('add-trigger');
-        const form = document.getElementById('add-form');
+    // --- INVENTAR TABELLE ---
+    function renderInventoryTable(product) {
+        const tbody = document.getElementById('inventory-list');
+        tbody.innerHTML = '';
         
-        if (form.style.display === 'none') {
-            // Öffnen
-            populateAddDropdowns(); // Dropdowns füllen
-            trigger.style.display = 'none';
-            form.style.display = 'block';
-        } else {
-            // Schließen
-            trigger.style.display = 'block';
-            form.style.display = 'none';
+        if (!product.inventory || product.inventory.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#999;">Keine Geräte an Lager.</td></tr>';
+            return;
+        }
+
+        product.inventory.forEach((item, idx) => {
+            const tr = document.createElement('tr');
+            const price = calculatePrice(product, item);
+            tr.innerHTML = `
+                <td><span class="id-badge">#${item.id}</span></td>
+                <td><strong>${item.color}</strong>, ${item.storage}</td>
+                <td>${item.condition} <br> <span style="font-size:11px; color:#999;">Akku: ${item.battery}</span></td>
+                <td><div style="font-weight:bold; color:#28a745;">${price} CHF</div></td>
+                <td style="text-align:right;">
+                    <button class="btn btn-small btn-danger" onclick="removeInventoryItem(${idx})" title="Gerät löschen">🗑️</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // --- FARB-TABELLE ---
+    function renderColorTable(containerId, dataArray) {
+        const container = document.getElementById(containerId);
+        if(!dataArray) dataArray = [];
+        let html = `<table class="variant-table"><thead><tr><th style="width:30%">Farbe Name</th><th style="width:30%">Farbauswahl</th><th style="width:20%">Preis (+/-)</th><th></th></tr></thead><tbody>`;
+        
+        dataArray.forEach((item, idx) => {
+            html += `<tr>
+                <td><input type="text" value="${item.name}" placeholder="z.B. Midnight" onchange="updateArrayItem('colors', ${idx}, 'name', this.value)"></td>
+                <td>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <input type="color" value="${item.hex}" onchange="updateArrayItem('colors', ${idx}, 'hex', this.value); this.nextElementSibling.value=this.value;">
+                        <input type="text" value="${item.hex}" style="font-family:monospace; width:80px;" onchange="updateArrayItem('colors', ${idx}, 'hex', this.value); this.previousElementSibling.value=this.value;">
+                    </div>
+                </td>
+                <td><input type="number" value="${item.price}" onchange="updateArrayItem('colors', ${idx}, 'price', this.value)"></td>
+                <td style="text-align:right;"><button style="color:#ea4335; background:none; border:none; cursor:pointer;" onclick="removeArrayItem('colors', ${idx})">&times;</button></td>
+            </tr>`;
+        });
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+    }
+
+    // --- LÖSCH FUNKTIONEN ---
+    function removeInventoryItem(idx) {
+        if(confirm("Gerät aus Lager löschen?")) {
+            shopData[currentBrand].products[currentProductIndex].inventory.splice(idx, 1);
+            renderInventoryTable(shopData[currentBrand].products[currentProductIndex]);
+            renderProductList();
         }
     }
 
-    // 2. Dropdowns mit den Optionen füllen
+    async function deleteProduct() {
+        if(confirm("ACHTUNG: Modell-Serie löschen?")) {
+            const prod = shopData[currentBrand].products[currentProductIndex];
+            // Löschversuch des Bildes (optional, wenn es nur ein String ist)
+            if (typeof prod.img === 'string' && prod.img.includes('/static/uploads/')) {
+                 try {
+                    await fetch('/api/admin/delete-image', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: prod.img })
+                    });
+                } catch(e) {}
+            }
+            shopData[currentBrand].products.splice(currentProductIndex, 1);
+            document.getElementById('editor').classList.remove('active');
+            renderProductList();
+            saveToServer();
+        }
+    }
+
+    // --- FIX: BILD UPLOAD & UI (WICHTIGSTE ÄNDERUNG) ---
+    
+    // 1. UI Update Funktion repariert
+    function updateImageUI(imgUrl) {
+        const container = document.getElementById('preview-container');
+        const noText = document.getElementById('no-img-text');
+        const delBtn = document.getElementById('btn-delete-all');
+        const hiddenInp = document.getElementById('inp-img');
+
+        // Reset
+        container.innerHTML = '';
+        container.appendChild(noText); // Text wieder reinpacken für den Fall dass leer
+
+        // hidden input updaten
+        hiddenInp.value = imgUrl || '';
+
+        if (imgUrl) {
+            noText.style.display = 'none';
+            delBtn.style.display = 'inline-block';
+
+            // Prüfen ob JSON String (Liste) oder einzelner String
+            let urls = [];
+            try {
+                // Versuchen als JSON zu parsen (falls wir mehrere Bilder speichern)
+                if(imgUrl.startsWith('[')) {
+                    urls = JSON.parse(imgUrl);
+                } else {
+                    urls = [imgUrl];
+                }
+            } catch(e) {
+                urls = [imgUrl];
+            }
+
+            urls.forEach(url => {
+                const img = document.createElement('img');
+                img.src = url;
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'contain';
+                img.style.border = '1px solid #ddd';
+                img.style.borderRadius = '8px';
+                img.style.marginRight = '10px';
+                container.appendChild(img);
+            });
+
+        } else {
+            noText.style.display = 'block';
+            delBtn.style.display = 'none';
+        }
+    }
+
+    // 2. Upload Funktion repariert (ID korrigiert)
+    async function uploadImages() {
+        // HIER WAR DER FEHLER: id="file-upload" statt "imageInput"
+        const input = document.getElementById('file-upload'); 
+        const files = input.files;
+        
+        if (files.length === 0) return;
+
+        const formData = new FormData();
+        for (let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+
+        try {
+            const response = await fetch('/api/admin/upload', { // Pfad muss zur Python Route passen
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                
+                // Wir nehmen vereinfacht das erste Bild als Hauptbild, oder speichern alle als Liste
+                // Hier: Wir speichern nur das erste Bild als String für Kompatibilität mit dem Rest
+                // Wenn du Mehrfachbilder willst, musst du 'img' im JSON als Array behandeln
+                
+                // LÖSUNG: Wir speichern nur das erste Bild (wie vorher), da deine Logik auf p.img (String) basiert
+                if(result.urls.length > 0) {
+                     // Update Daten
+                     const newUrl = result.urls[0]; 
+                     updateCurrentProduct('img', newUrl);
+                     updateImageUI(newUrl);
+                }
+                
+                alert("Bild hochgeladen!");
+            } else {
+                alert("Fehler beim Hochladen.");
+            }
+        } catch (error) {
+            console.error("Upload Error:", error);
+        } finally {
+            input.value = ""; // Reset
+        }
+    }
+
+    async function deleteServerImage() {
+        // Diese Funktion löscht jetzt das aktuelle Bild
+        const prod = shopData[currentBrand].products[currentProductIndex];
+        if (!prod.img) return;
+        
+        if(!confirm("Bild wirklich löschen?")) return;
+        
+        // Da p.img ein String ist:
+        try {
+            await fetch('/api/admin/delete-image', {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: prod.img })
+            });
+        } catch(e) { console.error(e); }
+
+        updateCurrentProduct('img', ''); 
+        updateImageUI('');
+    }
+    
+    // Alias für den Button "Alle Löschen"
+    function clearAllImages() {
+        deleteServerImage();
+    }
+
+
+    // --- RESTLICHE LOGIK ---
+    function toggleAddForm() {
+        const trigger = document.getElementById('add-trigger');
+        const form = document.getElementById('add-form');
+        if (form.style.display === 'none') { populateAddDropdowns(); trigger.style.display = 'none'; form.style.display = 'block'; }
+        else { trigger.style.display = 'block'; form.style.display = 'none'; }
+    }
+
     function populateAddDropdowns() {
         const p = shopData[currentBrand].products[currentProductIndex];
-        
         fillSelect('new-storage', p.storageOptions);
         fillSelect('new-color', p.colors);
         fillSelect('new-condition', p.opticalConditions);
@@ -340,24 +509,15 @@
     }
 
     function fillSelect(id, options) {
-        const sel = document.getElementById(id);
-        sel.innerHTML = '';
-        if(!options || options.length === 0) {
-            sel.innerHTML = '<option>Keine Option definiert</option>';
-            return;
-        }
+        const sel = document.getElementById(id); sel.innerHTML = '';
+        if(!options || options.length === 0) { sel.innerHTML = '<option>Keine Option definiert</option>'; return; }
         options.forEach(opt => {
-            const op = document.createElement('option');
-            op.value = opt.name;
-            op.innerText = opt.name;
-            sel.appendChild(op);
+            const op = document.createElement('option'); op.value = opt.name; op.innerText = opt.name; sel.appendChild(op);
         });
     }
 
-    // 3. Hinzufügen zur Liste
     function commitNewInventoryItem() {
         const p = shopData[currentBrand].products[currentProductIndex];
-        
         const newItem = {
             id: Math.floor(1000 + Math.random() * 9000),
             storage: document.getElementById('new-storage').value,
@@ -365,62 +525,14 @@
             condition: document.getElementById('new-condition').value,
             battery: document.getElementById('new-battery').value
         };
-        
         if(!p.inventory) p.inventory = [];
         p.inventory.push(newItem);
-        
-        renderInventoryTable(p);
-        renderProductList(); // Stock count update
-        toggleAddForm(); // Formular wieder schließen
-    }
-
-    // 4. Tabelle rendern
-    function renderInventoryTable(product) {
-        const tbody = document.getElementById('inventory-list');
-        tbody.innerHTML = '';
-        
-        if (!product.inventory || product.inventory.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#999;">Noch keine Geräte an Lager.</td></tr>';
-            return;
-        }
-
-        product.inventory.forEach((item, idx) => {
-            const tr = document.createElement('tr');
-            const price = calculatePrice(product, item);
-            
-            tr.innerHTML = `
-                <td><span class="id-badge">#${item.id}</span></td>
-                <td>
-                    <strong>${item.color}</strong>, ${item.storage}
-                </td>
-                <td>
-                    ${item.condition} <br> <span style="font-size:11px; color:#999;">Akku: ${item.battery}</span>
-                </td>
-                <td>
-                    <div style="font-weight:bold; color:#28a745;">${price} CHF</div>
-                </td>
-                <td style="text-align:right;">
-                    <button style="color:#ea4335; background:none; border:none; cursor:pointer;" onclick="removeInventoryItem(${idx})">&times;</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function removeInventoryItem(idx) {
-        if(confirm("Gerät entfernen?")) {
-            shopData[currentBrand].products[currentProductIndex].inventory.splice(idx, 1);
-            renderInventoryTable(shopData[currentBrand].products[currentProductIndex]);
-            renderProductList();
-        }
+        renderInventoryTable(p); renderProductList(); toggleAddForm();
     }
 
     function calculatePrice(product, item) {
         let price = parseInt(product.basePrice || 0);
-        const findPrice = (list, name) => {
-            const found = list ? list.find(x => x.name === name) : null;
-            return found ? parseInt(found.price || 0) : 0;
-        };
+        const findPrice = (list, name) => { const found = list ? list.find(x => x.name === name) : null; return found ? parseInt(found.price || 0) : 0; };
         price += findPrice(product.storageOptions, item.storage);
         price += findPrice(product.colors, item.color);
         price += findPrice(product.opticalConditions, item.condition);
@@ -428,7 +540,6 @@
         return price;
     }
 
-    // --- KONFIGURATION RENDERER ---
     function renderTable(containerId, dataArray, keyName) {
         const container = document.getElementById(containerId);
         if(!dataArray) dataArray = [];
@@ -444,38 +555,20 @@
         container.innerHTML = html;
     }
 
-    function renderColorTable(containerId, dataArray) {
-        const container = document.getElementById(containerId);
-        if(!dataArray) dataArray = [];
-        let html = `<table class="variant-table"><thead><tr><th style="width:30%">Farbe</th><th style="width:20%">Hex</th><th style="width:20%">Preis</th><th></th></tr></thead><tbody>`;
-        dataArray.forEach((item, idx) => {
-            html += `<tr>
-                <td><input type="text" value="${item.name}" onchange="updateArrayItem('colors', ${idx}, 'name', this.value)"></td>
-                <td><div style="display:flex;align-items:center;"><div style="width:15px;height:15px;border-radius:50%;background:${item.hex};border:1px solid #ddd;margin-right:5px;"></div><input type="text" value="${item.hex}" onchange="updateArrayItem('colors', ${idx}, 'hex', this.value)"></div></td>
-                <td><input type="number" value="${item.price}" onchange="updateArrayItem('colors', ${idx}, 'price', this.value)"></td>
-                <td style="text-align:right;"><button style="color:#ea4335; background:none; border:none; cursor:pointer;" onclick="removeArrayItem('colors', ${idx})">&times;</button></td>
-            </tr>`;
-        });
-        html += `</tbody></table>`;
-        container.innerHTML = html;
-    }
-
-    // --- UPDATES ---
-    function updateCurrentProduct(field, value) {
-        shopData[currentBrand].products[currentProductIndex][field] = value;
-        if(field === 'name') renderProductList();
-    }
+    function updateCurrentProduct(field, value) { shopData[currentBrand].products[currentProductIndex][field] = value; if(field === 'name') renderProductList(); }
+    
     function updateArrayItem(key, arrayIndex, field, value) {
         if(field === 'price') value = parseInt(value) || 0;
         shopData[currentBrand].products[currentProductIndex][key][arrayIndex][field] = value;
-        // Wenn Namen geändert werden, muss das Dropdown beim nächsten Mal upgedatet werden
         if(field === 'name') renderInventoryTable(shopData[currentBrand].products[currentProductIndex]); 
         if(key === 'colors' && field === 'hex') loadEditor(currentBrand, currentProductIndex);
     }
+    
     function removeArrayItem(key, arrayIndex) {
         shopData[currentBrand].products[currentProductIndex][key].splice(arrayIndex, 1);
         loadEditor(currentBrand, currentProductIndex);
     }
+    
     function addItem(key) {
         const emptyItem = { name: "Neu", price: 0 };
         if(key === 'colors') emptyItem.hex = "#000000";
@@ -483,51 +576,33 @@
         shopData[currentBrand].products[currentProductIndex][key].push(emptyItem);
         loadEditor(currentBrand, currentProductIndex);
     }
+    
     function addNewProduct() {
         const brand = document.getElementById('brand-select').value || Object.keys(shopData)[0];
         if(!brand) return alert("Keine Marke vorhanden!");
         const newProd = {
             id: generateId('MOD'),
             name: "Neues Modell", basePrice: 0, img: "",
-            opticalConditions: [{name:"Gut", price:0}], 
-            batteryConditions: [{name:"80%+", price:0}], 
-            storageOptions: [{name:"64GB", price:0}], 
-            colors: [{name:"Schwarz", hex:"#000", price:0}],
-            inventory: []
+            opticalConditions: [{name:"Gut", price:0}], batteryConditions: [{name:"80%+", price:0}], storageOptions: [{name:"64GB", price:0}], colors: [{name:"Schwarz", hex:"#000000", price:0}], inventory: []
         };
         shopData[brand].products.push(newProd);
-        renderProductList();
-        loadEditor(brand, shopData[brand].products.length - 1);
+        renderProductList(); loadEditor(brand, shopData[brand].products.length - 1);
     }
+    
     function generateId(prefix) { return (prefix || '') + Math.floor(1000 + Math.random() * 9000); }
+    
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         event.target.classList.add('active');
     }
-    function deleteProduct() {
-        if(confirm("Ganzes Modell löschen?")) {
-            shopData[currentBrand].products.splice(currentProductIndex, 1);
-            document.getElementById('editor').classList.remove('active');
-            renderProductList();
-        }
-    }
+    
     async function saveToServer() {
-        const btn = document.querySelector('.btn-save');
-        const originalText = btn.innerText;
-        btn.innerText = "Speichere...";
+        const btn = document.querySelector('.btn-save'); const originalText = btn.innerText; btn.innerText = "Speichere...";
         try {
-            const res = await fetch('/api/admin/data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(shopData)
-            });
-            if(res.ok) {
-                btn.innerText = "Gespeichert!";
-                btn.style.background = "#28a745";
-                setTimeout(() => { btn.innerText = originalText; btn.style.background = ""; }, 2000);
-            } else { alert("Fehler"); }
+            const res = await fetch('/api/admin/data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(shopData) });
+            if(res.ok) { btn.innerText = "Gespeichert!"; btn.style.background = "#28a745"; setTimeout(() => { btn.innerText = originalText; btn.style.background = ""; }, 2000); } else { alert("Fehler"); }
         } catch(e) { alert("Verbindung fehlgeschlagen"); }
     }
 </script>
